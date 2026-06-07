@@ -1,9 +1,133 @@
 ---
 name: setup-constitution
 description: Crea o modifica el archivo constitution.md del proyecto Realtor
+handoffs:
+  - label: Build Specification
+    agent: speckit.specify
+    prompt: Implement the feature specification based on the updated constitution. I want to build...
 ---
 
-/speckit.constitution.md
+## Pre-Execution Checks
+
+**Check for extension hooks (before constitution update)**:
+- Check if `.specify/extensions.yml` exists in the project root.
+- If it exists, read it and look for entries under the `hooks.before_constitution` key
+- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
+- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
+- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
+  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
+  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
+- For each executable hook, output the following based on its `optional` flag:
+  - **Optional hook** (`optional: true`):
+    ```
+    ## Extension Hooks
+
+    **Optional Pre-Hook**: {extension}
+    Command: `/{command}`
+    Description: {description}
+
+    Prompt: {prompt}
+    To execute: `/{command}`
+    ```
+  - **Mandatory hook** (`optional: false`):
+    ```
+    ## Extension Hooks
+
+    **Automatic Pre-Hook**: {extension}
+    Executing: `/{command}`
+    EXECUTE_COMMAND: {command}
+
+    Wait for the result of the hook command before proceeding to the Outline.
+    ```
+- If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
+
+## Outline
+
+You are filling the template at `.specify/memory/constitution.md` with the Realtor project constitution. You MUST replace each placeholder token while preserving the template's Markdown heading hierarchy (H1 → H2 → H3). Do NOT overwrite the file with a completely different structure.
+
+**Note**: If `.specify/memory/constitution.md` does not exist yet, copy `.specify/templates/constitution-template.md` to `.specify/memory/constitution.md` first.
+
+Follow this execution flow:
+
+1. Load the template at `.specify/memory/constitution.md`.
+
+2. Apply the following replacements. The source content for each placeholder is found in the Realtor constitution below (between `<!-- CONSTITUTION_START -->` and `<!-- CONSTITUTION_END -->`).
+
+### a) Metadata placeholders — replace directly
+
+| Placeholder | Value |
+|---|---|
+| `[PROJECT_NAME]` | `Realtor` |
+| `[CONSTITUTION_VERSION]` | `1.0` |
+| `[RATIFICATION_DATE]` | `2026-06-07` |
+| `[LAST_AMENDED_DATE]` | `2026-06-07` |
+
+### b) Heading translations — replace the template's English headings
+
+| Template line | Replace with |
+|---|---|
+| `# [PROJECT_NAME] Constitution` | `# Constitución del Proyecto Realtor` |
+| `## Core Principles` | `## Principios fundamentales` |
+| `## [SECTION_2_NAME]` | `## Reglas tecnológicas` |
+| `## [SECTION_3_NAME]` | `## Flujo de desarrollo y calidad` |
+| `## Governance` | `## Gobernanza de la constitución` |
+
+### c) Insert sections before `## Principios fundamentales`
+
+Between the title line (`# Constitución del Proyecto Realtor`) and `## Principios fundamentales`, insert:
+
+- `## Propósito` — copy the entire `## Propósito` section from the Realtor constitution below (heading + paragraph).
+- `## Contexto del proyecto` — copy the entire `## Contexto del proyecto` section from the Realtor constitution below (heading + paragraph).
+
+### d) Principle placeholders — fill from Realtor constitution
+
+| Placeholder | Source location in Realtor constitution |
+|---|---|
+| `[PRINCIPLE_1_NAME]` | `### Spec-Driven Development` (heading text) |
+| `[PRINCIPLE_1_DESCRIPTION]` | All content under `### Spec-Driven Development` (bullet list + closing sentence) |
+| `[PRINCIPLE_2_NAME]` | `### Test-Driven Development` (heading text) |
+| `[PRINCIPLE_2_DESCRIPTION]` | All content under `### Test-Driven Development` (numbered cycle + 5 mandatory rules) |
+| `[PRINCIPLE_3_NAME]` | `### Vertical Slice Architecture` (heading text) |
+| `[PRINCIPLE_3_DESCRIPTION]` | All content under `### Vertical Slice Architecture` (explanation + example tree + slice components list) |
+| `[PRINCIPLE_4_NAME]` | `### Monolito modular` (heading text) |
+| `[PRINCIPLE_4_DESCRIPTION]` | All content under `### Monolito modular` (explanation + 4 modularity rules) |
+
+**Realtor has 4 principles, not 5.** Remove the entire 5th principle slot: the `### [PRINCIPLE_5_NAME]` line, its `[PRINCIPLE_5_DESCRIPTION]` line, and any adjacent HTML comment lines.
+
+### e) Section content placeholders
+
+| Placeholder | Source from Realtor constitution |
+|---|---|
+| `[SECTION_2_NAME]` | Already replaced via heading translation — skip |
+| `[SECTION_2_CONTENT]` | Copy all `###` sub-sections under `## Reglas tecnológicas`: FastAPI, Jinja2 + HTMX, SQLAlchemy async + PostgreSQL, uv, Scalar. Each kept as `###` with their full text. |
+| `[SECTION_3_NAME]` | Already replaced via heading translation — skip |
+| `[SECTION_3_CONTENT]` | Copy the following sections as `###` sub-headings with their full content: `## Flujo SDD + TDD obligatorio`, `## Artefactos esperados por feature` (demote its nested `###` sub-sections for spec.md/plan.md/etc. to `####`), `## Reglas para agentes de IA`, `## Calidad y pruebas`, `## Base de datos y entorno local`. |
+
+### f) Governance placeholder
+
+| Placeholder | Source from Realtor constitution |
+|---|---|
+| `[GOVERNANCE_RULES]` | Copy the bullet points under `## Gobernanza de la constitución` (the 5 rules). Then append as `###` sub-sections: `### Decisiones arquitectónicas` (table definition) and `### Historial de cambios` (version table). Both taken from their respective `##` sections in the Realtor constitution. |
+
+### g) Remove leftover HTML comments
+
+Delete all lines matching `<!-- Example: ... -->` and any other HTML comments that were part of the original template scaffolding.
+
+3. After applying all replacements, validate:
+   - No `[BRACKET_PLACEHOLDER]` tokens remain in the file.
+   - The metadata line reads exactly: `**Version**: 1.0 | **Ratified**: 2026-06-07 | **Last Amended**: 2026-06-07`.
+   - All headings respect H1 → H2 → H3 hierarchy (no skipped levels).
+
+4. Write the completed constitution to `.specify/memory/constitution.md`.
+
+5. Output a summary:
+   - File updated: `.specify/memory/constitution.md`
+   - Version: `1.0`
+   - Suggested commit: `docs: set up Realtor project constitution v1.0`
+
+Reference — full Realtor constitution (source for all replacements above):
+
+<!-- CONSTITUTION_START -->
 
 # Constitución del Proyecto Realtor
 
@@ -332,3 +456,37 @@ Cada decisión arquitectónica importante debe registrarse con:
 | v1.0 | Uso de pytest para unit tests y Testcontainers para integración. |
 | v1.0 | Uso de uv como gestor principal del proyecto. |
 | v1.0 | Integración de comandos opcionales de Spec Kit dentro del workflow: `clarify`, `checklist` y `analyze`. |
+
+<!-- CONSTITUTION_END -->
+
+## Post-Execution Checks
+
+**Check for extension hooks (after constitution update)**:
+- Check if `.specify/extensions.yml` exists in the project root.
+- If it exists, read it and look for entries under the `hooks.after_constitution` key
+- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
+- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
+- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
+  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
+  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
+- For each executable hook, output the following based on its `optional` flag:
+  - **Optional hook** (`optional: true`):
+    ```
+    ## Extension Hooks
+
+    **Optional Hook**: {extension}
+    Command: `/{command}`
+    Description: {description}
+
+    Prompt: {prompt}
+    To execute: `/{command}`
+    ```
+  - **Mandatory hook** (`optional: false`):
+    ```
+    ## Extension Hooks
+
+    **Automatic Hook**: {extension}
+    Executing: `/{command}`
+    EXECUTE_COMMAND: {command}
+    ```
+- If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
