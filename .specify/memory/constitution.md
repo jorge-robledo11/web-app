@@ -1,322 +1,347 @@
+<!--
+Informe de impacto de sincronización
+- Cambio de versión: plantilla inicial -> 1.0.0
+- Secciones agregadas:
+  - I. Idioma
+  - II. Stack obligatorio inmutable
+  - III. Prohibiciones absolutas
+  - IV. Arquitectura: Vertical Slice
+  - V. Spec-Driven Development
+  - VI. Flujo Spec Kit obligatorio
+  - VII. Test-Driven Development
+  - VIII. Calidad y validación
+  - IX. Base de datos
+  - X. Async-First
+  - XI. Frontend y sistema visual
+  - XII. Estructura obligatoria del repositorio
+  - XIII. Contratos de dominio
+  - XIV. Complexity Tracking
+  - XV. Jerarquía de autoridad
+  - XVI. Gobernanza
+- Secciones modificadas:
+  - Ninguna
+- Secciones eliminadas:
+  - Ninguna
+- Artefactos relacionados a revisar:
+  - AGENTS.md
+  - .opencode/instructions/*.md
+  - .opencode/commands/*.md
+  - .specify/templates/*.md
+- Pendientes de seguimiento:
+  - Generar o actualizar AGENTS.md desde esta constitución.
+  - Verificar que las instrucciones por área no contradigan esta constitución.
+  - Verificar que los comandos de Spec Kit respeten el flujo obligatorio.
+-->
+
 # Constitución del Proyecto Realtor
 
-## Propósito
+Esta constitución es la fuente de verdad superior del proyecto. Toda decisión
+técnica, arquitectónica o de proceso debe ser consistente con los principios aquí
+declarados. Ante cualquier conflicto entre documentos, esta constitución
+prevalece.
 
-Esta constitución define las reglas obligatorias para el desarrollo del proyecto **Realtor**, un monolito web construido con Python. Su objetivo es guiar a agentes de IA y a personas desarrolladoras para entregar funcionalidades de forma consistente, verificable y alineada con la arquitectura del sistema.
+## I. Idioma
 
-## Contexto del proyecto
+Todo el contenido `.md`, los comentarios, los docstrings y los mensajes de
+commit DEBEN estar en español. NUNCA mezclar idiomas dentro de un mismo archivo.
 
-Realtor es una aplicación inmobiliaria construida con un flujo de trabajo guiado por especificaciones, pruebas y arquitectura por funcionalidades. El proyecto prioriza claridad, trazabilidad, mantenibilidad y evolución incremental.
+## II. Stack obligatorio inmutable
 
-## Stack tecnológico
+El proyecto es un monolito Python con los siguientes componentes fijos. Ningún
+componente del stack puede ser reemplazado sin una enmienda formal a esta
+constitución.
 
-El stack principal del proyecto es el siguiente:
+| Componente | Herramienta |
+|---|---|
+| Runtime | Python 3.13+, gestionado con `uv` |
+| Empaquetado | `pyproject.toml` + `uv.lock` |
+| HTTP | FastAPI |
+| Vistas | Jinja2 server-rendered + HTMX |
+| ORM | SQLAlchemy 2.x async con `Mapped[...]`, `mapped_column`, `select()` y `AsyncSession` |
+| Validación | Pydantic v2 con `model_config = ConfigDict(frozen=True)` |
+| Base de datos | PostgreSQL vía asyncpg, local con Docker o Docker Compose |
+| Migraciones | Alembic como única herramienta permitida |
+| Tests | pytest + pytest-asyncio + httpx.AsyncClient |
+| Integración | Testcontainers cuando se requiera infraestructura real |
+| Calidad estática | Ruff + mypy `--strict` mínimo en `app/modules/` |
+| Iconografía | SVG outline de Lucide vendoreados en `app/static/icons/` |
 
-- Python.
-- FastAPI.
-- Jinja2.
-- HTMX.
-- SQLAlchemy async.
-- PostgreSQL.
-- Docker o Docker Compose para ejecutar la base de datos local.
-- uv para gestión del proyecto, dependencias, entorno virtual y ejecución de comandos.
-- Scalar como documentación interactiva de la API.
-- pytest para pruebas unitarias.
-- Testcontainers para pruebas de integración.
+## III. Prohibiciones absolutas
 
-La base de datos no usará Supabase. PostgreSQL debe ejecutarse localmente mediante Docker o Docker Compose.
+Las siguientes herramientas, prácticas y patrones están PROHIBIDOS en todo el
+proyecto:
 
-## Principios fundamentales
+- `pip`, `poetry`, `conda`, `pipenv`, `requirements.txt`, `setup.py`.
+- Bootstrap, Tailwind, Bulma, Foundation o cualquier framework CSS.
+- Cargar HTMX o cualquier JS de terceros desde CDN en runtime.
+- Iconos como webfont, Bootstrap Icons, Font Awesome, Material Icons font,
+  emojis o caracteres Unicode como íconos funcionales.
+- Estilo legacy de SQLAlchemy: `Column(...)` en clase, `Query` o sesiones
+  síncronas.
+- Funciones `def` síncronas en `routes.py`, `service.py` o `repository.py`
+  cuando realicen I/O.
+- Carpetas globales por capa técnica: `controllers/`, `services/`,
+  `repositories/`, `handlers/`, `managers/` fuera de un módulo.
+- Exponer entidades SQLAlchemy como respuesta HTTP.
+- Retornar `dict` libres en errores.
+- Strings mágicos para estados de dominio.
+- Usar Supabase en producción o desarrollo.
+- Usar extensión `.yml` para archivos YAML; usar siempre `.yaml`.
+- Separar frontend y backend en aplicaciones o repositorios independientes.
+- Crear microservicios sin una enmienda formal a esta constitución.
 
-### Spec-Driven Development
+## IV. Arquitectura: Vertical Slice
 
-Todo desarrollo debe comenzar desde una especificación clara. Ninguna funcionalidad debe implementarse sin antes definir:
+El proyecto sigue una arquitectura de Vertical Slice. Cada feature vive en su
+propio módulo bajo `app/modules/<feature>/`.
 
-- Problema a resolver.
-- Objetivo funcional.
-- Alcance.
-- Reglas de negocio.
-- Criterios de aceptación.
-- Casos límite.
-- Comportamiento esperado.
-- Comportamiento fuera de alcance.
+Cada módulo DEBE contener estos artefactos:
 
-La especificación es la fuente de verdad para agentes de IA y personas desarrolladoras.
+- `routes.py` — capa delgada: parsea entrada, llama al servicio y retorna
+  respuesta.
+- `schemas.py` — DTOs Pydantic v2 con `frozen=True`.
+- `models.py` — entidades SQLAlchemy 2.x async con `Mapped[...]` y
+  `mapped_column`.
+- `repository.py` — solo acceso a datos.
+- `service.py` — lógica de negocio del módulo.
+- `templates/` — plantillas Jinja2 del módulo.
+- `tests/` — pruebas unitarias, integración o endpoint del módulo.
 
-### Test-Driven Development
+La lógica de negocio reside en `service.py`. `routes.py` y `repository.py` son
+capas de entrada e infraestructura sin reglas de negocio. La lógica compartida
+solo se extrae cuando exista duplicación real demostrable, nunca por anticipación.
 
-El proyecto debe seguir un ciclo TDD estricto:
+## V. Spec-Driven Development
 
-1. Red: escribir primero una prueba que falle por el motivo correcto.
-2. Green: implementar el código mínimo necesario para que la prueba pase.
-3. Refactor: mejorar el diseño sin cambiar el comportamiento observable.
+No se implementa NADA que no esté descrito en un `spec.md` aprobado bajo
+`.specify/specs/`.
 
-Reglas obligatorias:
+Cada `spec.md` aprobado es la fuente de verdad funcional de su feature, siempre
+que no contradiga esta constitución.
 
-- No se debe escribir código de producción antes de tener una prueba asociada.
-- Toda regla de negocio debe estar cubierta por pruebas.
-- Toda corrección de bug debe comenzar con una prueba que reproduzca el fallo.
-- No se debe marcar una tarea como terminada si sus pruebas no pasan.
-- La refactorización solo puede hacerse con la suite de pruebas en verde.
+Cada spec debe vivir en una carpeta secuencial plana:
 
-### Vertical Slice Architecture
-
-El proyecto debe organizarse por **features** o **casos de uso**, no por capas técnicas globales excesivas. Cada slice debe contener lo necesario para entregar una funcionalidad completa.
-
-Cada slice puede incluir:
-
-- Endpoint o ruta.
-- Schemas o DTOs.
-- Servicio o caso de uso.
-- Validaciones.
-- Acceso a datos, si aplica.
-- Plantillas Jinja2, si aplica.
-- Pruebas relacionadas.
-
-### Monolito modular
-
-El sistema debe mantenerse como un monolito con límites internos claros. No se deben crear microservicios salvo que una decisión arquitectónica futura lo justifique explícitamente.
-
-La modularidad debe lograrse mediante:
-
-- Features bien delimitadas.
-- Código compartido mínimo.
-- Separación clara entre lógica de negocio, infraestructura y presentación.
-- Evitar dependencias circulares entre módulos.
-
-## Reglas tecnológicas
-
-### FastAPI
-
-FastAPI será el framework principal de la aplicación web. Debe usarse para:
-
-- Definir rutas HTTP.
-- Gestionar dependencias.
-- Validar entradas cuando aplique.
-- Integrar respuestas HTML y JSON según el caso de uso.
-
-### Jinja2 + HTMX
-
-La interfaz será principalmente server-rendered usando Jinja2. HTMX debe usarse para interacciones dinámicas sin convertir la aplicación en una SPA.
-
-Reglas:
-
-- Preferir HTML renderizado desde el servidor.
-- Usar HTMX para interacciones parciales.
-- Evitar complejidad innecesaria en JavaScript.
-- Mantener las plantillas cercanas al slice cuando sean específicas de una funcionalidad.
-
-### SQLAlchemy async + PostgreSQL
-
-El acceso a datos debe usar SQLAlchemy en modo async. PostgreSQL será la base de datos principal.
-
-Reglas:
-
-- No usar Supabase como base de datos del proyecto.
-- La base de datos local debe levantarse con Docker.
-- Las migraciones deben gestionarse de forma explícita, preferiblemente con Alembic si el proyecto lo requiere.
-- Las sesiones de base de datos deben manejarse mediante dependencias controladas.
-
-### uv
-
-`uv` será la herramienta estándar para:
-
-- Inicializar el proyecto.
-- Gestionar dependencias.
-- Crear y sincronizar el entorno virtual.
-- Ejecutar comandos.
-- Mantener el lockfile.
-
-Comandos esperados:
-
-```bash
-uv sync
-uv run pytest
-uv run fastapi dev
+```text
+.specify/specs/<numero>-<nombre>/
 ```
 
-Si se definen scripts del proyecto, deben documentarse claramente.
-
-### Scalar
-
-Scalar será la documentación interactiva de la API para el proyecto. La documentación debe mantenerse alineada con los endpoints reales de FastAPI y actualizarse cuando cambie la superficie pública de la API.
-
-## Flujo de desarrollo y calidad
-
-### Flujo SDD + TDD obligatorio
-
-Cada nueva funcionalidad debe seguir este orden:
-
-1. Crear o actualizar la especificación.
-2. Definir criterios de aceptación.
-3. Refinar la especificación resolviendo ambigüedades.
-4. Crear plan de pruebas.
-5. Validar completitud y consistencia del plan.
-6. Crear plan técnico.
-7. Crear tareas pequeñas y verificables.
-8. Analizar consistencia entre especificación, plan y tareas.
-9. Escribir una prueba fallida.
-10. Implementar el mínimo código necesario.
-11. Ejecutar pruebas.
-12. Refactorizar.
-13. Actualizar documentación si aplica.
-14. Registrar trazabilidad entre especificación, tests y código.
-
-No se debe permitir que el agente de IA implemente directamente sin pasar por especificación y pruebas.
-
-### Flujo de creación de features
-
-Toda feature debe seguir este flujo obligatorio de comandos Spec Kit:
-
-1. `/speckit.specify` → `spec.md` inicial. Se crea la especificación de la feature.
-2. `/speckit.clarify` → preguntas + `spec.md` refinado. Se responden preguntas para
-   refinar la especificación.
-3. `/speckit.plan` → `plan.md`. Se genera el plan de implementación.
-4. `/speckit.analyze` → reporte de consistencia. Se analiza la consistencia entre el
-   plan y la especificación.
-5. `/speckit.tasks` → `tasks.md`. Se genera la lista de tareas y pasos concretos.
-6. `/speckit.implement` → código real en `app/`. Se implementa el código en el proyecto.
-
-Ninguna fase puede saltarse. El flujo es secuencial y cada fase depende de los
-artefactos generados en la anterior.
-
-### Artefactos esperados por feature
-
-Cada feature debe poder generar o mantener estos artefactos:
+Cada spec debe contener, como mínimo:
 
 ```text
 spec.md
 plan.md
 tasks.md
-test-plan.md
-traceability.md
 ```
 
-#### spec.md
+El orden de implementación lo define el prefijo numérico de cada spec. Toda tarea
+de implementación debe rastrear a un `tasks.md` generado desde la spec.
 
-Debe describir la funcionalidad desde el punto de vista del usuario y del negocio.
+## VI. Flujo Spec Kit obligatorio
 
-#### plan.md
-
-Debe explicar la estrategia técnica de implementación.
-
-#### tasks.md
-
-Debe dividir el trabajo en tareas pequeñas, verificables y ordenadas.
-
-#### test-plan.md
-
-Debe definir los tests necesarios antes de la implementación.
-
-Debe incluir:
-
-- Tests unitarios.
-- Tests de integración.
-- Tests de endpoints.
-- Tests de plantillas o respuestas HTML cuando aplique.
-- Casos límite.
-- Casos de error.
-
-#### traceability.md
-
-Debe mapear cada requisito con sus pruebas y archivos de implementación.
-
-Ejemplo:
-
-| Requisito | Criterio de aceptación | Test | Código | Estado |
-|---|---|---|---|---|
-| Crear propiedad | Usuario puede registrar una propiedad válida | `test_create_property_success` | `create_property/service.py` | Passing |
-
-### Reglas para agentes de IA
-
-El agente debe:
-
-- Leer la especificación antes de modificar código.
-- Confirmar el alcance antes de implementar.
-- Crear o actualizar pruebas antes del código de producción.
-- Mantener los cambios pequeños.
-- Trabajar por vertical slices.
-- Evitar abstracciones prematuras.
-- No crear capas globales innecesarias.
-- No introducir dependencias sin justificación.
-- No modificar partes no relacionadas del sistema.
-- No eliminar pruebas para hacer pasar la suite.
-- No declarar una tarea completa sin pruebas verdes.
-- Seguir el flujo obligatorio de creación de features: specify → clarify → plan → analyze → tasks → implement.
-
-El agente debe rechazar o pausar una implementación si:
-
-- No existe especificación.
-- No hay criterios de aceptación.
-- No hay plan de pruebas.
-- La petición contradice la constitución.
-- Requiere una decisión técnica no documentada.
-
-### Calidad y pruebas
-
-Todas las pruebas deben poder ejecutarse localmente. Las pruebas deben ser deterministas y no depender de servicios externos innecesarios.
-
-Reglas mínimas:
-
-- Las pruebas unitarias deben ejecutarse con `pytest`.
-- Las pruebas de integración deben usar `Testcontainers` cuando requieran PostgreSQL.
-- La base de datos de pruebas debe estar aislada.
-- Las pruebas deben ser claras, legibles y enfocadas en comportamiento.
-- Se debe priorizar cobertura de reglas de negocio sobre cobertura superficial.
-- Las pruebas de integración pueden usar PostgreSQL en Docker o mediante contenedores efímeros de Testcontainers.
-
-### Base de datos y entorno local
-
-El entorno local debe poder levantarse de forma reproducible.
-
-Debe existir una estrategia para:
-
-- Levantar PostgreSQL con Docker.
-- Configurar variables de entorno.
-- Ejecutar migraciones.
-- Correr pruebas.
-- Reiniciar el entorno local si es necesario.
-
-Ejemplo esperado:
+Toda feature debe seguir este flujo obligatorio:
 
 ```text
-docker-compose.yml
+/speckit.specify
+/speckit.clarify
+/speckit.plan
+/speckit.analyze
+/speckit.tasks
+/speckit.implement
+```
+
+Ninguna fase puede saltarse. Cada fase depende de los artefactos generados por la
+fase anterior.
+
+Reglas del flujo:
+
+- `specify` crea o actualiza `spec.md`.
+- `clarify` resuelve ambigüedades antes del plan.
+- `plan` crea `plan.md` con decisiones técnicas y dependencias.
+- `analyze` valida consistencia entre spec, plan y restricciones.
+- `tasks` crea `tasks.md` con tareas pequeñas, ordenadas y verificables.
+- `implement` modifica código real solo después de existir spec, plan y tasks.
+
+## VII. Test-Driven Development
+
+El ciclo Red-Green-Refactor es obligatorio:
+
+1. **Red**: escribir primero una prueba que falle por el motivo correcto.
+2. **Green**: implementar el código mínimo necesario para que la prueba pase.
+3. **Refactor**: mejorar el diseño sin cambiar el comportamiento observable.
+
+Reglas complementarias:
+
+- No se escribe código de producción sin una prueba asociada.
+- Toda regla de negocio debe estar cubierta por pruebas.
+- Toda corrección de bug comienza con una prueba que reproduzca el fallo.
+- Refactorizar solo con la suite de tests en verde.
+- No se elimina ni debilita una prueba para hacer pasar la suite.
+
+## VIII. Calidad y validación
+
+Toda implementación debe poder validarse localmente con comandos reproducibles.
+
+Comandos mínimos esperados:
+
+```bash
+uv sync
+uv run pytest
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy --strict app/modules/
+```
+
+Reglas de testing:
+
+- Las pruebas unitarias usan pytest.
+- Las pruebas asíncronas usan pytest-asyncio.
+- Las pruebas HTTP usan httpx.AsyncClient.
+- Las pruebas de integración que requieran PostgreSQL usan Testcontainers.
+- La base de datos de pruebas debe estar aislada.
+- Las pruebas deben ser deterministas y enfocadas en comportamiento observable.
+
+## IX. Base de datos
+
+- PostgreSQL se ejecuta localmente con Docker o Docker Compose.
+- La base de datos de producción no usará Supabase.
+- Las migraciones se gestionan exclusivamente con Alembic.
+- Las sesiones de base de datos se manejan mediante dependencias controladas con
+  inyección de `AsyncSession`.
+- `.env` nunca debe versionarse con secretos reales.
+- `.env.example` debe existir como plantilla de configuración.
+- La infraestructura local debe usar archivos `.yaml`, nunca `.yml`.
+
+## X. Async-First
+
+Todo I/O del sistema debe ser asíncrono cuando forme parte del flujo web,
+persistencia o integración externa.
+
+Esto incluye:
+
+- Base de datos.
+- HTTP saliente.
+- Colas.
+- Storage remoto.
+- Servicios externos.
+- Operaciones de infraestructura.
+
+Solo se permite `def` síncrono para puro cómputo en memoria, mapeos, cálculos o
+validaciones sin I/O.
+
+## XI. Frontend y sistema visual
+
+La interfaz será server-rendered con Jinja2 y mejorada progresivamente con HTMX.
+No se debe convertir la aplicación en una SPA.
+
+Reglas obligatorias:
+
+- HTMX vive vendoreado en `app/static/vendor/htmx.min.js`.
+- El CSS propio vive en `app/static/css/app.css`.
+- Los iconos SVG outline viven en `app/static/icons/`.
+- La librería estándar de iconografía es Lucide.
+- Las plantillas compartidas viven en `app/templates/`.
+- Las plantillas específicas viven dentro del módulo correspondiente.
+- Los componentes compartidos viven en `app/templates/components/`.
+- Las macros compartidas viven en `app/templates/macros/`.
+
+## XII. Estructura obligatoria del repositorio
+
+La estructura base del proyecto debe respetar esta organización:
+
+```text
+app/
+  __init__.py
+  main.py
+  config.py
+  database.py
+  modules/
+    <feature>/
+      routes.py
+      schemas.py
+      models.py
+      repository.py
+      service.py
+      templates/
+        *.html
+      tests/
+        test_*.py
+  static/
+    css/
+      app.css
+    vendor/
+      htmx.min.js
+    icons/
+      *.svg
+  templates/
+    base.html
+    components/
+      _*.html
+    macros/
+      *.html
+alembic/
+  env.py
+  versions/
+pyproject.toml
+uv.lock
+docker-compose.yaml
 .env.example
 ```
 
-La constitución debe indicar que `.env` nunca debe versionarse con secretos reales.
+Cualquier desviación debe justificarse en `plan.md`.
 
-## Gobernanza de la constitución
+## XIII. Contratos de dominio
 
-- Todo cambio a la constitución debe estar justificado.
-- Los cambios deben registrarse en un historial.
-- Las reglas de la constitución tienen prioridad sobre preferencias puntuales del agente.
-- Si una instrucción entra en conflicto con la constitución, el agente debe advertirlo antes de continuar.
+- Las entidades SQLAlchemy no se exponen como respuesta HTTP.
+- Las respuestas HTTP se mapean a DTOs Pydantic.
+- Todos los DTOs Pydantic deben usar `model_config = ConfigDict(frozen=True)`.
+- Los estados de dominio se modelan con `Enum` o tipos explícitos.
+- Los errores usan `HTTPException` o modelos de error tipados.
+- Los límites del sistema validan entradas antes de ejecutar lógica de negocio.
 
-### Decisiones arquitectónicas
+## XIV. Complexity Tracking
 
-Cada decisión arquitectónica importante debe registrarse con:
+Toda desviación del stack, arquitectura, estructura, flujo obligatorio o reglas
+de esta constitución debe registrarse explícitamente en la sección
+`Complexity Tracking` de `plan.md`.
 
-| Campo | Descripción |
-|---|---|
-| Contexto | Situación o problema que motiva la decisión. |
-| Decisión tomada | Solución adoptada. |
-| Alternativas consideradas | Opciones evaluadas antes de decidir. |
-| Consecuencias | Impacto esperado de la decisión. |
-| Fecha | Momento en que se tomó la decisión. |
-| Estado | Propuesto, aprobado, obsoleto o revisado. |
+Debe incluir:
 
-### Historial de cambios
+- Qué regla se desvía.
+- Por qué la desviación es necesaria.
+- Alternativas consideradas.
+- Riesgos introducidos.
+- Cómo se mitigarán esos riesgos.
+- Cómo se validará que la desviación no rompe el sistema.
 
-| Versión | Cambios |
-|---|---|
-| v1.0 | Constitución inicial del proyecto Realtor. |
-| v1.0 | Definición del flujo SDD + TDD. |
-| v1.0 | Adopción de Vertical Slice Architecture. |
-| v1.0 | Uso de FastAPI, Jinja2, HTMX, SQLAlchemy async y PostgreSQL. |
-| v1.0 | Uso de Scalar como documentación de API. |
-| v1.0 | Uso de pytest para unit tests y Testcontainers para integración. |
-| v1.0 | Uso de uv como gestor principal del proyecto. |
-| v1.0 | Flujo obligatorio de creación de features con Spec Kit: specify → clarify → plan → analyze → tasks → implement. |
+En ausencia de justificación, la desviación debe rechazarse.
 
-**Version**: 1.0 | **Ratified**: 2026-06-08 | **Last Amended**: 2026-06-08
+## XV. Jerarquía de autoridad
+
+Durante la implementación de una spec, aplica el siguiente orden de prioridad
+ante cualquier conflicto:
+
+```text
+constitución > spec > AGENTS.md > instructions > comando
+```
+
+Si hay conflicto entre capas, se debe pausar, advertir el conflicto
+explícitamente y seguir la capa de mayor autoridad.
+
+## XVI. Gobernanza
+
+- Esta constitución es la fuente de verdad suprema del proyecto. Ninguna
+  decisión, spec o implementación puede contradecirla.
+- Toda modificación a esta constitución requiere una enmienda documentada con
+  justificación, impacto evaluado y plan de migración si aplica.
+- Las enmiendas se versionan siguiendo el esquema semántico
+  `MAJOR.MINOR.PATCH`.
+- **MAJOR**: cambios incompatibles en stack, arquitectura, flujo obligatorio o
+  principios.
+- **MINOR**: nuevas secciones, nuevos principios o ampliaciones materiales.
+- **PATCH**: correcciones de redacción, aclaraciones o cambios no semánticos.
+- El cumplimiento de esta constitución se verifica en cada code review y en cada
+  etapa del flujo Spec-Driven.
+- La complejidad introducida debe justificarse explícitamente. Ante la duda,
+  elegir la opción más simple.
+
+**Versión**: 1.0.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-08

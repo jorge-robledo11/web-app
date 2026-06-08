@@ -4,9 +4,9 @@ applyTo: "app/modules/**/templates/**,app/templates/**,app/static/**"
 
 # Frontend — Jinja2 + HTMX + sistema visual
 
-Este archivo es la **fuente única de verdad** para todo lo relacionado con
+Este archivo es la **instrucción** para todo lo relacionado con
 presentación, estructura de templates, estilos y experiencia de usuario.
-Copilot lo aplica automáticamente al trabajar en cualquier archivo bajo
+OpenCode lo aplica automáticamente al trabajar en cualquier archivo bajo
 `app/modules/**/templates/`, `app/templates/` o `app/static/`.
 
 Referencia visual: **Notion, Google Keep, dashboards de gestión modernos**.
