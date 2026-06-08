@@ -9,7 +9,7 @@ Este archivo resume las reglas obligatorias del proyecto. La fuente de verdad
 completa es `.specify/memory/constitution.md`. Ante cualquier conflicto, la
 constitución prevalece.
 
-Cada `spec.md` aprobado bajo `.specify/specs/` es la fuente de verdad funcional
+Cada `spec.md` aprobado bajo `specs/` es la fuente de verdad funcional
 de su feature, siempre que no contradiga la constitución.
 
 ## Idioma
@@ -75,12 +75,12 @@ nunca por anticipación.
 ## Spec-Driven Development
 
 NO implementar nada que no esté descrito en un `spec.md` aprobado bajo
-`.specify/specs/`.
+`specs/`.
 
 Cada spec debe vivir en:
 
 ```text
-.specify/specs/<numero>-<nombre>/
+specs/<numero>-<nombre>/
 ```
 
 y contener, como mínimo:

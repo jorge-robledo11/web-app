@@ -7,9 +7,7 @@ description: Prompt fuente para generar la spec fundacional del proyecto Realtor
 
 Crea la spec `001-bootstrap-proyecto`.
 
-Esta spec debe ejecutarse como subagente para aislar la generación de la
-especificación fundacional del contexto principal. Su salida esperada es una spec
-real bajo `.specify/specs/001-bootstrap-proyecto/`.
+La salida esperada es una spec real bajo `specs/001-bootstrap-proyecto/`.
 
 ## OBJETIVO
 
@@ -155,7 +153,7 @@ con rangos versionados razonables.
 
 Dependencias esperadas:
 
-- `fastapi[scalar]`
+- `fastapi[standard]`
 - `sqlalchemy[asyncio]`
 - `asyncpg`
 - `alembic`
@@ -177,8 +175,8 @@ Dependencias esperadas:
 
 ## REGLAS DE CONSTITUCIÓN A RESPETAR
 
-- Stack inmutable según constitución `v1.1.1`.
-- Python target: `3.13.13`.
+- Stack inmutable según constitución `v1.0.0`.
+- Python target: `3.13+`.
 - PostgreSQL local con Docker o Docker Compose.
 - `uv` como único gestor de proyecto.
 - No usar Supabase.

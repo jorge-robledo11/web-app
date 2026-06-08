@@ -114,7 +114,7 @@ solo se extrae cuando exista duplicación real demostrable, nunca por anticipaci
 ## V. Spec-Driven Development
 
 No se implementa NADA que no esté descrito en un `spec.md` aprobado bajo
-`.specify/specs/`.
+`specs/`.
 
 Cada `spec.md` aprobado es la fuente de verdad funcional de su feature, siempre
 que no contradiga esta constitución.
@@ -122,7 +122,7 @@ que no contradiga esta constitución.
 Cada spec debe vivir en una carpeta secuencial plana:
 
 ```text
-.specify/specs/<numero>-<nombre>/
+specs/<numero>-<nombre>/
 ```
 
 Cada spec debe contener, como mínimo:
