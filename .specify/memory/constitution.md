@@ -149,12 +149,12 @@ Cada nueva funcionalidad debe seguir este orden:
 
 1. Crear o actualizar la especificación.
 2. Definir criterios de aceptación.
-3. Usar `/speckit.clarify` cuando existan ambigüedades o decisiones sin resolver.
+3. Refinar la especificación resolviendo ambigüedades.
 4. Crear plan de pruebas.
-5. Ejecutar `/speckit.checklist` después del plan para validar completitud y consistencia.
+5. Validar completitud y consistencia del plan.
 6. Crear plan técnico.
 7. Crear tareas pequeñas y verificables.
-8. Ejecutar `/speckit.analyze` antes de implementar para detectar inconsistencias entre especificación, plan y tareas.
+8. Analizar consistencia entre especificación, plan y tareas.
 9. Escribir una prueba fallida.
 10. Implementar el mínimo código necesario.
 11. Ejecutar pruebas.
@@ -163,6 +163,22 @@ Cada nueva funcionalidad debe seguir este orden:
 14. Registrar trazabilidad entre especificación, tests y código.
 
 No se debe permitir que el agente de IA implemente directamente sin pasar por especificación y pruebas.
+
+### Flujo de creación de features
+
+Toda feature debe seguir este flujo obligatorio de comandos Spec Kit:
+
+1. `/speckit.specify` → `spec.md` inicial. Se crea la especificación de la feature.
+2. `/speckit.clarify` → preguntas + `spec.md` refinado. Se responden preguntas para
+   refinar la especificación.
+3. `/speckit.plan` → `plan.md`. Se genera el plan de implementación.
+4. `/speckit.analyze` → reporte de consistencia. Se analiza la consistencia entre el
+   plan y la especificación.
+5. `/speckit.tasks` → `tasks.md`. Se genera la lista de tareas y pasos concretos.
+6. `/speckit.implement` → código real en `app/`. Se implementa el código en el proyecto.
+
+Ninguna fase puede saltarse. El flujo es secuencial y cada fase depende de los
+artefactos generados en la anterior.
 
 ### Artefactos esperados por feature
 
@@ -226,7 +242,7 @@ El agente debe:
 - No modificar partes no relacionadas del sistema.
 - No eliminar pruebas para hacer pasar la suite.
 - No declarar una tarea completa sin pruebas verdes.
-- Usar `/speckit.clarify`, `/speckit.checklist` y `/speckit.analyze` cuando corresponda dentro del flujo.
+- Seguir el flujo obligatorio de creación de features: specify → clarify → plan → analyze → tasks → implement.
 
 El agente debe rechazar o pausar una implementación si:
 
@@ -301,6 +317,6 @@ Cada decisión arquitectónica importante debe registrarse con:
 | v1.0 | Uso de Scalar como documentación de API. |
 | v1.0 | Uso de pytest para unit tests y Testcontainers para integración. |
 | v1.0 | Uso de uv como gestor principal del proyecto. |
-| v1.0 | Integración de comandos opcionales de Spec Kit dentro del workflow: `clarify`, `checklist` y `analyze`. |
+| v1.0 | Flujo obligatorio de creación de features con Spec Kit: specify → clarify → plan → analyze → tasks → implement. |
 
-**Version**: 1.0 | **Ratified**: 2026-06-07 | **Last Amended**: 2026-06-07
+**Version**: 1.0 | **Ratified**: 2026-06-08 | **Last Amended**: 2026-06-08
