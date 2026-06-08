@@ -113,17 +113,25 @@ solo se extrae cuando exista duplicación real demostrable, nunca por anticipaci
 
 ## V. Spec-Driven Development
 
-No se implementa NADA que no esté descrito en un `spec.md` aprobado bajo
-`specs/`.
+No se implementa NADA que no esté descrito en un `spec.md` aprobado.
+
+Las specs deben crearse exclusivamente mediante los comandos de Spec Kit. No se
+deben crear, mover o duplicar specs manualmente fuera de la ruta que resuelvan
+esos comandos.
 
 Cada `spec.md` aprobado es la fuente de verdad funcional de su feature, siempre
 que no contradiga esta constitución.
 
-Cada spec debe vivir en una carpeta secuencial plana:
+En la integración actual entre OpenCode y Spec Kit, las specs se crean bajo:
 
 ```text
 specs/<numero>-<nombre>/
 ```
+
+Esta ruta es una convención operativa resuelta por Spec Kit, no una decisión de
+arquitectura de aplicación. Si una versión futura de Spec Kit cambia la ruta
+generada por sus comandos, deben actualizarse los documentos derivados sin
+modificar la arquitectura del proyecto.
 
 Cada spec debe contener, como mínimo:
 

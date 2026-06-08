@@ -1,6 +1,6 @@
 ---
-name: 001-bootstrap-proyecto
-description: Prompt fuente para generar la spec fundacional del proyecto Realtor.
+name: 001-bootstrap-proyecto-spec
+description: Prompt fuente para crear la especificación fundacional del proyecto Realtor.
 ---
 
 /speckit.specify
