@@ -63,35 +63,11 @@ Reglas obligatorias:
 
 El proyecto debe organizarse por **features** o **casos de uso**, no por capas técnicas globales excesivas. Cada slice debe contener lo necesario para entregar una funcionalidad completa.
 
-Ejemplo orientativo:
-
-```text
-src/
-  realtor/
-    features/
-      properties/
-        create_property/
-          endpoint.py
-          schemas.py
-          handler.py
-          tests.py
-        list_properties/
-          endpoint.py
-          schemas.py
-          handler.py
-          tests.py
-    shared/
-      database/
-      templates/
-      auth/
-      config/
-```
-
 Cada slice puede incluir:
 
 - Endpoint o ruta.
 - Schemas o DTOs.
-- Handler o caso de uso.
+- Servicio o caso de uso.
 - Validaciones.
 - Acceso a datos, si aplica.
 - Plantillas Jinja2, si aplica.
@@ -233,7 +209,7 @@ Ejemplo:
 
 | Requisito | Criterio de aceptación | Test | Código | Estado |
 |---|---|---|---|---|
-| Crear propiedad | Usuario puede registrar una propiedad válida | `test_create_property_success` | `create_property/handler.py` | Passing |
+| Crear propiedad | Usuario puede registrar una propiedad válida | `test_create_property_success` | `create_property/service.py` | Passing |
 
 ### Reglas para agentes de IA
 
