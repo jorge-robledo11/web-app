@@ -7,7 +7,15 @@ description: Prompt fuente para crear la especificación fundacional del proyect
 
 Crea la spec `001-bootstrap-proyecto`.
 
-La salida esperada es una spec real bajo `specs/001-bootstrap-proyecto/`.
+La salida esperada es una spec real en la ruta resuelta por Spec Kit para la
+feature actual. No fijes manualmente la ruta de salida.
+
+Si existe `.specify/feature.json`, respeta su campo `feature_directory` como
+puntero operativo de la feature activa.
+
+Si necesitas fijar explícitamente la ruta de salida, usa
+`SPECIFY_FEATURE_DIRECTORY` con el valor de `.specify/feature.json.feature_directory`
+en vez de asumir una ruta fija.
 
 ## OBJETIVO
 
@@ -153,7 +161,7 @@ con rangos versionados razonables.
 
 Dependencias esperadas:
 
-- `fastapi[standard]`
+- `fastapi[scalar]`
 - `sqlalchemy[asyncio]`
 - `asyncpg`
 - `alembic`
@@ -175,7 +183,7 @@ Dependencias esperadas:
 
 ## REGLAS DE CONSTITUCIÓN A RESPETAR
 
-- Stack inmutable según constitución `v1.0.0`.
+- Stack inmutable según constitución vigente.
 - Python target: `3.13+`.
 - PostgreSQL local con Docker o Docker Compose.
 - `uv` como único gestor de proyecto.
@@ -184,3 +192,6 @@ Dependencias esperadas:
 - Idioma: 100 % español en specs, plan, tasks, comentarios, docstrings y Markdown.
 - No implementar código de producción sin pruebas asociadas.
 - No crear módulos de dominio en esta spec.
+- Usa la ruta de feature resuelta por Spec Kit.
+- Si existe `.specify/feature.json`, respeta su `feature_directory`.
+- No crees specs manualmente en rutas alternativas.

@@ -120,15 +120,13 @@ esos comandos.
 Cada `spec.md` aprobado es la fuente de verdad funcional de su feature, siempre
 que no contradiga esta constitución.
 
-En la integración actual entre OpenCode y Spec Kit, las specs se crean bajo:
+La ubicación física de cada spec es una convención operativa resuelta por Spec
+Kit. Si existe `.specify/feature.json`, su campo `feature_directory` actúa como
+puntero de la feature activa y debe respetarse.
 
-```text
-specs/<numero>-<nombre>/
-```
-
-Esta ruta es una convención operativa resuelta por Spec Kit, no una decisión de
-arquitectura de aplicación. Si una versión futura de Spec Kit cambia la ruta
-generada por sus comandos, deben actualizarse los documentos derivados sin
+La ruta de specs no es una decisión de arquitectura de aplicación. Si una versión
+futura de Spec Kit cambia la ruta generada por sus comandos, deben actualizarse
+solo los documentos derivados o el puntero operativo correspondiente, sin
 modificar la arquitectura del proyecto.
 
 Cada spec debe contener, como mínimo:
