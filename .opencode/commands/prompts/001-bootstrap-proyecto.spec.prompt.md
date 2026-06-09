@@ -7,15 +7,22 @@ description: Prompt fuente para crear la especificación fundacional del proyect
 
 Crea la spec `001-bootstrap-proyecto`.
 
-La salida esperada es una spec real en la ruta resuelta por Spec Kit para la
-feature actual. No fijes manualmente la ruta de salida.
+## REGLA DE CREACIÓN CANÓNICA
 
-Si existe `.specify/feature.json`, respeta su campo `feature_directory` como
-puntero operativo de la feature activa.
+Antes de escribir o actualizar `spec.md`, respeta el workflow canónico de Spec
+Kit para creación o activación de la feature.
 
-Si necesitas fijar explícitamente la ruta de salida, usa
-`SPECIFY_FEATURE_DIRECTORY` con el valor de `.specify/feature.json.feature_directory`
-en vez de asumir una ruta fija.
+No crees manualmente directorios de spec, no copies templates a mano y no
+escribas `spec.md` fuera del flujo resuelto por Spec Kit.
+
+Usa la feature activa que determine Spec Kit. Si existe `.specify/feature.json`,
+respeta su campo `feature_directory` como puntero operativo de esa feature.
+
+La ubicación física de `spec.md` debe ser la ruta resuelta por Spec Kit, no una
+ruta asumida por el prompt.
+
+Si el workflow de Spec Kit no puede determinar una feature activa válida, pausa
+la ejecución e informa el problema antes de crear o modificar archivos.
 
 ## OBJETIVO
 
