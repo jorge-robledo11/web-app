@@ -19,11 +19,11 @@ Revisa, como mínimo:
 
 - `spec.md`
 - `plan.md`
-- artefactos generados por el plan, si existen
+- Artefactos generados por el plan, si existen
 
 ## Salida esperada
 
-Genera o actualiza el archivo `reporte.md` dentro de la carpeta de la feature
+Genera o actualiza el archivo `report.md` dentro de la carpeta de la feature
 activa resuelta por Spec Kit.
 
 El reporte debe estar en español y organizado con estos niveles de severidad:
@@ -42,11 +42,11 @@ El reporte debe estar en español y organizado con estos niveles de severidad:
   - Archivo afectado
   - Problema
   - Recomendación de corrección
-- Si no hay problemas, genera igualmente `reporte.md` indicando que no se
+- Si no hay problemas, genera igualmente `report.md` indicando que no se
   detectaron inconsistencias.
 
 Al finalizar, indica:
 
-- Ruta del `reporte.md` generado o actualizado;
-- Cantidad de hallazgos por severidad;
+- Ruta del `report.md` generado o actualizado.
+- Cantidad de hallazgos por severidad.
 - Siguiente comando recomendado.

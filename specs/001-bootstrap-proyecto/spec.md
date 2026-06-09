@@ -30,7 +30,7 @@ estado de la base de datos.
    `{"status": "ok", "database": "ok"}`.
 2. **Given** el servidor FastAPI está corriendo pero PostgreSQL no responde,
    **When** se hace `GET /health`, **Then** retorna `503 Service Unavailable` con
-   `{"status": "error", "database": "error"}`.
+   `{"status": "error", "database": "unavailable", "detail": "timeout after 2s"}`.
 
 ---
 
@@ -163,8 +163,9 @@ y `uv run mypy --strict app/modules/` y verificar que todos terminan sin errores
   asociada.
 - **Dashboard Demo**: Estructura de página con datos hardcodeados (métricas,
   accesos rápidos). No persiste entidades; es puramente presentacional.
-- **Migración Baseline**: Primera migración Alembic que establece el estado
-  inicial de la base de datos. Puede ser vacía (solo crea `alembic_version`).
+- **Migración Baseline**: Primera migración Alembic que instala la extensión
+  `pgcrypto` mediante `CREATE EXTENSION IF NOT EXISTS pgcrypto` para dejar
+  disponible `gen_random_uuid()` a los módulos futuros.
 
 ## Success Criteria
 
@@ -178,8 +179,9 @@ y `uv run mypy --strict app/modules/` y verificar que todos terminan sin errores
   disponible.
 - **SC-004**: `GET /` retorna HTML completo con sidebar, navbar y 3 tarjetas de
   métrica.
-- **SC-005**: La sidebar colapsa correctamente al reducir el viewport por debajo
-  de 1024px y se expande al superarlo.
+- **SC-005**: La sidebar colapsa a overlay por debajo de 1024px y se oculta
+  completamente con toggle hamburguesa por debajo de 768px, expandiéndose
+  correctamente al superar cada breakpoint.
 - **SC-006**: `uv run alembic upgrade head` aplica la baseline contra PostgreSQL
   local sin errores.
 - **SC-007**: `uv run ruff check .` termina con 0 errores y 0 warnings.

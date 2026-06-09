@@ -149,12 +149,12 @@ endpoints viven en `tests/` en la raíz del repositorio.
 11. `app/templates/components/_*.html` (8 componentes)
 12. `app/templates/base.html`
 13. `app/templates/dashboard.html`
-14. `app/main.py` (lifespan + `/health` + `/`)
-15. `app/__init__.py` + `app/modules/__init__.py`
+14. `app/__init__.py` + `app/modules/__init__.py`
+15. `app/main.py` (app FastAPI + lifespan sin handlers de endpoints)
 16. `tests/conftest.py` + `tests/test_health.py` (Red)
-17. Implementar `GET /health` (Green)
+17. Implementar `GET /health` en `main.py` (Green)
 18. `tests/test_dashboard.py` (Red)
-19. Implementar `GET /` (Green)
+19. Implementar `GET /` en `main.py` (Green)
 20. `ruff check .` + `ruff format --check .` + `mypy --strict app/modules/`
 21. Refactor final si es necesario
 
