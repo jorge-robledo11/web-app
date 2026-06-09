@@ -183,5 +183,4 @@ Dependencias esperadas:
 - No implementar código de producción sin pruebas asociadas.
 - No crear módulos de dominio en esta spec.
 - Usa la ruta de feature resuelta por Spec Kit.
-- Si existe `.specify/feature.json`, respeta su `feature_directory`.
 - No crees specs manualmente en rutas alternativas.
