@@ -1,55 +1,26 @@
 ---
 name: 001-bootstrap-proyecto-plan
-description: Prompt fuente para generar el plan técnico de la spec 001-bootstrap-proyecto.
+description: Genera el plan técnico de la spec 001-bootstrap-proyecto.
 ---
 
 /speckit.plan
 
-Genera el `plan.md` de la spec `001-bootstrap-proyecto`.
+Genera el `plan.md` para la feature activa `001-bootstrap-proyecto` usando el
+workflow canónico de Spec Kit.
 
-No asumas una ruta fija para la spec; usa la ruta activa que resuelvan los
-comandos de Spec Kit.
+## Contratos
 
-## Instrucciones
+Si el plan genera archivos dentro de `contracts/*.yaml`, esos archivos DEBEN
+contener YAML válido y parseable.
 
-- Lee `.specify/memory/constitution.md`.
-- Lee `AGENTS.md`.
-- Lee `spec.md` de la feature actual.
-- Lee la sección `Clarificaciones` de `spec.md`, si existe.
-- Respeta las instrucciones aplicables en `.opencode/instructions/`.
-- No implementes código.
-- No modifiques `tasks.md`.
-- Mantén todo el contenido en español.
-- No uses Supabase.
-- No uses `.yml`; usa siempre `.yaml`.
-- Si hay conflicto, prevalece la constitución.
+No escribas Markdown, texto narrativo libre ni bloques de código dentro de
+archivos `.yaml`.
 
-## Modo interactivo
+La estructura de cada contrato debe ser consistente, explícita y adecuada al tipo
+de contrato generado por Spec Kit.
 
-Haz preguntas solo si falta una decisión necesaria para crear el plan.
+Si el contenido necesita explicación narrativa, contexto o notas de diseño, debe
+ir en `plan.md`, `research.md` o `quickstart.md`, no en `contracts/*.yaml`.
 
-Si preguntas, sigue el modo interactivo definido en la constitución:
-
-- una sola pregunta a la vez;
-- opciones concretas;
-- una opción marcada como `← Recomendado`;
-- resumen final de decisiones.
-
-No preguntes por decisiones ya resueltas en la spec o en las clarificaciones.
-
-## Salida esperada
-
-Actualiza `plan.md` en la carpeta de la feature actual resuelta por Spec Kit.
-
-El plan debe quedar listo para continuar con:
-
-```text
-/speckit.analyze
-```
-
-Al terminar, indica:
-
-- ruta del `plan.md`;
-- si hubo preguntas;
-- si hubo desviaciones en `Complexity Tracking`;
-- siguiente comando sugerido.
+Antes de finalizar, verifica que cada archivo `contracts/*.yaml` pueda abrirse
+como YAML válido sin errores de sintaxis.

@@ -1,6 +1,7 @@
 <!-- SPECKIT START -->
-Para obtener contexto adicional sobre tecnologías, estructura del proyecto,
-comandos de shell y otra información importante, lee el plan vigente.
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+at specs/001-bootstrap-proyecto/plan.md
 <!-- SPECKIT END -->
 
 # Instrucciones — Proyecto Realtor
