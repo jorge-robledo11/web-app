@@ -7,9 +7,6 @@ description: Prompt fuente para generar el plan técnico de la spec 001-bootstra
 
 Genera el `plan.md` de la spec `001-bootstrap-proyecto`.
 
-Usa la feature actual resuelta por Spec Kit. Si existe `.specify/feature.json`,
-respeta su `feature_directory`.
-
 No asumas una ruta fija para la spec; usa la ruta activa que resuelvan los
 comandos de Spec Kit.
 

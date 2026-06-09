@@ -9,9 +9,6 @@ description: >
 
 Revisa la spec `001-bootstrap-proyecto`.
 
-Usa la feature actual resuelta por Spec Kit. Si existe `.specify/feature.json`,
-respeta su `feature_directory`. No asumas una ruta fija para `spec.md`.
-
 Identifica ambigüedades, decisiones implícitas o gaps que puedan aflorar durante
 el plan o la implementación.
 

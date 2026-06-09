@@ -120,10 +120,6 @@ esos comandos.
 Cada `spec.md` aprobado es la fuente de verdad funcional de su feature, siempre
 que no contradiga esta constitución.
 
-La ubicación física de cada spec es una convención operativa resuelta por Spec
-Kit. Si existe `.specify/feature.json`, su campo `feature_directory` actúa como
-puntero de la feature activa y debe respetarse.
-
 La ruta de specs no es una decisión de arquitectura de aplicación. Si una versión
 futura de Spec Kit cambia la ruta generada por sus comandos, deben actualizarse
 solo los documentos derivados o el puntero operativo correspondiente, sin

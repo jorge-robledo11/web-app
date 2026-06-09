@@ -79,9 +79,6 @@ NO implementar nada que no esté descrito en un `spec.md` aprobado.
 Las specs se crean exclusivamente con los comandos de Spec Kit. No crear, mover
 ni duplicar specs manualmente fuera de la ruta que resuelvan esos comandos.
 
-Si existe `.specify/feature.json`, respetar su `feature_directory` como puntero
-de la feature activa.
-
 La ruta física de specs es una convención operativa de Spec Kit, no una regla de
 arquitectura de aplicación.
 
