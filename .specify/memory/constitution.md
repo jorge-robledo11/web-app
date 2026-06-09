@@ -1,25 +1,23 @@
 <!--
 Informe de impacto de sincronización
-- Cambio de versión: plantilla inicial -> 1.0.0
+- Cambio de versión: 1.0.0 -> 1.1.0
 - Secciones agregadas:
-  - I. Idioma
-  - II. Stack obligatorio inmutable
-  - III. Prohibiciones absolutas
-  - IV. Arquitectura: Vertical Slice
-  - V. Spec-Driven Development
-  - VI. Flujo Spec Kit obligatorio
-  - VII. Test-Driven Development
-  - VIII. Calidad y validación
-  - IX. Base de datos
-  - X. Async-First
-  - XI. Frontend y sistema visual
-  - XII. Estructura obligatoria del repositorio
-  - XIII. Contratos de dominio
-  - XIV. Complexity Tracking
-  - XV. Jerarquía de autoridad
-  - XVI. Gobernanza
+  - VII. Modo interactivo de preguntas
+  - XVIII. Historial de versiones
 - Secciones modificadas:
-  - Ninguna
+  - VI. Flujo Spec Kit obligatorio
+  - XVII. Gobernanza
+- Secciones renumeradas:
+  - VII. Test-Driven Development -> VIII. Test-Driven Development
+  - VIII. Calidad y validación -> IX. Calidad y validación
+  - IX. Base de datos -> X. Base de datos
+  - X. Async-First -> XI. Async-First
+  - XI. Frontend y sistema visual -> XII. Frontend y sistema visual
+  - XII. Estructura obligatoria del repositorio -> XIII. Estructura obligatoria del repositorio
+  - XIII. Contratos de dominio -> XIV. Contratos de dominio
+  - XIV. Complexity Tracking -> XV. Complexity Tracking
+  - XV. Jerarquía de autoridad -> XVI. Jerarquía de autoridad
+  - XVI. Gobernanza -> XVII. Gobernanza
 - Secciones eliminadas:
   - Ninguna
 - Artefactos relacionados a revisar:
@@ -28,9 +26,9 @@ Informe de impacto de sincronización
   - .opencode/commands/*.md
   - .specify/templates/*.md
 - Pendientes de seguimiento:
-  - Generar o actualizar AGENTS.md desde esta constitución.
-  - Verificar que las instrucciones por área no contradigan esta constitución.
-  - Verificar que los comandos de Spec Kit respeten el flujo obligatorio.
+  - Actualizar AGENTS.md con el resumen operativo del modo interactivo.
+  - Verificar que speckit.specify y speckit.clarify usen una pregunta a la vez.
+  - Verificar que los prompts custom de clarificación respeten este protocolo.
 -->
 
 # Constitución del Proyecto Realtor
@@ -51,44 +49,44 @@ El proyecto es un monolito Python con los siguientes componentes fijos. Ningún
 componente del stack puede ser reemplazado sin una enmienda formal a esta
 constitución.
 
-| Componente | Herramienta |
-|---|---|
-| Runtime | Python 3.13+, gestionado con `uv` |
-| Empaquetado | `pyproject.toml` + `uv.lock` |
-| HTTP | FastAPI |
-| Vistas | Jinja2 server-rendered + HTMX |
-| ORM | SQLAlchemy 2.x async con `Mapped[...]`, `mapped_column`, `select()` y `AsyncSession` |
-| Validación | Pydantic v2 con `model_config = ConfigDict(frozen=True)` |
-| Base de datos | PostgreSQL vía asyncpg, local con Docker o Docker Compose |
-| Migraciones | Alembic como única herramienta permitida |
-| Tests | pytest + pytest-asyncio + httpx.AsyncClient |
-| Integración | Testcontainers cuando se requiera infraestructura real |
-| Calidad estática | Ruff + mypy `--strict` mínimo en `app/modules/` |
-| Iconografía | SVG outline de Lucide vendoreados en `app/static/icons/` |
+| Componente       | Herramienta                                                                          |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| Runtime          | Python 3.13.13, gestionado con `uv`                                                    |
+| Empaquetado      | `pyproject.toml` + `uv.lock`                                                         |
+| HTTP             | FastAPI                                                                              |
+| Vistas           | Jinja2 server-rendered + HTMX                                                        |
+| ORM              | SQLAlchemy 2.x async con `Mapped[...]`, `mapped_column`, `select()` y `AsyncSession` |
+| Validación       | Pydantic v2 con `model_config = ConfigDict(frozen=True)`                             |
+| Base de datos    | PostgreSQL vía asyncpg, local con Docker o Docker Compose                            |
+| Migraciones      | Alembic como única herramienta permitida                                             |
+| Tests            | pytest + pytest-asyncio + httpx.AsyncClient                                          |
+| Integración      | Testcontainers cuando se requiera infraestructura real                               |
+| Calidad estática | Ruff + mypy `--strict` mínimo en `app/modules/`                                      |
+| Iconografía      | SVG outline de Lucide vendoreados en `app/static/icons/`                             |
 
 ## III. Prohibiciones absolutas
 
 Las siguientes herramientas, prácticas y patrones están PROHIBIDOS en todo el
 proyecto:
 
-- `pip`, `poetry`, `conda`, `pipenv`, `requirements.txt`, `setup.py`.
-- Bootstrap, Tailwind, Bulma, Foundation o cualquier framework CSS.
-- Cargar HTMX o cualquier JS de terceros desde CDN en runtime.
-- Iconos como webfont, Bootstrap Icons, Font Awesome, Material Icons font,
+* `pip`, `poetry`, `conda`, `pipenv`, `requirements.txt`, `setup.py`.
+* Bootstrap, Tailwind, Bulma, Foundation o cualquier framework CSS.
+* Cargar HTMX o cualquier JS de terceros desde CDN en runtime.
+* Iconos como webfont, Bootstrap Icons, Font Awesome, Material Icons font,
   emojis o caracteres Unicode como íconos funcionales.
-- Estilo legacy de SQLAlchemy: `Column(...)` en clase, `Query` o sesiones
+* Estilo legacy de SQLAlchemy: `Column(...)` en clase, `Query` o sesiones
   síncronas.
-- Funciones `def` síncronas en `routes.py`, `service.py` o `repository.py`
+* Funciones `def` síncronas en `routes.py`, `service.py` o `repository.py`
   cuando realicen I/O.
-- Carpetas globales por capa técnica: `controllers/`, `services/`,
+* Carpetas globales por capa técnica: `controllers/`, `services/`,
   `repositories/`, `handlers/`, `managers/` fuera de un módulo.
-- Exponer entidades SQLAlchemy como respuesta HTTP.
-- Retornar `dict` libres en errores.
-- Strings mágicos para estados de dominio.
-- Usar Supabase en producción o desarrollo.
-- Usar extensión `.yml` para archivos YAML; usar siempre `.yaml`.
-- Separar frontend y backend en aplicaciones o repositorios independientes.
-- Crear microservicios sin una enmienda formal a esta constitución.
+* Exponer entidades SQLAlchemy como respuesta HTTP.
+* Retornar `dict` libres en errores.
+* Strings mágicos para estados de dominio.
+* Usar Supabase en producción o desarrollo.
+* Usar extensión `.yml` para archivos YAML; usar siempre `.yaml`.
+* Separar frontend y backend en aplicaciones o repositorios independientes.
+* Crear microservicios sin una enmienda formal a esta constitución.
 
 ## IV. Arquitectura: Vertical Slice
 
@@ -97,15 +95,15 @@ propio módulo bajo `app/modules/<feature>/`.
 
 Cada módulo DEBE contener estos artefactos:
 
-- `routes.py` — capa delgada: parsea entrada, llama al servicio y retorna
+* `routes.py` — capa delgada: parsea entrada, llama al servicio y retorna
   respuesta.
-- `schemas.py` — DTOs Pydantic v2 con `frozen=True`.
-- `models.py` — entidades SQLAlchemy 2.x async con `Mapped[...]` y
+* `schemas.py` — DTOs Pydantic v2 con `frozen=True`.
+* `models.py` — entidades SQLAlchemy 2.x async con `Mapped[...]` y
   `mapped_column`.
-- `repository.py` — solo acceso a datos.
-- `service.py` — lógica de negocio del módulo.
-- `templates/` — plantillas Jinja2 del módulo.
-- `tests/` — pruebas unitarias, integración o endpoint del módulo.
+* `repository.py` — solo acceso a datos.
+* `service.py` — lógica de negocio del módulo.
+* `templates/` — plantillas Jinja2 del módulo.
+* `tests/` — pruebas unitarias, integración o endpoint del módulo.
 
 La lógica de negocio reside en `service.py`. `routes.py` y `repository.py` son
 capas de entrada e infraestructura sin reglas de negocio. La lógica compartida
@@ -162,14 +160,137 @@ fase anterior.
 
 Reglas del flujo:
 
-- `specify` crea o actualiza `spec.md`.
-- `clarify` resuelve ambigüedades antes del plan.
-- `plan` crea `plan.md` con decisiones técnicas y dependencias.
-- `analyze` valida consistencia entre spec, plan y restricciones.
-- `tasks` crea `tasks.md` con tareas pequeñas, ordenadas y verificables.
-- `implement` modifica código real solo después de existir spec, plan y tasks.
+* `specify` crea o actualiza `spec.md`.
+* `clarify` resuelve ambigüedades antes del plan.
+* `plan` crea `plan.md` con decisiones técnicas y dependencias.
+* `analyze` valida consistencia entre spec, plan y restricciones.
+* `tasks` crea `tasks.md` con tareas pequeñas, ordenadas y verificables.
+* `implement` modifica código real solo después de existir spec, plan y tasks.
 
-## VII. Test-Driven Development
+Los comandos `speckit.specify` y `speckit.clarify` deben operar en modo
+interactivo cuando existan decisiones abiertas. El comando `speckit.plan` puede
+operar en modo interactivo solo cuando detecte decisiones estructurales no
+resueltas que afecten la implementación o specs futuras.
+
+## VII. Modo interactivo de preguntas
+
+Cuando un comando o prompt opere en modo interactivo, DEBE hacer una sola
+pregunta a la vez y esperar respuesta antes de continuar. Está prohibido lanzar
+una lista completa de preguntas cuando la decisión requiera interacción guiada.
+
+### 1. Cuándo usar modo interactivo
+
+El modo interactivo debe usarse cuando existan:
+
+- Ambigüedades funcionales en una spec.
+- Decisiones técnicas que afecten el plan o la implementación.
+- Criterios de aceptación incompletos.
+- Gaps que puedan generar retrabajo durante `plan`, `tasks` o `implement`.
+- Decisiones con más de una opción razonable y efectos distintos en código,
+  pruebas, infraestructura o experiencia de usuario.
+
+### 2. Formato de pregunta con opciones
+
+Cada pregunta con opciones debe usar exactamente este formato:
+
+```text
+Pregunta [N de TOTAL] — [tema corto]
+─────────────────────────────────────
+[Enunciado claro de la pregunta]
+
+Por qué importa: [1 línea explicando el impacto de decidir mal]
+
+A) [opción concreta con valor específico]
+B) [opción concreta con valor específico] ← Recomendado
+C) [opción concreta con valor específico]
+D) Otro — escribe tu respuesta
+
+> Responde con la letra (A, B, C o D) o escribe tu respuesta libre.
+```
+
+Reglas de las opciones:
+
+- Cada opción debe ser concreta, verificable y accionable.
+- Las opciones deben ser mutuamente excluyentes.
+- Cada opción debe llevar a un resultado distinto en spec, plan, tareas,
+  implementación, pruebas o configuración.
+- La opción marcada con `← Recomendado` debe ser la más alineada con FastAPI,
+  PostgreSQL local, SQLAlchemy async, Docker o Docker Compose, `uv`,
+  Python 3.13+ y esta constitución.
+- La opción `D) Otro` siempre debe estar presente cuando existan alternativas
+  personalizadas razonables.
+
+Ejemplo correcto:
+
+```text
+A) Colapsar sidebar por debajo de 768px.
+B) Colapsar sidebar por debajo de 1024px. ← Recomendado
+C) Colapsar sidebar por debajo de 1280px.
+D) Otro — escribe tu respuesta
+```
+
+Ejemplo prohibido:
+
+```text
+A) Usar un breakpoint pequeño.
+B) Usar un breakpoint estándar.
+C) Usar un breakpoint grande.
+```
+
+### 3. Formato de pregunta Sí/No
+
+Cuando la decisión sea binaria, debe usarse este formato:
+
+```text
+Pregunta [N de TOTAL] — [tema corto]
+─────────────────────────────────────
+[Enunciado de la pregunta]
+
+Por qué importa: [1 línea]
+
+S) Sí ← Recomendado
+N) No
+
+> Responde S o N.
+```
+
+La opción recomendada puede ser `S` o `N`, según la opción más consistente con
+esta constitución y con la spec vigente.
+
+### 4. Reglas de respuesta
+
+Si el usuario responde con una letra (`A`, `B`, `C`, `S` o `N`), el agente debe:
+
+1. Confirmar la elección en una línea con el valor concreto elegido.
+2. Registrar la decisión para el resumen final.
+3. Pasar inmediatamente a la siguiente pregunta.
+
+Si el usuario responde `D` o escribe texto libre, el agente debe:
+
+1. Aceptar la respuesta.
+2. Confirmarla en una línea.
+3. Registrar la decisión para el resumen final.
+4. Pasar a la siguiente pregunta.
+
+El agente no debe debatir la elección salvo que contradiga la constitución. Si
+la respuesta contradice la constitución, debe pausar, explicar el conflicto y
+pedir una alternativa válida.
+
+### 5. Cierre del modo interactivo
+
+Después de la última pregunta, el agente debe mostrar un resumen de decisiones
+tomadas.
+
+Según el comando en ejecución, debe actualizar el artefacto correspondiente:
+
+- `speckit.specify`: integrar las decisiones en `spec.md`.
+- `speckit.clarify`: añadir o actualizar la sección `Clarificaciones` en
+  `spec.md`.
+- `speckit.plan`: integrar las decisiones en `plan.md`.
+- Prompts custom de clarificación: seguir el comportamiento declarado en el
+  prompt, siempre que no contradiga esta constitución.
+
+## VIII. Test-Driven Development
 
 El ciclo Red-Green-Refactor es obligatorio:
 
@@ -179,13 +300,13 @@ El ciclo Red-Green-Refactor es obligatorio:
 
 Reglas complementarias:
 
-- No se escribe código de producción sin una prueba asociada.
-- Toda regla de negocio debe estar cubierta por pruebas.
-- Toda corrección de bug comienza con una prueba que reproduzca el fallo.
-- Refactorizar solo con la suite de tests en verde.
-- No se elimina ni debilita una prueba para hacer pasar la suite.
+* No se escribe código de producción sin una prueba asociada.
+* Toda regla de negocio debe estar cubierta por pruebas.
+* Toda corrección de bug comienza con una prueba que reproduzca el fallo.
+* Refactorizar solo con la suite de tests en verde.
+* No se elimina ni debilita una prueba para hacer pasar la suite.
 
-## VIII. Calidad y validación
+## IX. Calidad y validación
 
 Toda implementación debe poder validarse localmente con comandos reproducibles.
 
@@ -201,58 +322,58 @@ uv run mypy --strict app/modules/
 
 Reglas de testing:
 
-- Las pruebas unitarias usan pytest.
-- Las pruebas asíncronas usan pytest-asyncio.
-- Las pruebas HTTP usan httpx.AsyncClient.
-- Las pruebas de integración que requieran PostgreSQL usan Testcontainers.
-- La base de datos de pruebas debe estar aislada.
-- Las pruebas deben ser deterministas y enfocadas en comportamiento observable.
+* Las pruebas unitarias usan pytest.
+* Las pruebas asíncronas usan pytest-asyncio.
+* Las pruebas HTTP usan httpx.AsyncClient.
+* Las pruebas de integración que requieran PostgreSQL usan Testcontainers.
+* La base de datos de pruebas debe estar aislada.
+* Las pruebas deben ser deterministas y enfocadas en comportamiento observable.
 
-## IX. Base de datos
+## X. Base de datos
 
-- PostgreSQL se ejecuta localmente con Docker o Docker Compose.
-- La base de datos de producción no usará Supabase.
-- Las migraciones se gestionan exclusivamente con Alembic.
-- Las sesiones de base de datos se manejan mediante dependencias controladas con
+* PostgreSQL se ejecuta localmente con Docker o Docker Compose.
+* La base de datos de producción no usará Supabase.
+* Las migraciones se gestionan exclusivamente con Alembic.
+* Las sesiones de base de datos se manejan mediante dependencias controladas con
   inyección de `AsyncSession`.
-- `.env` nunca debe versionarse con secretos reales.
-- `.env.example` debe existir como plantilla de configuración.
-- La infraestructura local debe usar archivos `.yaml`, nunca `.yml`.
+* `.env` nunca debe versionarse con secretos reales.
+* `.env.example` debe existir como plantilla de configuración.
+* La infraestructura local debe usar archivos `.yaml`, nunca `.yml`.
 
-## X. Async-First
+## XI. Async-First
 
 Todo I/O del sistema debe ser asíncrono cuando forme parte del flujo web,
 persistencia o integración externa.
 
 Esto incluye:
 
-- Base de datos.
-- HTTP saliente.
-- Colas.
-- Storage remoto.
-- Servicios externos.
-- Operaciones de infraestructura.
+* Base de datos.
+* HTTP saliente.
+* Colas.
+* Storage remoto.
+* Servicios externos.
+* Operaciones de infraestructura.
 
 Solo se permite `def` síncrono para puro cómputo en memoria, mapeos, cálculos o
 validaciones sin I/O.
 
-## XI. Frontend y sistema visual
+## XII. Frontend y sistema visual
 
 La interfaz será server-rendered con Jinja2 y mejorada progresivamente con HTMX.
 No se debe convertir la aplicación en una SPA.
 
 Reglas obligatorias:
 
-- HTMX vive vendoreado en `app/static/vendor/htmx.min.js`.
-- El CSS propio vive en `app/static/css/app.css`.
-- Los iconos SVG outline viven en `app/static/icons/`.
-- La librería estándar de iconografía es Lucide.
-- Las plantillas compartidas viven en `app/templates/`.
-- Las plantillas específicas viven dentro del módulo correspondiente.
-- Los componentes compartidos viven en `app/templates/components/`.
-- Las macros compartidas viven en `app/templates/macros/`.
+* HTMX vive vendoreado en `app/static/vendor/htmx.min.js`.
+* El CSS propio vive en `app/static/css/app.css`.
+* Los iconos SVG outline viven en `app/static/icons/`.
+* La librería estándar de iconografía es Lucide.
+* Las plantillas compartidas viven en `app/templates/`.
+* Las plantillas específicas viven dentro del módulo correspondiente.
+* Los componentes compartidos viven en `app/templates/components/`.
+* Las macros compartidas viven en `app/templates/macros/`.
 
-## XII. Estructura obligatoria del repositorio
+## XIII. Estructura obligatoria del repositorio
 
 La estructura base del proyecto debe respetar esta organización:
 
@@ -297,16 +418,16 @@ docker-compose.yaml
 
 Cualquier desviación debe justificarse en `plan.md`.
 
-## XIII. Contratos de dominio
+## XIV. Contratos de dominio
 
-- Las entidades SQLAlchemy no se exponen como respuesta HTTP.
-- Las respuestas HTTP se mapean a DTOs Pydantic.
-- Todos los DTOs Pydantic deben usar `model_config = ConfigDict(frozen=True)`.
-- Los estados de dominio se modelan con `Enum` o tipos explícitos.
-- Los errores usan `HTTPException` o modelos de error tipados.
-- Los límites del sistema validan entradas antes de ejecutar lógica de negocio.
+* Las entidades SQLAlchemy no se exponen como respuesta HTTP.
+* Las respuestas HTTP se mapean a DTOs Pydantic.
+* Todos los DTOs Pydantic deben usar `model_config = ConfigDict(frozen=True)`.
+* Los estados de dominio se modelan con `Enum` o tipos explícitos.
+* Los errores usan `HTTPException` o modelos de error tipados.
+* Los límites del sistema validan entradas antes de ejecutar lógica de negocio.
 
-## XIV. Complexity Tracking
+## XV. Complexity Tracking
 
 Toda desviación del stack, arquitectura, estructura, flujo obligatorio o reglas
 de esta constitución debe registrarse explícitamente en la sección
@@ -314,16 +435,16 @@ de esta constitución debe registrarse explícitamente en la sección
 
 Debe incluir:
 
-- Qué regla se desvía.
-- Por qué la desviación es necesaria.
-- Alternativas consideradas.
-- Riesgos introducidos.
-- Cómo se mitigarán esos riesgos.
-- Cómo se validará que la desviación no rompe el sistema.
+* Qué regla se desvía.
+* Por qué la desviación es necesaria.
+* Alternativas consideradas.
+* Riesgos introducidos.
+* Cómo se mitigarán esos riesgos.
+* Cómo se validará que la desviación no rompe el sistema.
 
 En ausencia de justificación, la desviación debe rechazarse.
 
-## XV. Jerarquía de autoridad
+## XVI. Jerarquía de autoridad
 
 Durante la implementación de una spec, aplica el siguiente orden de prioridad
 ante cualquier conflicto:
@@ -335,21 +456,28 @@ constitución > spec > AGENTS.md > instructions > comando
 Si hay conflicto entre capas, se debe pausar, advertir el conflicto
 explícitamente y seguir la capa de mayor autoridad.
 
-## XVI. Gobernanza
+## XVII. Gobernanza
 
-- Esta constitución es la fuente de verdad suprema del proyecto. Ninguna
+* Esta constitución es la fuente de verdad suprema del proyecto. Ninguna
   decisión, spec o implementación puede contradecirla.
-- Toda modificación a esta constitución requiere una enmienda documentada con
+* Toda modificación a esta constitución requiere una enmienda documentada con
   justificación, impacto evaluado y plan de migración si aplica.
-- Las enmiendas se versionan siguiendo el esquema semántico
+* Las enmiendas se versionan siguiendo el esquema semántico
   `MAJOR.MINOR.PATCH`.
-- **MAJOR**: cambios incompatibles en stack, arquitectura, flujo obligatorio o
+* **MAJOR**: cambios incompatibles en stack, arquitectura, flujo obligatorio o
   principios.
-- **MINOR**: nuevas secciones, nuevos principios o ampliaciones materiales.
-- **PATCH**: correcciones de redacción, aclaraciones o cambios no semánticos.
-- El cumplimiento de esta constitución se verifica en cada code review y en cada
+* **MINOR**: nuevas secciones, nuevos principios o ampliaciones materiales.
+* **PATCH**: correcciones de redacción, aclaraciones o cambios no semánticos.
+* El cumplimiento de esta constitución se verifica en cada code review y en cada
   etapa del flujo Spec-Driven.
-- La complejidad introducida debe justificarse explícitamente. Ante la duda,
+* La complejidad introducida debe justificarse explícitamente. Ante la duda,
   elegir la opción más simple.
 
-**Versión**: 1.0.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-08
+## XVIII. Historial de versiones
+
+* **v1.0.0** — Versión inicial de la constitución del proyecto Realtor.
+* **v1.1.0** — Agregado el protocolo de modo interactivo de preguntas para
+  `speckit.specify`, `speckit.clarify`, `speckit.plan` y prompts custom de
+  clarificación.
+
+**Versión**: 1.1.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-08
