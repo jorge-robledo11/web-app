@@ -87,9 +87,10 @@ y `uv run mypy --strict app/modules/` y verificar que todos terminan sin errores
 - ¿Qué sucede si el archivo `.env` no existe al iniciar? La aplicación debe
   arrancar usando defaults razonables de `pydantic-settings` y advertir en logs.
 - ¿Qué sucede si PostgreSQL no está disponible al iniciar? La aplicación debe
-  arrancar, pero `GET /health` debe reportar `database: "error"` con `503`.
+  arrancar, pero `GET /health` debe reportar `database: "unavailable"` con `503`
+  y detalle del fallo.
 - ¿Qué sucede si `alembic upgrade head` se ejecuta sin migraciones? No debe
-  fallar; la migración baseline (vacía o inicial) debe existir.
+  fallar; la migración baseline que instala `pgcrypto` debe existir.
 - ¿Qué sucede si el dashboard se renderiza con HTMX deshabilitado? Debe
   mostrarse igual; el layout base no depende de HTMX para la estructura inicial.
 - ¿Qué sucede si el servidor se detiene durante `SELECT 1` en el health check?
@@ -133,7 +134,8 @@ y `uv run mypy --strict app/modules/` y verificar que todos terminan sin errores
   `_sidebar.html`, `_navbar.html`, `_card_propiedad.html`,
   `_tarjeta_metrica.html`, `_accesos_rapidos.html`, `_badge_estado.html`,
   `_form_field.html`, `_alerta.html`.
-- **FR-015**: La sidebar DEBE colapsar a menú toggleable por debajo de 1024px.
+- **FR-015**: La sidebar DEBE colapsar a overlay por debajo de 1024px y ocultarse
+  completamente con toggle hamburguesa por debajo de 768px.
 - **FR-016**: `ruff` DEBE configurarse en `pyproject.toml` con target `py313`,
   `line-length = 88` y reglas `E`, `F`, `I`, `B`, `UP`, `ASYNC`.
 - **FR-017**: `mypy` DEBE configurarse en modo estricto como mínimo para

@@ -48,7 +48,7 @@ Archivo: `alembic/versions/001_bootstrap_extensions.py`
 ```python
 """bootstrap: instala extensión pgcrypto
 
-Revision ID: 001
+Revision ID: 001_bootstrap
 Revises: None
 Create Date: 2026-06-08
 """
