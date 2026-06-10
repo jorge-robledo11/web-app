@@ -1,0 +1,30 @@
+{# Campo de formulario: label + input + error inline + helper text.
+
+  Recibe:
+    - label: etiqueta del campo
+    - name: nombre del input
+    - type: tipo de input (text, email, number, etc.)
+    - value: valor actual (opcional)
+    - placeholder: placeholder (opcional)
+    - error: mensaje de error (opcional)
+    - helper: texto de ayuda (opcional)
+    - required: bool (opcional)
+#}
+<div class="form-field">
+  <label class="form-field__label" for="{{ name }}">{{ label }}</label>
+  <input
+    class="form-field__input {% if error %}form-field__input--error{% endif %}"
+    id="{{ name }}"
+    name="{{ name }}"
+    type="{{ type|default("text") }}"
+    value="{{ value|default("") }}"
+    placeholder="{{ placeholder|default("") }}"
+    {% if required %}required{% endif %}
+  />
+  {% if error %}
+  <span class="form-field__error">{{ error }}</span>
+  {% endif %}
+  {% if helper %}
+  <span class="form-field__helper">{{ helper }}</span>
+  {% endif %}
+</div>

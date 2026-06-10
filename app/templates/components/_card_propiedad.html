@@ -1,0 +1,30 @@
+{# Card de propiedad: vista compacta de una propiedad.
+
+  Recibe:
+    - titulo: dirección o nombre de la propiedad
+    - detalle: texto secundario (ej. tipo, ubicación)
+    - icono: nombre del icono Lucide
+    - badge: diccionario opcional { texto: str, variante: str }
+    - accion_url: URL para la acción principal
+#}
+{% from "macros/icons.html" import icon %}
+
+<div class="card-propiedad">
+  <div class="card-propiedad__icono">
+    {{ icon(icono|default("building-2"), size=24) }}
+  </div>
+  <div class="card-propiedad__info">
+    <div class="card-propiedad__titulo">{{ titulo }}</div>
+    <div class="card-propiedad__detalle">{{ detalle }}</div>
+  </div>
+  {% if badge %}
+  <div>
+    <span class="badge-estado badge-estado--{{ badge.variante }}">{{ badge.texto }}</span>
+  </div>
+  {% endif %}
+  <div class="card-propiedad__acciones">
+    <a href="{{ accion_url }}" class="acceso-rapido" style="padding:{{ 'var(--space-2)' }} {{ 'var(--space-3)' }}">
+      Ver detalles
+    </a>
+  </div>
+</div>

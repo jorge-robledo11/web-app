@@ -1,0 +1,24 @@
+{# Tarjeta de métrica: KPI con número, label, icono y tendencia.
+
+  Recibe:
+    - label: texto descriptivo
+    - valor: número de la métrica
+    - icono: nombre del icono Lucide
+    - tendencia: diccionario opcional { direccion: "up"|"down", texto: str }
+#}
+{% from "macros/icons.html" import icon %}
+
+<div class="tarjeta-metrica">
+  <div class="tarjeta-metrica__header">
+    <div class="tarjeta-metrica__icono">
+      {{ icon(icono, size=24) }}
+    </div>
+  </div>
+  <div class="tarjeta-metrica__valor">{{ "{:,}".format(valor) }}</div>
+  <div class="tarjeta-metrica__label">{{ label }}</div>
+  {% if tendencia %}
+  <div class="tarjeta-metrica__tendencia tarjeta-metrica__tendencia--{{ tendencia.direccion }}">
+    {{ tendencia.texto }}
+  </div>
+  {% endif %}
+</div>

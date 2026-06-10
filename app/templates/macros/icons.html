@@ -1,0 +1,7 @@
+{# Macro para renderizar iconos SVG Lucide inline. #}
+{% macro icon(nombre, size=24, class="") -%}
+{% set ruta = "icons/" ~ nombre ~ ".svg" -%}
+<span class="icon {{ class }}" style="width:{{ size }}px;height:{{ size }}px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
+{% include ruta %}
+</span>
+{%- endmacro %}

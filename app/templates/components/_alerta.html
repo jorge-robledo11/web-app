@@ -1,0 +1,27 @@
+{# Alerta: banner dismissible en 4 variantes.
+
+  Recibe:
+    - tipo: success | warning | danger | info
+    - mensaje: texto principal de la alerta
+    - dismissible: bool (opcional, default True)
+#}
+{% from "macros/icons.html" import icon %}
+
+{% set iconos = {
+    "success": "check-circle-2",
+    "warning": "alert-triangle",
+    "danger": "alert-circle",
+    "info": "info",
+} %}
+
+<div class="alerta alerta--{{ tipo }}" role="alert">
+  <span class="alerta__icono">
+    {{ icon(iconos.get(tipo, "info"), size=20) }}
+  </span>
+  <span class="alerta__mensaje">{{ mensaje }}</span>
+  {% if dismissible|default(True) %}
+  <button class="alerta__cerrar" onclick="this.parentElement.remove()" aria-label="Cerrar">
+    {{ icon("x", size=16) }}
+  </button>
+  {% endif %}
+</div>

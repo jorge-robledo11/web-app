@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Realtor{% endblock %} — Realtor</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script src="/static/vendor/htmx.min.js"></script>
+</head>
+<body>
+  <div class="layout">
+    {% include "components/_sidebar.html" %}
+
+    <main class="main">
+      {% include "components/_navbar.html" %}
+
+      <div id="flash-zone"></div>
+
+      <div class="content">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+</body>
+</html>

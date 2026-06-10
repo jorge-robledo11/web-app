@@ -1,0 +1,44 @@
+{# Sidebar: navegación lateral principal. #}
+{% from "macros/icons.html" import icon %}
+
+<button class="sidebar__toggle" onclick="document.querySelector('.sidebar').classList.toggle('sidebar--open')" aria-label="Toggle navigation">
+  {{ icon("menu", size=24) }}
+</button>
+
+<aside class="sidebar">
+  <div class="sidebar__brand">
+    {{ icon("layout-dashboard", size=24) }}
+    <span>Realtor</span>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a href="/" class="sidebar__item sidebar__item--active" aria-current="page">
+      {{ icon("layout-dashboard", size=20) }}
+      <span>Dashboard</span>
+    </a>
+    <a href="#" class="sidebar__item">
+      {{ icon("building-2", size=20) }}
+      <span>Propiedades</span>
+    </a>
+    <a href="#" class="sidebar__item">
+      {{ icon("users", size=20) }}
+      <span>Inquilinos</span>
+    </a>
+    <a href="#" class="sidebar__item">
+      {{ icon("file-text", size=20) }}
+      <span>Contratos</span>
+    </a>
+    <a href="#" class="sidebar__item">
+      {{ icon("wallet", size=20) }}
+      <span>Pagos</span>
+    </a>
+    <a href="#" class="sidebar__item">
+      {{ icon("wrench", size=20) }}
+      <span>Mantenimiento</span>
+    </a>
+    <a href="#" class="sidebar__item">
+      {{ icon("settings", size=20) }}
+      <span>Configuración</span>
+    </a>
+  </nav>
+</aside>

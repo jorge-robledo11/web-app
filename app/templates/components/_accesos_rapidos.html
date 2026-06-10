@@ -1,0 +1,21 @@
+{# Accesos rápidos: grid de atajos a acciones frecuentes.
+
+  Recibe:
+    - titulo: título de la sección
+    - accesos: lista de { icono: str, label: str, url: str }
+#}
+{% from "macros/icons.html" import icon %}
+
+<section class="accesos-rapidos">
+  <h3 class="accesos-rapidos__title">{{ titulo }}</h3>
+  <div class="accesos-rapidos__grid">
+    {% for acceso in accesos %}
+    <a href="{{ acceso.url }}" class="acceso-rapido">
+      <span class="acceso-rapido__icono">
+        {{ icon(acceso.icono, size=24) }}
+      </span>
+      <span>{{ acceso.label }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>

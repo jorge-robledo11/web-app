@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<section class="metricas">
+  {% for metrica in metricas %}
+    {% with label=metrica.label, valor=metrica.valor, icono=metrica.icono %}
+      {% include "components/_tarjeta_metrica.html" %}
+    {% endwith %}
+  {% endfor %}
+</section>
+
+{% with titulo="Accesos rápidos", accesos=[
+    {"icono": "building-2", "label": "Propiedades", "url": "#"},
+    {"icono": "users", "label": "Inquilinos", "url": "#"},
+    {"icono": "file-text", "label": "Contratos", "url": "#"},
+    {"icono": "wallet", "label": "Pagos", "url": "#"},
+] %}
+  {% include "components/_accesos_rapidos.html" %}
+{% endwith %}
+{% endblock %}
