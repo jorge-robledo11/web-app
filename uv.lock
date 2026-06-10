@@ -933,6 +933,12 @@ dev = [
     { name = "testcontainers" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = ">=1.14,<2.0" },
@@ -952,6 +958,12 @@ requires-dist = [
     { name = "testcontainers", marker = "extra == 'dev'", specifier = ">=4.0,<5.0" },
 ]
 provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8.4.2" },
+    { name = "ruff", specifier = ">=0.15.16" },
+]
 
 [[package]]
 name = "requests"

@@ -1,4 +1,7 @@
-.PHONY: setup dev db-up db-down db-reset db-migrate db-create-migration
+.PHONY: context setup dev db-up db-down db-reset db-migrate db-create-migration
+
+context:
+	@npx repomix@latest --output repomix-output.xml
 
 setup:
 	bash scripts/dev-setup.sh
