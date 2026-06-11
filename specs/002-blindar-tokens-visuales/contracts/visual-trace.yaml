@@ -1,0 +1,41 @@
+# Contrato del script check-visual-trace.sh
+# Este archivo define el comportamiento esperado del script de verificación visual.
+script:
+  name: check-visual-trace.sh
+  path: scripts/check-visual-trace.sh
+  description: Verifica que los cambios en archivos visuales tengan trazabilidad en tasks.md.
+  execution: manual
+
+behavior:
+  diff_base:
+    command: git diff main...HEAD --name-only
+    description: Cambios únicos de la feature desde la bifurcación de main.
+
+  protected_files:
+    - app/static/css/app.css
+    - app/templates/base.html
+    - app/templates/components/_*.html
+    - app/templates/macros/*.html
+    - app/static/icons/*.svg
+    - app/static/vendor/htmx.min.js
+    - .opencode/instructions/frontend.instructions.md
+
+  marker_search:
+    source: tasks.md
+    pattern: '^- \[[ X]\] .*\[visual\]'
+    description: Solo en líneas de tarea, no en comentarios ni notas.
+
+exit_codes:
+  0:
+    condition: Sin archivos protegidos modificados, o todos los modificados tienen tareas [visual] en tasks.md.
+  1:
+    condition: Hay archivos protegidos modificados sin tareas [visual] en tasks.md, o tasks.md no existe.
+
+messages:
+  ok: "Verificación visual completada: todos los cambios tienen trazabilidad."
+  fail_no_tasks: "tasks.md no encontrado. Esta feature no tiene tareas declaradas."
+  fail_unmarked: |
+    Los siguientes archivos visuales fueron modificados sin tareas [visual] en tasks.md:
+    {archivos}
+    Agrega tareas con marcador [visual] en tasks.md para cada cambio.
+  no_changes: "Sin cambios en archivos visuales protegidos."
