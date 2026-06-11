@@ -2,14 +2,17 @@
 
 **Feature**: `002-blindar-tokens-visuales` | **Date**: 2026-06-10
 
-## 1. Detección de cambios: git diff
+## 1. Detección de cambios: git diff + archivos no trackeados
 
-- **Decisión**: `git diff main...HEAD --name-only` para listar archivos modificados.
-- **Fundamento**: El triple dot muestra solo cambios de la feature, no de `main`.
-  `--name-only` devuelve solo rutas de archivos, ideal para comparar contra la lista
-  de archivos protegidos. Decisión de las clarificaciones.
-- **Alternativas descartadas**: `git diff main..HEAD` (incluye cambios de main que
-  no están en la feature), `git diff HEAD~N` (asume historial lineal).
+- **Decisión**: Combinar `git diff main...HEAD --name-only` (cambios commiteados)
+  con `git ls-files --others --exclude-standard` (archivos nuevos no trackeados).
+- **Fundamento**: `git diff main...HEAD` solo detecta diferencias entre commits.
+  Archivos nuevos no commiteados en carpetas protegidas (ej. un icono agregado en
+  `app/static/icons/` sin commit) no serían detectados por diff solo. La unión de
+  ambos comandos cubre todos los escenarios. Decisión de las clarificaciones
+  ampliada para cubrir el caso de archivos no trackeados.
+- **Alternativas descartadas**: `git diff` solo (no detecta archivos nuevos),
+  `git status --porcelain` (más verboso, requiere parseo adicional).
 
 ## 2. Búsqueda de marcadores en tasks.md
 

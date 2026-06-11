@@ -9,7 +9,11 @@ script:
 behavior:
   diff_base:
     command: git diff main...HEAD --name-only
-    description: Cambios únicos de la feature desde la bifurcación de main.
+    description: Cambios commiteados de la feature desde la bifurcación de main.
+
+  untracked_detection:
+    command: git ls-files --others --exclude-standard
+    description: Archivos nuevos no trackeados en el árbol de trabajo. Captura iconos, componentes o templates agregados sin commit.
 
   protected_files:
     - app/static/css/app.css

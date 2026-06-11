@@ -1,7 +1,7 @@
 .PHONY: help backend context \
         db-up db-down db-reset db-migrate db-create \
         db-logs db-status db-shell \
-        test lint format typecheck check clean
+        test lint format typecheck check clean visual-check
 
 .DEFAULT_GOAL := help
 
@@ -66,3 +66,10 @@ check: ## Ejecuta lint + typecheck + test (verificación completa)
 
 clean: ## Elimina __pycache__, .pytest_cache, .ruff_cache, .mypy_cache, *.pyc
 	bash scripts/clean.sh
+
+# ╔══════════════════════════════════════════╗
+# ║          GOBERNANZA VISUAL               ║
+# ╚══════════════════════════════════════════╝
+
+visual-check: ## Audit trail visual contrast feature‑activa
+	bash scripts/visual-check.sh
