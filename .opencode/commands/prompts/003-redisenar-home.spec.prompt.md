@@ -9,9 +9,6 @@ description: >
 
 Crea una nueva spec para la feature `003-redisenar-home`.
 
-Si el workflow de Spec Kit crea una rama Git, usa la rama
-`feat/003-redisenar-home`.
-
 Usa el workflow canónico de Spec Kit. No crees specs manualmente fuera de la ruta
 resuelta por Spec Kit.
 
