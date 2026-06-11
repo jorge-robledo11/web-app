@@ -291,3 +291,26 @@ constitución > spec > AGENTS.md > instructions > comando
 
 Si hay conflicto entre capas, se debe pausar, advertir el conflicto y seguir la
 capa de mayor autoridad.
+
+## Instrucciones obligatorias por área
+
+Antes de planificar, generar tareas o implementar, el agente debe leer y respetar
+las instrucciones específicas del área afectada:
+
+* Frontend: `.opencode/instructions/frontend.instructions.md`
+* Backend: `.opencode/instructions/backend.instructions.md`
+* Database: `.opencode/instructions/database.instructions.md`
+* Tests: `.opencode/instructions/tests.instructions.md`
+
+Estas instrucciones también están cargadas explícitamente desde `opencode.json`
+mediante el patrón:
+
+```text
+.opencode/instructions/*.instructions.md
+```
+
+Si una tarea toca varias áreas, deben aplicarse todas las instrucciones
+correspondientes.
+
+Estas instrucciones son obligatorias y forman parte del contexto operativo del
+proyecto.
