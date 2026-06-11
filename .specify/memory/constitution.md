@@ -367,6 +367,50 @@ Reglas obligatorias:
 * Los componentes compartidos viven en `app/templates/components/`.
 * Las macros compartidas viven en `app/templates/macros/`.
 
+### Blindaje de tokens visuales canónicos
+
+Los tokens visuales canónicos definidos en
+`.opencode/instructions/frontend.instructions.md` y en `app/static/css/app.css`
+están protegidos contra modificaciones no autorizadas.
+
+* Cualquier cambio en tokens visuales canónicos (colores, sombras, radios,
+  espaciados, tipografía, breakpoints, layout base, componentes compartidos,
+  macros de iconos o patrones visuales de estados) requiere autorización
+  explícita, justificación y trazabilidad en `tasks.md` con el marcador
+  `[visual]`.
+* Las extensiones (nuevos tokens que no modifican los existentes) se permiten
+  con marcador `[visual][extension]`.
+* Las correcciones de bugs visuales se permiten con marcador
+  `[visual][bugfix]`.
+* Toda modificación de un token existente debe registrarse en
+  `Complexity Tracking` de `plan.md` con justificación.
+* La fuente operativa de los tokens es
+  `.opencode/instructions/frontend.instructions.md`.
+* La spec `002-blindar-tokens-visuales` define el proceso completo de
+  gobernanza visual.
+
+## Sistema visual canónico
+
+Para todo trabajo frontend, la definición canónica de tokens visuales vive en
+`.opencode/instructions/frontend.instructions.md`.
+
+La implementación en `app/static/css/app.css`, templates Jinja, componentes,
+macros e iconografía DEBE respetar exactamente esos tokens visuales.
+
+No se aceptan cambios implícitos de color, sombra, radio, espaciado, tipografía,
+breakpoints, layout base o patrones visuales compartidos por criterio estético
+durante la implementación.
+
+Toda variación de tokens visuales canónicos requiere:
+
+- Spec aprobada.
+- Autorización explícita.
+- Actualización de las instrucciones frontend, si corresponde.
+- Trazabilidad en `tasks.md`.
+- Registro en `Complexity Tracking` cuando implique una desviación visual global.
+
+El incumplimiento de esta regla invalida la implementación de la spec en revisión.
+
 ## XIII. Estructura obligatoria del repositorio
 
 La estructura base del proyecto debe respetar esta organización:
@@ -473,5 +517,8 @@ explícitamente y seguir la capa de mayor autoridad.
 * **v1.1.0** — Agregado el protocolo de modo interactivo de preguntas para
   `speckit.specify`, `speckit.clarify`, `speckit.plan` y prompts custom de
   clarificación.
+* **v1.2.0** — Agregada la regla de blindaje de tokens visuales canónicos en
+  la sección XII, exigiendo autorización explícita, justificación y trazabilidad
+  en `tasks.md` con marcador `[visual]`.
 
-**Versión**: 1.1.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-08
+**Versión**: 1.2.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-10

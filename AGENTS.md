@@ -238,6 +238,12 @@ PostgreSQL usan Testcontainers.
 * Las plantillas específicas viven dentro del módulo correspondiente.
 * Los componentes compartidos viven en `app/templates/components/`.
 * Las macros compartidas viven en `app/templates/macros/`.
+* Los tokens visuales canónicos (colores, sombras, radios, espaciado,
+  tipografía, breakpoints, layout base, componentes compartidos, macros de
+  iconos) están protegidos. Cualquier modificación requiere marcador
+  `[visual]` en `tasks.md` con justificación. Las extensiones se permiten con
+  `[visual][extension]`. Ver constitución sección XII y spec
+  `002-blindar-tokens-visuales`.
 
 ## Estructura obligatoria del repositorio
 

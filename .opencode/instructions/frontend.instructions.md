@@ -13,6 +13,35 @@ Referencia visual: **Notion, Google Keep, dashboards de gestión modernos**.
 
 ---
 
+## 0. Tokens visuales canónicos — fuente operativa
+
+Este archivo es la **fuente operativa única** para los tokens visuales
+canónicos del sistema Realtor. Cualquier cambio en los siguientes elementos
+requiere autorización explícita, justificación y trazabilidad en `tasks.md`
+con el marcador `[visual]`:
+
+- **Colores**: tokens `--color-*` definidos en `:root` de `app/static/css/app.css`.
+- **Sombras**: tokens `--shadow-*`.
+- **Radios**: tokens `--radius-*`.
+- **Espaciado**: tokens `--space-*`.
+- **Tipografía**: tokens `--font-*`, `--font-size-base`, `--line-height-base`.
+- **Breakpoints**: 1024px (tablet, sidebar overlay) y 768px (móvil, sidebar oculta).
+- **Layout base**: estructura sidebar + main + `#flash-zone` en `app/templates/base.html`.
+- **Componentes compartidos**: los 8 parciales en `app/templates/components/`.
+- **Macros de iconos**: `app/templates/macros/icons.html`.
+- **Patrones visuales de estados**: colores de badge, alertas, feedback.
+
+Las reglas de trazabilidad y autorización están definidas en:
+
+- `.specify/memory/constitution.md`, sección XII.
+- `specs/002-blindar-tokens-visuales/spec.md` (spec de gobernanza visual).
+
+Ninguna feature futura puede modificar estos tokens como efecto colateral de
+su implementación sin pasar por el proceso de trazabilidad definido en la
+spec `002-blindar-tokens-visuales`.
+
+---
+
 ## 1. Principios técnicos
 
 - Server-rendered. La UI se compone en el servidor con Jinja2.
@@ -95,7 +124,18 @@ radios o sombras en componentes.
 - Escala: h1 28px / h2 22px / h3 18px / body 15px / caption 13px.
 - Pesos: 400, 500 (medio), 600 (semibold para títulos y acciones).
 
-### Valores concretos sugeridos para `:root`
+### Valores concretos obligatorios para `:root`
+
+Los siguientes tokens son canónicos y deben mantenerse exactamente en `app/static/css/app.css`.
+
+No se permite sustituir la paleta por variantes “equivalentes”, reinterpretaciones estéticas 
+ni cambios implícitos durante la implementación.
+
+Cualquier cambio de token visual requiere:
+1. Una spec aprobada.
+2. Actualización explícita de este archivo.
+3. Actualización explícita de `.specify/memory/constitution.md`.
+4. Trazabilidad en `tasks.md`.
 
 ```css
 :root {

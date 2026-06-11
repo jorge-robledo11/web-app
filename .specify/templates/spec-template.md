@@ -129,3 +129,19 @@
 - [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
 - [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
 - [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+
+## Impacto visual
+
+<!--
+  Declarar si esta feature modifica tokens visuales canónicos o componentes
+  compartidos. Si no los toca, marcar "Sin impacto visual".
+
+  Si hay impacto, las tareas correspondientes DEBEN incluir el marcador
+  `[visual]` en tasks.md. Ver constitución sección XII y spec
+  002-blindar-tokens-visuales.
+-->
+
+- [ ] Esta feature NO modifica tokens visuales canónicos ni componentes compartidos (sin impacto visual).
+- [ ] Esta feature SÍ modifica tokens visuales canónicos o componentes compartidos (requiere marcador `[visual]` en tasks.md).
+
+*Si la respuesta es SÍ, describir qué tokens o componentes se modifican y por qué:*
