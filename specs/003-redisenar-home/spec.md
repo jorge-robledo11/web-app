@@ -59,10 +59,14 @@ Puede probarse sin accesos rápidos ni otras secciones; entrega valor por sí so
    el dato lo soporte.
 2. **Given** que los datos están en proceso de carga, **When** el usuario abre la
    Home, **Then** ve un indicador visual de carga (spinner o skeleton) en cada
-   tarjeta de métrica mientras los datos no están disponibles.
+   tarjeta de métrica mientras los datos no están disponibles. En esta spec, los
+   estados de carga se implementan como clases CSS (`.is-loading`) y estructura de
+   template, verificables manualmente; no requieren endpoints HTMX asíncronos.
 3. **Given** que ocurre un error al obtener las métricas, **When** el usuario
    carga la Home, **Then** ve un mensaje de error descriptivo en la sección de
-   métricas, no un error genérico ni una página en blanco.
+   métricas, no un error genérico ni una página en blanco. Igual que el estado de
+   carga, el estado de error se implementa como clase CSS (`.is-error`) y
+   estructura de template, verificable manualmente sin endpoints asíncronos.
 4. **Given** que no hay datos para una métrica (valor cero o nulo), **When** se
    renderiza la Home, **Then** la tarjeta muestra el valor «0» o «—» con la
    etiqueta correspondiente, sin ocultar la tarjeta.
@@ -164,12 +168,18 @@ métricas ni accesos rápidos.
 
 ### Functional Requirements
 
-- **FR-001**: La Home DEBE renderizar al menos 3 tarjetas de métrica con valor
-  numérico, etiqueta, icono Lucide y tendencia (dirección y porcentaje).
+- **FR-001**: La Home DEBE renderizar 3 tarjetas de métrica con valor
+  numérico, etiqueta, icono Lucide y tendencia (dirección y porcentaje):
+  Propiedades activas (`building-2`), Inquilinos al día (`users`), Contratos
+  vigentes (`file-text`).
 - **FR-002**: Cada tarjeta de métrica DEBE tener un estado de carga visible
-  (spinner o skeleton) mientras los datos no están disponibles.
+  (spinner o skeleton) implementado como clase CSS (`.is-loading`) y estructura
+  de template. No requiere endpoint HTMX asíncrono en esta spec; los datos se
+  sirven hardcodeados desde `GET /`.
 - **FR-003**: Cada tarjeta de métrica DEBE tener un estado de error visible
-  cuando la obtención de datos falla.
+  implementado como clase CSS (`.is-error`) y estructura de template.
+  Verificable manualmente; los endpoints de fragmento HTMX para carga asíncrona
+  real se difieren a specs futuras.
 - **FR-004**: La Home DEBE incluir una sección de accesos rápidos con al menos 4
   tarjetas cliqueables (Propiedades, Inquilinos, Contratos, Pagos), cada una con
   icono Lucide, título y URL.
@@ -201,6 +211,8 @@ métricas ni accesos rápidos.
 - **FR-015**: El CSS nuevo o modificado DEBE residir en `app/static/css/app.css`
   respetando sus 7 secciones existentes (Reset, Variables, Tipografía, Layout,
   Componentes, Utilidades, Responsive). No se permite crear nuevos archivos CSS.
+- **FR-016**: Las 3 secciones DEBEN renderizarse en orden vertical fijo: Métricas
+  primero, Accesos rápidos segundo, Actividad reciente tercero.
 
 ### Key Entities
 
@@ -214,14 +226,16 @@ métricas ni accesos rápidos.
   usuario a un módulo del sistema. Reutiliza el componente `_accesos_rapidos.html`
   existente.
 - **Ítem de actividad**: Registro individual en la sección de actividad reciente
-  que muestra fecha, descripción y badge de estado.
+  que muestra fecha, descripción y badge de estado. Se implementa con el nuevo
+  componente compartido `_actividad_item.html`.
 
 ## Success Criteria
 
 ### Measurable Outcomes
 
-- **SC-001**: La Home renderiza 3 secciones visualmente distintas (métricas,
-  accesos rápidos, actividad reciente) en desktop sin scroll horizontal.
+- **SC-001**: La Home renderiza 3 secciones visualmente distintas en orden
+  Métricas → Accesos rápidos → Actividad reciente, en desktop sin scroll
+  horizontal.
 - **SC-002**: Las 3 secciones muestran estados de carga, éxito, vacío y error
   según corresponda, verificables aislando cada sección.
 - **SC-003**: En viewport de 360px de ancho (móvil pequeño), todas las secciones
@@ -243,6 +257,16 @@ métricas ni accesos rápidos.
   presencia de las 3 secciones, estados de carga y error para métricas, y estado
   vacío para actividad reciente.
 
+## Clarificaciones
+
+### Session 2026-06-10
+
+- Q: ¿Los estados de carga y error deben implementarse con endpoints HTMX asíncronos reales o como preparación visual server-rendered? → A: Server-rendered con CSS preparado. La Home se renderiza con datos hardcodeados desde `GET /`. Los estados de carga/error se implementan como estructura de template y clases CSS (`.is-loading`, `.is-error`), verificables vía manipulación manual en tests, sin nuevos endpoints HTMX asíncronos. Los endpoints de fragmento se implementarán en specs futuras cuando los datos sean reales.
+- Q: ¿Se puede crear un nuevo componente compartido para los ítems de actividad o debe reutilizarse `_card_propiedad.html`? → A: Se crea el nuevo componente `_actividad_item.html` en `app/templates/components/` con props específicos (tipo, descripción, fecha, badge). No se modifica `_card_propiedad.html`. Requiere marcador `[visual][componente]` en tasks.md.
+- Q: ¿Qué métricas específicas debe mostrar la Home? → A: Las 3 métricas actuales: Propiedades activas (icono `building-2`), Inquilinos al día (icono `users`), Contratos vigentes (icono `file-text`). Se agregan tendencias (dirección y porcentaje) a cada una.
+- Q: ¿Se modifica `base.html` o solo `dashboard.html`? → A: No se modifica `base.html`, `_sidebar.html` ni `_navbar.html`. Todo el rediseño cabe dentro del bloque `{% block content %}` de `dashboard.html`. Sidebar, navbar y layout base quedan intactos.
+- Q: ¿Orden vertical explícito de las 3 secciones? → A: Métricas → Accesos rápidos → Actividad reciente (orden por prioridad: P1, P2, P3).
+
 ## Impacto visual
 
 - [ ] Esta feature NO modifica tokens visuales canónicos ni componentes compartidos (sin impacto visual).
@@ -253,13 +277,14 @@ métricas ni accesos rápidos.
 | Archivo | Tipo de cambio | Marcador requerido |
 |---|---|---|
 | `app/static/css/app.css` | Nuevos estilos para sección de actividad reciente, estados de carga/vacío/error, mejoras responsive | `[visual]` |
-| `app/templates/base.html` | Posible ajuste de estructura de grid o zonas de contenido si se requiere | `[visual]` |
+| `app/templates/base.html` | No se modifica (rediseño solo afecta `dashboard.html`) | — |
 | `app/templates/dashboard.html` | Reorganización completa del contenido en 3 secciones | `[visual]` |
 | `app/templates/components/_tarjeta_metrica.html` | Extensión para soportar tendencia, estado de carga y estado de error | `[visual][extension]` |
 | `app/templates/components/_accesos_rapidos.html` | Mejora visual (espaciado, jerarquía, iconos más prominentes) | `[visual]` |
 | `app/templates/components/_alerta.html` | Posible reutilización para estados de error inline en secciones | Sin cambios (reutilización) |
 | `app/templates/components/_badge_estado.html` | Posible reutilización para items de actividad | Sin cambios (reutilización) |
-| `app/templates/components/_card_propiedad.html` | Posible reutilización o extensión para items de actividad reciente | `[visual][extension]` si se modifica |
+| `app/templates/components/_card_propiedad.html` | No se modifica | — |
+| `app/templates/components/_actividad_item.html` | Nuevo componente para ítems de actividad reciente | `[visual][componente]` |
 | `app/templates/macros/icons.html` | Sin cambios previsibles | — |
 | `app/static/icons/` | Posibles nuevos iconos Lucide para actividad reciente | `[visual][extension]` |
 
@@ -281,9 +306,12 @@ base. Todos los cambios se declaran explícitamente y se trazarán con marcadore
 
 ## Assumptions
 
-- La Home se sirve desde el endpoint `GET /` con datos hardcodeados (mismo
-  patrón que el dashboard actual). Los datos reales desde base de datos se
-  implementarán en specs futuras cuando existan los módulos de dominio.
+- La Home se sirve desde el endpoint `GET /` con datos hardcodeados vía
+  server-rendering tradicional (Jinja2). Los endpoints de fragmento HTMX para
+  carga asíncrona real se implementarán en specs futuras cuando existan los
+  módulos de dominio con datos reales. Los estados de carga y error se diseñan
+  como preparación estructural (CSS + template) lista para activarse en ese
+  momento.
 - Los componentes existentes (`_tarjeta_metrica.html`, `_accesos_rapidos.html`,
   `_badge_estado.html`, `_alerta.html`, `_card_propiedad.html`) se reutilizan
   como base. Solo se extienden si el rediseño requiere atributos adicionales que

@@ -31,5 +31,5 @@
 
 ## Notes
 
-- Todas las validaciones pasan. Spec lista para `/speckit.clarify` o `/speckit.plan`.
-- US3 escenario 4 resuelto: Combinación de últimas propiedades + contratos por vencer + últimos pagos.
+- Todas las validaciones pasan. Spec lista para `/speckit.plan`.
+- 5 clarificaciones resueltas en session 2026-06-10: estados carga/error CSS, nuevo componente `_actividad_item.html`, métricas específicas, base.html sin cambios, orden vertical fijo.
