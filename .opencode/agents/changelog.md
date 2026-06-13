@@ -1,7 +1,7 @@
 ---
 description: >
   Cura el changelog del proyecto siguiendo Keep a Changelog, agrupando cambios
-  por intención a partir del buffer técnico y el historial Git.
+  por intención a partir del historial Git y CHANGELOG.md.
 mode: subagent
 model: opencode-go/deepseek-v4-flash
 permission:
@@ -27,16 +27,7 @@ corregir mensajes de commit, usá el agente `improve-commits`.
 
 ## Flujo de trabajo
 
-### 1. Determinar qué procesar
-
-El agente usa dos fuentes de datos:
-
-#### 1a. Leer el buffer pendiente
-
-Leé `docs/context/.changelog-pending.md`. Extraé las entradas bajo `## Pending`
-si las hay.
-
-#### 1b. Leer la marca de último commit procesado
+### 1. Leer la marca de último commit procesado
 
 Leé `CHANGELOG.md` y buscá:
 
@@ -44,24 +35,23 @@ Leé `CHANGELOG.md` y buscá:
 <!-- changelog:last-processed-commit=<hash> -->
 ```
 
-#### 1c. Determinar la fuente
+### 2. Determinar el alcance
 
-- Si el buffer tiene entradas → usá las entradas del buffer como fuente.
-- Si el buffer está vacío **pero** hay commits en `<last-processed-commit>..HEAD`
-  (el hash existe y es anterior a HEAD) → generá entradas mecánicas desde
-  `git log <last-processed-commit>..HEAD --oneline` y `git diff --stat
-  <last-processed-commit>..HEAD` como fuente. Esto cubre commits hechos
-  después de un rebase o cuando el hook post-commit no se ejecutó.
-- Si el buffer está vacío **y** `last-processed-commit` ya es HEAD o no hay
-  commits nuevos → reportá «sin cambios pendientes» y terminá sin modificar nada.
+- Si la marca existe y el hash es anterior a HEAD → procesá los commits en
+  `<last-processed-commit>..HEAD` usando `git log` y `git diff --stat`.
+- Si la marca existe pero el hash ya es HEAD o no hay commits nuevos →
+  reportá «sin cambios pendientes» y terminá sin modificar nada.
+- Si la marca no existe → usá los últimos 20 commits como inicialización.
+- Si el hash de la marca no está disponible en el historial local → usá los
+  últimos 20 commits como fallback.
 
-El alcance de curaduría siempre es desde `last-processed-commit` hasta HEAD.
-Si la marca no existe, usá los últimos 20 commits como inicialización.
+La fuente única de curaduría es `git log` desde `last-processed-commit`
+hasta `HEAD`.
 
-### 2. Curar el changelog
+### 3. Curar el changelog
 
-Actualizá `CHANGELOG.md` bajo la sección `## [Unreleased]` usando la fuente
-determinada en el paso 1 (buffer o git log):
+Actualizá `CHANGELOG.md` bajo la sección `## [Unreleased]` usando los
+commits determinados en el paso 2:
 
 - Agrupá cambios por intención, no por commit.
 - Usá solo estas categorías: `Added`, `Changed`, `Deprecated`, `Removed`,
@@ -76,7 +66,7 @@ determinada en el paso 1 (buffer o git log):
   `app/templates/macros/`, `app/static/icons/`), verificá si hay trazabilidad
   `[visual]` en `tasks.md` de la spec activa y advertí si falta.
 
-### 3. Actualizar la marca
+### 4. Actualizar la marca
 
 Al final de `CHANGELOG.md`, actualizá o creá:
 
@@ -86,19 +76,13 @@ Al final de `CHANGELOG.md`, actualizá o creá:
 
 con el hash completo del último commit incluido en esta revisión.
 
-### 4. Limpiar el buffer
-
-Eliminá las entradas procesadas de `docs/context/.changelog-pending.md`,
-dejando solo el encabezado y `## Pending`.
-
 ## Restricciones
 
 - Solo comandos Git de lectura: `git log`, `git diff`, `git show`,
   `git branch`, `git status`, `git rev-parse`.
-- Si el buffer está vacío, generá entradas desde `git log` y `git diff`.
 - No ejecutes comandos destructivos de Git.
 - No modifiques archivos bajo `.opencode/`, `scripts/` ni `.git/`.
-- Solo modificá `CHANGELOG.md` y `docs/context/.changelog-pending.md`.
+- Solo modificá `CHANGELOG.md`.
 - Mantené todo en español.
 
 ## Salida esperada

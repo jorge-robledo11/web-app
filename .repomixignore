@@ -65,8 +65,6 @@ Thumbs.db
 .git/
 .gitignore
 
-# Buffer técnico de changelog
-docs/context/.changelog-pending.md
 
 # Spec Kit / OpenCode / contexto operativo local
 .specify/

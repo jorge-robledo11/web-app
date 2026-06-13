@@ -34,11 +34,3 @@ build/
 
 # Logs
 *.log
-
-# Changelog local buffer
-docs/context/
-
-# OpenCode / Node artifacts
-.opencode/node_modules/
-.opencode/package.json
-.opencode/package-lock.json

@@ -1,11 +1,11 @@
 ---
 name: 000-changelog
 description: >
-  Configura el sistema de changelog dual del proyecto: buffer técnico post-commit,
-  changelog curado, subagente de auditoría y comando /changelog.
+  Configura el sistema de changelog del proyecto: hook post-commit,
+  changelog curado, subagente cronista y comando /changelog.
 ---
 
-Implementa el sistema base de changelog dual y auditoría de mensajes de commit
+Implementa el sistema base de changelog y auditoría de mensajes de commit
 para el repositorio.
 
 Este prompt funciona como setup inicial del proyecto para dejar instalado el flujo
@@ -23,7 +23,6 @@ templates de aplicación.
 Puede crear o modificar únicamente archivos de soporte operativo:
 
 ```text
-docs/context/
 scripts/
 scripts/hooks/
 .opencode/agents/
@@ -37,10 +36,8 @@ e informa antes de continuar.
 
 ## Objetivo
 
-Crear un flujo que transforme el historial Git en dos niveles de documentación:
-
-1. Un buffer técnico y mecánico generado después de cada commit.
-2. Un changelog curado, humano y estable siguiendo Keep a Changelog.
+Crear un flujo que transforme el historial Git en un changelog curado, humano
+y estable siguiendo Keep a Changelog.
 
 Además, el flujo debe detectar commits con mensajes pobres, genéricos o poco
 trazables y sugerir mensajes mejorados siguiendo Conventional Commits.
@@ -50,7 +47,6 @@ trazables y sugerir mensajes mejorados siguiendo Conventional Commits.
 Crea estos archivos si no existen:
 
 ```text
-docs/context/.changelog-pending.md
 CHANGELOG.md
 scripts/changelog.sh
 scripts/hooks/post-commit.changelog
@@ -106,72 +102,18 @@ El flujo debe ser:
 ```text
 git commit manual
   -> .git/hooks/post-commit
-  -> scripts/changelog.sh
-  -> docs/context/.changelog-pending.md
+  -> scripts/changelog.sh (recordatorio)
   -> /changelog
   -> CHANGELOG.md
 ```
 
-El hook y el script solo capturan información mecánica.
+El hook y el script solo muestran un recordatorio tras cada commit.
 
-El subagente `/changelog` interpreta, agrupa y cura los cambios.
+El subagente `/changelog` interpreta, agrupa y cura los cambios directamente
+desde el historial Git usando la marca `changelog:last-processed-commit`.
 
 El subagente también audita mensajes de commit y sugiere mejoras cuando detecte
 mensajes pobres o poco trazables.
-
-## Archivo técnico pendiente
-
-Crea `docs/context/.changelog-pending.md` como buffer técnico.
-
-Debe contener entradas por commit con información como:
-
-* Hash corto.
-* Fecha ISO.
-* Rama actual.
-* Mensaje del commit.
-* Archivos cambiados.
-* Diff stat.
-* Categoría sugerida.
-* Entrada sugerida para el changelog curado.
-* Evaluación del mensaje de commit.
-* Mensaje de commit sugerido, si aplica.
-* Notas técnicas.
-
-Ejemplo de formato:
-
-````markdown
-# Changelog pending
-
-Este archivo contiene entradas mecánicas generadas por el hook `post-commit`.
-
-No es el changelog final del proyecto.
-
-El changelog curado vive en:
-
-```text
-CHANGELOG.md
-```
-
----
-
-## Pending
-
-### 451fc95 — 2026-06-10T11:40:00-05:00
-
-- Branch: `003-redisenar-home`.
-- Message: `feat: nuevo prompt de clarify`.
-- Files:
-  - `M .opencode/commands/prompts/003-redisenar-home.clarify.prompt.md`
-- Stat: `1 file changed, 42 insertions(+)`.
-- Suggested category: `Added`.
-- Suggested entry: Agregado el prompt de clarificación para la spec `003-redisenar-home`.
-- Commit message quality: `Mejorable`.
-- Suggested commit message: `docs(003): añadir prompt de aclaración para la spec de rediseño del inicio`.
-- Notes:
-  - Cambio documental de Spec Kit.
-  - El mensaje original usa `feat`, pero el cambio afecta prompts/documentación, no funcionalidad de aplicación.
-  - Relacionado con `specs/003-redisenar-home`.
-````
 
 ## Changelog curado
 
@@ -230,15 +172,6 @@ Motivo:
 * Sirve como memoria histórica del proyecto.
 * Puede entrar en Repomix.
 * Ayuda a agentes futuros a entender la evolución del repo sin leer `.git/`.
-
-`docs/context/.changelog-pending.md` no debe versionarse.
-
-Motivo:
-
-* Es buffer mecánico.
-* Puede contener ruido.
-* Se regenera después de commits.
-* No representa el changelog final.
 
 ## Marca de último commit procesado
 
@@ -515,13 +448,12 @@ Debe advertir:
 Crea un script Bash seguro que:
 
 * Use `set -euo pipefail`.
-* Cree `docs/context/` si no existe.
 * Lea el último commit.
-* Agregue una entrada técnica a `docs/context/.changelog-pending.md`.
+* Muestre un recordatorio para ejecutar `/changelog`.
+* No escriba en archivos.
 * No modifique Git.
 * No haga commits.
 * No invoque IA.
-* No falle el commit si no puede escribir la bitácora.
 
 Puede usar comandos Git de solo lectura:
 
@@ -594,7 +526,6 @@ Crea:
 
 El subagente debe:
 
-* Leer `docs/context/.changelog-pending.md`.
 * Leer `CHANGELOG.md`.
 * Revisar contexto Git reciente con comandos de solo lectura.
 * Actualizar `CHANGELOG.md`.
@@ -624,13 +555,11 @@ Este archivo es el prompt del comando `/changelog`.
 No lo recrees ni lo dupliques.
 
 El prompt del comando debe invocar al subagente de changelog y pedirle que
-actualice `CHANGELOG.md` usando el buffer pendiente y el historial
-Git reciente.
+actualice `CHANGELOG.md` usando el historial Git reciente.
 
 El comando debe pedir explícitamente:
 
 * Actualizar `CHANGELOG.md`.
-* Leer `docs/context/.changelog-pending.md`.
 * Auditar commits recientes respetando el alcance definido.
 * Sugerir renombres para commits pobres.
 * No ejecutar reescrituras de historial.
@@ -640,46 +569,6 @@ El comando debe pedir explícitamente:
 * Actualizar la marca `changelog:last-processed-commit` cuando corresponda.
 
 ## Actualización segura de `.gitignore`
-
-Actualiza `.gitignore` para ignorar el buffer técnico:
-
-```gitignore
-docs/context/.changelog-pending.md
-```
-
-Reglas:
-
-* Si `.gitignore` ya contiene esa entrada, no la dupliques.
-* Si `.gitignore` no existe, créalo.
-* Si existe, agrega la entrada al final bajo esta sección solo si falta:
-
-```gitignore
-# Changelog local buffer
-docs/context/.changelog-pending.md
-```
-
-## Actualización segura de `.repomixignore`
-
-Si `.repomixignore` existe, revisa si ya contiene:
-
-```gitignore
-.git/
-docs/context/.changelog-pending.md
-```
-
-Reglas:
-
-* No dupliques entradas existentes.
-* Si `.repomixignore` no existe, no lo crees automáticamente salvo que el usuario lo haya pedido explícitamente.
-* Si existe, agrega las entradas faltantes bajo esta sección:
-
-```gitignore
-# Git internals and local changelog buffer
-.git/
-docs/context/.changelog-pending.md
-```
-
-No ignores:
 
 ```text
 CHANGELOG.md
@@ -714,7 +603,7 @@ Si es seguro, ejecuta también:
 scripts/changelog.sh
 ```
 
-para generar una entrada inicial de prueba en `.changelog-pending.md`.
+para verificar que el script de recordatorio funciona.
 
 No hagas commit automáticamente.
 
@@ -730,7 +619,6 @@ Al finalizar informa:
 * Cómo instalar el hook.
 * Cómo ejecutar `/changelog`.
 * Si `CHANGELOG.md` quedó listo y versionable.
-* Si `docs/context/.changelog-pending.md` quedó ignorado.
 * Cantidad máxima de commits que auditará el subagente por defecto.
 * Si se agregó o detectó la marca `changelog:last-processed-commit`.
 * Commits revisados.
