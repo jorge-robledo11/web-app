@@ -73,7 +73,7 @@ write_entry() {
   printf -- '- Commit message quality: _(pendiente de revisión)_.\n'
   printf -- '- Suggested commit message: _(pendiente de revisión)_.\n'
   printf -- '- Notes:\n'
-  printf -- '  - Entrada mecánica generada por `scripts/changelog.sh`.\n'
+  printf -- '  - Entrada mecánica generada por `scripts/tools/changelog.sh`.\n'
   printf -- '  - Revisar con `/changelog`.\n'
 }
 

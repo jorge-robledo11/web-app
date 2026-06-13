@@ -2,8 +2,8 @@
 # ---------------------------------------------------------------------------
 # post-commit.changelog — Hook versionado para el sistema de changelog dual
 #
-# Uso: copiado a .git/hooks/post-commit por scripts/install-git-hooks.sh
+# Uso: copiado a .git/hooks/post-commit por scripts/tools/install-git-hooks.sh
 # No debe invocarse directamente.
 # ---------------------------------------------------------------------------
 
-scripts/changelog.sh
+scripts/tools/changelog.sh

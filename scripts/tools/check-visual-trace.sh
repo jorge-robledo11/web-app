@@ -7,7 +7,7 @@ set -euo pipefail
 # Verifica que los cambios en archivos visuales protegidos tengan tareas
 # con marcador [visual] en tasks.md de la feature activa.
 #
-# Uso: bash scripts/check-visual-trace.sh
+# Uso: bash scripts/tools/check-visual-trace.sh
 # Salida: 0 si OK, 1 si hay archivos protegidos sin trazabilidad.
 # ---------------------------------------------------------------------------
 

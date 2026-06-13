@@ -36,7 +36,4 @@ build/
 *.log
 
 # Changelog local buffer
-docs/context/.changelog-pending.md
-
-.repomixignore
-repomix-output.*
+docs/context/
