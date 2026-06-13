@@ -21,4 +21,4 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Instrucciones de frontend extendidas con la sección 0 (tokens visuales canónicos como fuente operativa única) y reglas de trazabilidad para cambios visuales.
 - Constitución del proyecto (`.specify/memory/constitution.md`) ampliada con sección XII: protección de tokens visuales y reglas de gobernanza.
 
-<!-- changelog:last-processed-commit=adf9229f08a1ff37bb5d6d24ff13b02ae3c17fdd -->
+<!-- changelog:last-processed-commit=664674ea6d3528b1b0ad4a8d2c58fec800808ae5 -->
