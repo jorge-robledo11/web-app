@@ -27,26 +27,41 @@ corregir mensajes de commit, usá el agente `improve-commits`.
 
 ## Flujo de trabajo
 
-### 1. Verificar el buffer pendiente
+### 1. Determinar qué procesar
 
-Leé `docs/context/.changelog-pending.md`. Si no tiene entradas bajo `## Pending`
-(aparte del encabezado), reportá «sin cambios pendientes» y terminá sin
-modificar nada.
+El agente usa dos fuentes de datos:
 
-### 2. Determinar alcance de curaduría
+#### 1a. Leer el buffer pendiente
 
-Leé `CHANGELOG.md` y buscá la marca:
+Leé `docs/context/.changelog-pending.md`. Extraé las entradas bajo `## Pending`
+si las hay.
+
+#### 1b. Leer la marca de último commit procesado
+
+Leé `CHANGELOG.md` y buscá:
 
 ```html
 <!-- changelog:last-processed-commit=<hash> -->
 ```
 
-Si existe, el alcance es `<hash>..HEAD`. Si no existe o el hash no está
-disponible, usá los últimos 20 commits como inicialización.
+#### 1c. Determinar la fuente
 
-### 3. Actualizar el changelog curado
+- Si el buffer tiene entradas → usá las entradas del buffer como fuente.
+- Si el buffer está vacío **pero** hay commits en `<last-processed-commit>..HEAD`
+  (el hash existe y es anterior a HEAD) → generá entradas mecánicas desde
+  `git log <last-processed-commit>..HEAD --oneline` y `git diff --stat
+  <last-processed-commit>..HEAD` como fuente. Esto cubre commits hechos
+  después de un rebase o cuando el hook post-commit no se ejecutó.
+- Si el buffer está vacío **y** `last-processed-commit` ya es HEAD o no hay
+  commits nuevos → reportá «sin cambios pendientes» y terminá sin modificar nada.
 
-Actualizá `CHANGELOG.md` bajo la sección `## [Unreleased]`:
+El alcance de curaduría siempre es desde `last-processed-commit` hasta HEAD.
+Si la marca no existe, usá los últimos 20 commits como inicialización.
+
+### 2. Curar el changelog
+
+Actualizá `CHANGELOG.md` bajo la sección `## [Unreleased]` usando la fuente
+determinada en el paso 1 (buffer o git log):
 
 - Agrupá cambios por intención, no por commit.
 - Usá solo estas categorías: `Added`, `Changed`, `Deprecated`, `Removed`,
@@ -61,7 +76,7 @@ Actualizá `CHANGELOG.md` bajo la sección `## [Unreleased]`:
   `app/templates/macros/`, `app/static/icons/`), verificá si hay trazabilidad
   `[visual]` en `tasks.md` de la spec activa y advertí si falta.
 
-### 4. Actualizar la marca
+### 3. Actualizar la marca
 
 Al final de `CHANGELOG.md`, actualizá o creá:
 
@@ -71,7 +86,7 @@ Al final de `CHANGELOG.md`, actualizá o creá:
 
 con el hash completo del último commit incluido en esta revisión.
 
-### 5. Limpiar el buffer
+### 4. Limpiar el buffer
 
 Eliminá las entradas procesadas de `docs/context/.changelog-pending.md`,
 dejando solo el encabezado y `## Pending`.
@@ -80,6 +95,7 @@ dejando solo el encabezado y `## Pending`.
 
 - Solo comandos Git de lectura: `git log`, `git diff`, `git show`,
   `git branch`, `git status`, `git rev-parse`.
+- Si el buffer está vacío, generá entradas desde `git log` y `git diff`.
 - No ejecutes comandos destructivos de Git.
 - No modifiques archivos bajo `.opencode/`, `scripts/` ni `.git/`.
 - Solo modificá `CHANGELOG.md` y `docs/context/.changelog-pending.md`.
