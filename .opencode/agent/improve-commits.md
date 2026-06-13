@@ -46,7 +46,7 @@ Si la salida **no está vacía**, no hagas nada más. Reportá:
 ```
 [improve-commits] El árbol de trabajo tiene cambios sin commit.
 Archivos modificados:
-  M .opencode/agents/improve-commits.md
+  M .opencode/agent/improve-commits.md
   M CHANGELOG.md
 
 Hacé commit de tus cambios y volvé a ejecutar /improve-commits.

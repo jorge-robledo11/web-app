@@ -9,7 +9,7 @@ set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 YAML_FILE="$REPO_ROOT/config/models.yaml"
-AGENTS_DIR="$REPO_ROOT/.opencode/agents"
+AGENTS_DIR="$REPO_ROOT/.opencode/agent"
 
 echo "Sincronizando modelos de agentes desde config/models.yaml"
 echo "----------------------------------------------------------"
