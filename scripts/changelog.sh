@@ -96,4 +96,14 @@ fi
 
 mv "$TEMP_FILE" "$PENDING_FILE"
 
+# Contar entradas pendientes y mostrar recordatorio
+PENDING_COUNT=$(grep -c '^### ' "$PENDING_FILE" 2>/dev/null || echo "0")
+PENDING_COUNT=$(echo "$PENDING_COUNT" | grep -oE '[0-9]+' | head -1)
+PENDING_COUNT="${PENDING_COUNT:-0}"
+
 echo "[changelog] Entrada registrada: $HASH_SHORT — $COMMIT_MSG"
+if [[ "$PENDING_COUNT" -eq 1 ]]; then
+  echo "[changelog] 1 commit pendiente de revisión. Ejecutá /changelog para curar."
+else
+  echo "[changelog] $PENDING_COUNT commits pendientes de revisión. Ejecutá /changelog para curar."
+fi
