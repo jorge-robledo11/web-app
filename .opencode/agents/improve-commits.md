@@ -33,7 +33,28 @@ Commits y renombrarlos automáticamente cuando sea seguro.
 
 ## Flujo de trabajo
 
-### 1. Determinar el alcance según la rama
+### 1. Verificar árbol de trabajo limpio
+
+Antes de hacer cualquier otra cosa, verificá que no haya cambios sin commitear:
+
+```bash
+git status --porcelain
+```
+
+Si la salida **no está vacía**, no hagas nada más. Reportá:
+
+```
+[improve-commits] El árbol de trabajo tiene cambios sin commit.
+Archivos modificados:
+  M .opencode/agents/improve-commits.md
+  M CHANGELOG.md
+
+Hacé commit de tus cambios y volvé a ejecutar /improve-commits.
+```
+
+Si la salida está vacía, continuá con el paso 2.
+
+### 2. Determinar el alcance según la rama
 
 ```bash
 BRANCH=$(git branch --show-current)
@@ -45,7 +66,7 @@ else
 fi
 ```
 
-### 2. Auditar cada commit
+### 3. Auditar cada commit
 
 Para cada commit en el alcance, evaluá:
 
@@ -85,7 +106,7 @@ Scopes sugeridos: `001`, `002`, `003`, `specs`, `opencode`, `agents`,
 `changelog`, `frontend`, `backend`, `database`, `tests`, `health`, `home`,
 `visual-governance`, `docker`, `docs`, `setup`.
 
-### 3. Verificar qué commits son locales
+### 4. Verificar qué commits son locales
 
 Para cada commit a renombrar:
 
@@ -95,7 +116,7 @@ git branch -r --contains <hash>
 
 Si retorna vacío → local. Si retorna ramas remotas → publicado (solo sugerir).
 
-### 4. Renombrar commits
+### 5. Renombrar commits
 
 #### A. Si el único commit a renombrar es HEAD → amend directo
 
@@ -107,19 +128,13 @@ git commit --amend -m "nuevo mensaje"
 
 Solo si hay al menos 2 commits locales con mensajes mejorables.
 
-1. Verificá árbol limpio:
-   ```bash
-   git status --porcelain
-   ```
-   Si no está vacío, abortá.
-
-2. Creá `/tmp/improve-commits-messages.txt`:
+1. Creá `/tmp/improve-commits-messages.txt`:
    ```
    <hash_completo> <nuevo mensaje>
    <hash_completo> <nuevo mensaje>
    ```
 
-3. Creá `/tmp/improve-commits-editor.sh`:
+2. Creá `/tmp/improve-commits-editor.sh`:
    ```bash
    #!/bin/bash
    MSG_FILE="$1"
@@ -131,19 +146,19 @@ Solo si hay al menos 2 commits locales con mensajes mejorables.
    ```
    `chmod +x /tmp/improve-commits-editor.sh`
 
-4. Construí el SED_CMD marcando solo los commits del mapeo como `reword`:
+3. Construí el SED_CMD marcando solo los commits del mapeo como `reword`:
    ```
    SED_CMD="s/^pick <hash>/reword <hash>/; s/^pick <hash>/reword <hash>/;"
    ```
 
-5. Ejecutá:
+4. Ejecutá:
    ```bash
    GIT_SEQUENCE_EDITOR="sed -i '${SED_CMD}'" \
    GIT_EDITOR="/tmp/improve-commits-editor.sh" \
    git rebase -i main
    ```
 
-6. Si falla por conflicto:
+5. Si falla por conflicto:
    ```bash
    git rebase --abort
    ```
