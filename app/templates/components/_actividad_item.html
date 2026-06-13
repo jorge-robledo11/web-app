@@ -1,0 +1,29 @@
+{# Ítem de actividad reciente: registro con tipo, descripción, fecha y badge.
+
+  Recibe:
+    - tipo: "propiedad" | "contrato" | "pago"
+    - descripcion: texto descriptivo del evento
+    - fecha: fecha relativa o ISO
+    - badge_variante: "success" | "warning" | "danger" | "accent" | "info" | "muted"
+    - estado: "datos" | "vacio" | "error" (default "datos")
+#}
+
+{% set estado_clase = "datos" %}
+{% if estado is defined and estado %}
+  {% set estado_clase = estado %}
+{% endif %}
+
+<div class="actividad-item" aria-label="Actividad: {{ tipo_label }} — {{ descripcion }}">
+  <div class="actividad-item__tipo">
+    {% set tipo_label = tipo %}
+    {% if tipo == "propiedad" %}{% set tipo_label = "Propiedad" %}
+    {% elif tipo == "contrato" %}{% set tipo_label = "Contrato" %}
+    {% elif tipo == "pago" %}{% set tipo_label = "Pago" %}
+    {% endif %}
+    {% with texto=tipo_label, variante=badge_variante %}
+      {% include "components/_badge_estado.html" %}
+    {% endwith %}
+  </div>
+  <div class="actividad-item__descripcion">{{ descripcion }}</div>
+  <div class="actividad-item__fecha">{{ fecha }}</div>
+</div>

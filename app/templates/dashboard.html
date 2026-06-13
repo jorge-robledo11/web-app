@@ -6,7 +6,7 @@
 {% block content %}
 <section class="metricas">
   {% for metrica in metricas %}
-    {% with label=metrica.label, valor=metrica.valor, icono=metrica.icono %}
+    {% with label=metrica.label, valor=metrica.valor, icono=metrica.icono, tendencia=metrica.tendencia, estado=metrica.estado %}
       {% include "components/_tarjeta_metrica.html" %}
     {% endwith %}
   {% endfor %}
@@ -20,4 +20,27 @@
 ] %}
   {% include "components/_accesos_rapidos.html" %}
 {% endwith %}
+
+<section class="actividad">
+  <h3 class="accesos-rapidos__title">Actividad reciente</h3>
+  {% if actividad_estado == "vacio" %}
+  <div class="actividad--empty">
+    <span class="icon " style="width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">{{ icon("info", size=20) }}</span>
+    <span>Aún no hay actividad registrada</span>
+  </div>
+  {% elif actividad_estado == "error" %}
+  <div class="actividad--error">
+    <span class="icon " style="width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">{{ icon("alert-circle", size=20) }}</span>
+    <span>No se pudo cargar la actividad reciente</span>
+  </div>
+  {% else %}
+  <div class="actividad__grid">
+    {% for item in actividad %}
+      {% with tipo=item.tipo, descripcion=item.descripcion, fecha=item.fecha, badge_variante=item.badge_variante, estado=item.estado %}
+        {% include "components/_actividad_item.html" %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
 {% endblock %}

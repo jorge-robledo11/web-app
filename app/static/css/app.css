@@ -295,6 +295,61 @@ h3 {
   color: var(--color-danger);
 }
 
+/* --- Estados de tarjeta métrica: carga y error --- */
+.tarjeta-metrica__estado-datos,
+.tarjeta-metrica__estado-carga,
+.tarjeta-metrica__estado-error {
+  display: none;
+}
+
+.tarjeta-metrica__estado-datos {
+  display: block;
+}
+
+.tarjeta-metrica.is-loading .tarjeta-metrica__estado-datos {
+  display: none;
+}
+
+.tarjeta-metrica.is-loading .tarjeta-metrica__estado-carga {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) 0;
+}
+
+.tarjeta-metrica.is-error .tarjeta-metrica__estado-datos {
+  display: none;
+}
+
+.tarjeta-metrica.is-error .tarjeta-metrica__estado-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: center;
+  padding: var(--space-3) 0;
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.tarjeta-metrica__skeleton {
+  width: 60%;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  background: var(--color-border);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.tarjeta-metrica__skeleton--small {
+  width: 40%;
+  height: 14px;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 /* --- Grid de métricas --- */
 .metricas {
   display: grid;
@@ -344,7 +399,68 @@ h3 {
 }
 
 .acceso-rapido__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
   color: var(--color-accent);
+}
+
+/* --- Actividad reciente --- */
+.actividad {
+  margin-bottom: var(--space-8);
+}
+
+.actividad__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.actividad-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.actividad-item__tipo {
+  flex-shrink: 0;
+}
+
+.actividad-item__descripcion {
+  flex: 1;
+  font-size: 14px;
+  line-height: var(--line-height-base);
+}
+
+.actividad-item__fecha {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.actividad--empty,
+.actividad--error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: center;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.actividad--error {
+  color: var(--color-danger);
 }
 
 /* --- Card de propiedad --- */
@@ -588,6 +704,11 @@ h3 {
 
   .accesos-rapidos__grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .actividad-item {
+    flex-direction: column;
+    gap: var(--space-2);
   }
 }
 

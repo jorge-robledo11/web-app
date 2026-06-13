@@ -1,6 +1,7 @@
 ---
 name: setup-constitution
-description: Crea o actualiza constitution.md del proyecto Realtor
+description: >
+  Crea o actualiza constitution.md del proyecto Realtor.
 ---
 
 /speckit.constitution
@@ -10,7 +11,7 @@ Crea o actualiza la constitución inicial del proyecto Realtor en `v1.0.0`.
 Usa como fuente principal las reglas, herramientas y detalles definidos en:
 
 ```text
-.opencode/prompts/000-setup-constitution.prompt.md
+.opencode/commands/prompts/000-setup-constitution.prompt.md
 ```
 
 La constitución final debe escribirse en:

@@ -146,7 +146,7 @@ métricas ni accesos rápidos.
   propio estado de error; no se colapsa la sección completa.
 - ¿Qué sucede si un acceso rápido apunta a una URL que aún no existe? La tarjeta
   se renderiza con `href="#"` y se muestra igual visualmente, sin error.
-- ¿Qué sucede en pantallas menores a 1024px (tablet)? La sidebar se oculta con
+- ¿Qué sucede en pantallas menores a 1023px (tablet)? La sidebar se oculta con
   toggle; el contenido principal ocupa el ancho completo; las métricas se
   reorganizan en 2 columnas.
 - ¿Qué sucede en pantallas menores a 768px (móvil)? Las métricas se reorganizan en
@@ -190,7 +190,7 @@ métricas ni accesos rápidos.
 - **FR-007**: La sección de actividad reciente DEBE tener un estado de error
   visible cuando falle la obtención de datos.
 - **FR-008**: El layout DEBE adaptarse responsive a los breakpoints definidos:
-  1024px (tablet, sidebar overlay) y 768px (móvil, 1 columna métricas, 2
+  1023px (tablet, sidebar overlay) y 768px (móvil, 1 columna métricas, 2
   columnas accesos).
 - **FR-009**: Todos los valores visuales (colores, espaciados, sombras, radios,
   tipografía) DEBEN consumirse exclusivamente desde los tokens CSS definidos en
@@ -322,7 +322,7 @@ base. Todos los cambios se declaran explícitamente y se trazarán con marcadore
 - El `#flash-zone` de `base.html` se mantiene para mensajes flash globales. Las
   secciones individuales manejan sus propios estados inline, no vía flash-zone.
 - Los iconos Lucide nuevos que requiera la sección de actividad reciente (ej.
-  `clock`, `calendar`, `arrow-up-right`) se agregan como archivos SVG
+  `clock`, `calendar`) se agregan como archivos SVG
   individuales en `app/static/icons/`.
 - El rediseño no introduce dependencias nuevas de CSS, JS ni templates externos.
 - La especificación sigue el flujo canónico de Spec Kit y las reglas de la

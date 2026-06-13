@@ -12,35 +12,35 @@ Actualiza los archivos de gobernanza necesarios para soportar la futura spec
 
 ## Objetivo
 
-Establecer Que Los Tokens Visuales Canónicos Del Frontend No Pueden Modificarse
-Sin Autorización Explícita, Justificación Y Trazabilidad En `tasks.md`.
+Establecer que los tokens visuales canónicos del frontend no pueden modificarse
+sin autorización explícita, justificación y trazabilidad en `tasks.md`.
 
-## Archivos A Revisar
+## Archivos a revisar
 
 - `.opencode/instructions/frontend.instructions.md`
 - `.specify/memory/constitution.md`
 - `AGENTS.md`
 - `.specify/templates/spec-template.md`, si existe.
 
-## Cambios Esperados
+## Cambios esperados
 
 1. En `.opencode/instructions/frontend.instructions.md`, declarar que este
    archivo es la fuente operativa para:
-   - Tokens De Color.
+   - Tokens de color.
    - Espaciado.
    - Radios.
    - Sombras.
    - Tipografía.
    - Breakpoints.
-   - Layout Base.
-   - Componentes Visuales Compartidos.
+   - Layout base.
+   - Componentes visuales compartidos.
 
 2. En `.specify/memory/constitution.md`, agregar una regla global que indique que
    cualquier cambio en tokens visuales canónicos requiere:
-   - Autorización Explícita.
+   - Autorización explícita.
    - Justificación.
-   - Trazabilidad En `tasks.md`.
-   - Registro En `Complexity Tracking` Si Implica Desviación Visual Global.
+   - Trazabilidad en `tasks.md`.
+   - Registro en `Complexity Tracking` si implica desviación visual global.
 
 3. En `AGENTS.md`, reflejar la misma regla como instrucción operativa para
    agentes.
@@ -60,12 +60,12 @@ Sin Autorización Explícita, Justificación Y Trazabilidad En `tasks.md`.
 - Si una modificación a la constitución requiere subir versión, actualiza el
   historial de versiones de la constitución.
 
-## Salida Esperada
+## Salida esperada
 
 Al finalizar, informa:
 
-- Archivos Modificados.
-- Regla Agregada A La Constitución.
-- Si Se Actualizó El Template De Specs.
-- Nueva Versión De La Constitución, Si Cambió.
-- Siguiente Comando Recomendado.
+- Archivos modificados.
+- Regla agregada a la constitución.
+- Si se actualizó el template de specs.
+- Nueva versión de la constitución, si cambió.
+- Siguiente comando recomendado.

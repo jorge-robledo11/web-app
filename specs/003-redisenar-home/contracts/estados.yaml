@@ -1,0 +1,79 @@
+# Contrato de estados visuales por componente
+componentes:
+  _tarjeta_metrica.html:
+    archivo: app/templates/components/_tarjeta_metrica.html
+    accion: extender
+    marcador: "[visual][extension]"
+    props_nuevos:
+      - estado: "datos | carga | error"
+    clases_css:
+      wrapper: ".tarjeta-metrica"
+      modificadores: [".is-loading", ".is-error"]
+      sub_elementos:
+        estado_carga: ".tarjeta-metrica__estado-carga"
+        estado_error: ".tarjeta-metrica__estado-error"
+        estado_datos: ".tarjeta-metrica__estado-datos"
+    test_verificacion: "presencia de clase .is-loading o .is-error en HTML"
+
+  _accesos_rapidos.html:
+    archivo: app/templates/components/_accesos_rapidos.html
+    accion: modificar
+    marcador: "[visual]"
+    cambios:
+      - "Iconos 24px → 28px"
+      - "Mejor espaciado entre icono y label"
+    clases_css:
+      wrapper: ".accesos-rapidos"
+      grid: ".accesos-rapidos__grid"
+      tarjeta: ".acceso-rapido"
+      icono: ".acceso-rapido__icono"
+
+  _actividad_item.html:
+    archivo: app/templates/components/_actividad_item.html
+    accion: crear
+    marcador: "[visual][componente]"
+    props:
+      - tipo: "propiedad | contrato | pago"
+      - descripcion: string
+      - fecha: string
+      - badge_variante: "success | warning | danger | accent | info | muted"
+    clases_css:
+      wrapper: ".actividad-item"
+      tipo_badge: ".actividad-item__tipo"
+      descripcion: ".actividad-item__descripcion"
+      fecha: ".actividad-item__fecha"
+    test_verificacion: "presencia de 3 items con clase .actividad-item"
+
+  _alerta.html:
+    archivo: app/templates/components/_alerta.html
+    accion: reutilizar
+    marcador: null
+    uso: "mensajes de error inline en secciones"
+
+  _badge_estado.html:
+    archivo: app/templates/components/_badge_estado.html
+    accion: reutilizar
+    marcador: null
+    uso: "badge de tipo en items de actividad"
+
+layout:
+  orden_secciones:
+    - metricas
+    - accesos_rapidos
+    - actividad
+  responsive:
+    desktop:
+      width: "> 1024px"
+      metricas: "3 columnas"
+      accesos: "4 columnas"
+      actividad: "1 columna"
+    tablet:
+      width: "768px - 1023px"
+      metricas: "2 columnas"
+      accesos: "2 columnas"
+      actividad: "1 columna"
+    movil:
+      width: "< 768px"
+      metricas: "1 columna"
+      accesos: "2 columnas"
+      actividad: "1 columna"

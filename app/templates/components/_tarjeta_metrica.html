@@ -1,24 +1,44 @@
-{# Tarjeta de métrica: KPI con número, label, icono y tendencia.
+{# Tarjeta de métrica: KPI con número, label, icono, tendencia y estados.
 
   Recibe:
     - label: texto descriptivo
     - valor: número de la métrica
     - icono: nombre del icono Lucide
     - tendencia: diccionario opcional { direccion: "up"|"down", texto: str }
+    - estado: "datos" | "carga" | "error" (default "datos")
 #}
 {% from "macros/icons.html" import icon %}
 
-<div class="tarjeta-metrica">
-  <div class="tarjeta-metrica__header">
-    <div class="tarjeta-metrica__icono">
-      {{ icon(icono, size=24) }}
+{% set estado_clase = "datos" %}
+{% if estado is defined and estado %}
+  {% set estado_clase = estado %}
+{% endif %}
+
+<div class="tarjeta-metrica{% if estado_clase == 'carga' %} is-loading{% endif %}{% if estado_clase == 'error' %} is-error{% endif %}">
+
+  <div class="tarjeta-metrica__estado-datos">
+    <div class="tarjeta-metrica__header">
+      <div class="tarjeta-metrica__icono">
+        {{ icon(icono, size=24) }}
+      </div>
     </div>
+    <div class="tarjeta-metrica__valor">{{ "{:,}".format(valor) }}</div>
+    <div class="tarjeta-metrica__label">{{ label }}</div>
+    {% if tendencia %}
+    <div class="tarjeta-metrica__tendencia tarjeta-metrica__tendencia--{{ tendencia.direccion }}">
+      {{ tendencia.texto }}
+    </div>
+    {% endif %}
   </div>
-  <div class="tarjeta-metrica__valor">{{ "{:,}".format(valor) }}</div>
-  <div class="tarjeta-metrica__label">{{ label }}</div>
-  {% if tendencia %}
-  <div class="tarjeta-metrica__tendencia tarjeta-metrica__tendencia--{{ tendencia.direccion }}">
-    {{ tendencia.texto }}
+
+  <div class="tarjeta-metrica__estado-carga" role="status" aria-label="Cargando métrica">
+    <div class="tarjeta-metrica__skeleton"></div>
+    <div class="tarjeta-metrica__skeleton tarjeta-metrica__skeleton--small"></div>
   </div>
-  {% endif %}
+
+  <div class="tarjeta-metrica__estado-error" role="alert">
+    {{ icon("alert-circle", size=20) }}
+    <span>Error al cargar</span>
+  </div>
+
 </div>

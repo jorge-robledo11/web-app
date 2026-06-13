@@ -1,0 +1,68 @@
+# Contrato del endpoint GET /
+endpoint:
+  method: GET
+  path: /
+  response_type: HTMLResponse
+  template: dashboard.html
+
+contexto:
+  request:
+    type: Request
+    source: fastapi
+  metricas:
+    type: list[dict]
+    required: true
+    items:
+      label: string
+      valor: integer
+      icono: string
+      tendencia:
+        type: dict
+        optional: true
+        keys:
+          direccion: "up | down"
+          texto: string
+      estado:
+        type: string
+        default: datos
+        values: [datos, carga, error]
+  accesos:
+    type: list[dict]
+    required: true
+    items:
+      icono: string
+      label: string
+      url: string
+  actividad:
+    type: list[dict]
+    required: true
+    items:
+      tipo: string
+      descripcion: string
+      fecha: string
+      badge_variante: string
+      estado:
+        type: string
+        default: datos
+        values: [datos, vacio, error]
+
+layout:
+  orden: [metricas, accesos, actividad]
+  base_template: base.html
+  blocks_overrideados: [title, content]
+
+estados_visuales:
+  metricas:
+    datos: ".tarjeta-metrica"                # normal
+    carga: ".tarjeta-metrica.is-loading"      # skeleton/spinner
+    error: ".tarjeta-metrica.is-error"        # mensaje de error
+  accesos:
+    datos: ".accesos-rapidos"                # normal
+  actividad:
+    datos: ".actividad"                      # normal
+    vacio: ".actividad--empty"               # mensaje + icono
+    error: ".actividad--error"               # mensaje de error
+
+iconos_requeridos:
+  existentes: [building-2, users, file-text, wallet]
+  nuevos: [clock, calendar]

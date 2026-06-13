@@ -91,3 +91,7 @@ report.md
 *.tar
 *.tar.gz
 *.7z
+
+.opencode/node_modules/
+.opencode/package.json
+.opencode/package-lock.json

@@ -23,5 +23,16 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Instrucciones de frontend extendidas con la sección 0 (tokens visuales canónicos como fuente operativa única) y reglas de trazabilidad para cambios visuales.
 - Constitución del proyecto (`.specify/memory/constitution.md`) ampliada con sección XII: protección de tokens visuales y reglas de gobernanza.
 - Agente `changelog` refactorizado: responsabilidad de auditoría de commits extraída al agente `improve-commits`; permisos reducidos (eliminados `git commit --amend`, `git rebase`, `git merge-base`, `mktemp`, `cat`).
+- Scripts del proyecto reorganizados en subdirectorios `ci/`, `dev/` y `tools/`; se agregaron `.repomixignore` y `scripts/tools/context.sh`, y se corrigió el hook post-commit para manejar el sufijo `.changelog`.
+- Agente `changelog` actualizado con estrategia de fuente dual (buffer pendiente o git log) para determinar el alcance de curaduría.
+- Agente `improve-commits` ampliado con reglas consolidadas de nomenclatura del proyecto.
 
-<!-- changelog:last-processed-commit=1d1b13087b017712defd464e6ad668ec5ec9bfa1 -->
+### Added
+
+- Comandos `changelog` e `improve-commits` registrados en `opencode.json` con plantillas de ejecución.
+
+### Removed
+
+- Script `sync-agent-models.sh` y archivo `config/models.yaml` eliminados tras completar su uso transitorio.
+
+<!-- changelog:last-processed-commit=6163426798e49251b9b7bb253b3553ea260fff13 -->
