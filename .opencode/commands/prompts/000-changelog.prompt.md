@@ -26,7 +26,7 @@ Puede crear o modificar únicamente archivos de soporte operativo:
 docs/context/
 scripts/
 scripts/hooks/
-.opencode/agent/
+.opencode/agents/
 .opencode/commands/prompts/
 .gitignore
 .repomixignore
@@ -55,7 +55,7 @@ CHANGELOG.md
 scripts/changelog.sh
 scripts/hooks/post-commit.changelog
 scripts/install-git-hooks.sh
-.opencode/agent/changelog.md
+.opencode/agents/changelog.md
 ```
 
 ## Archivo de comando existente
@@ -589,7 +589,7 @@ Si ya existe `.git/hooks/post-commit`, debe:
 Crea:
 
 ```text
-.opencode/agent/changelog.md
+.opencode/agents/changelog.md
 ```
 
 El subagente debe:
