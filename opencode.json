@@ -3,5 +3,17 @@
   "instructions": [
     "AGENTS.md",
     ".opencode/instructions/*.instructions.md"
-  ]
+  ],
+  "command": {
+    "improve-commits": {
+      "agent": "improve-commits",
+      "subtask": true,
+      "model": "opencode-go/deepseek-v4-flash"
+    },
+    "changelog": {
+      "agent": "changelog",
+      "subtask": true,
+      "model": "opencode-go/deepseek-v4-flash"
+    }
+  }
 }
