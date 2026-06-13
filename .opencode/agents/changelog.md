@@ -3,7 +3,7 @@ description: >
   Cura el changelog del proyecto siguiendo Keep a Changelog, agrupando cambios
   por intención a partir del buffer técnico y el historial Git.
 mode: subagent
-model: deepseek/deepseek-v4-flash
+model: opencode-go/deepseek-v4-flash
 permission:
   read: allow
   edit: allow

@@ -1,7 +1,7 @@
 .PHONY: help backend context \
         db-up db-down db-reset db-migrate db-create \
         db-logs db-status db-shell \
-        test lint format typecheck check clean visual-check hooks-install
+        test lint format typecheck check clean visual-check hooks-install sync-agents
 
 .DEFAULT_GOAL := help
 
@@ -73,6 +73,9 @@ context: ## Genera el estado del repositorio en docs/context/repo-state.xml
 
 hooks-install: ## Instala hooks Git del proyecto (post-commit changelog)
 	bash scripts/tools/install-git-hooks.sh
+
+sync-agents: ## Sincroniza modelos de agentes desde config/models.yaml
+	bash scripts/tools/sync-agent-models.sh
 
 visual-check: ## Audit trail visual contrast feature‑activa
 	bash scripts/tools/check-visual-trace.sh
