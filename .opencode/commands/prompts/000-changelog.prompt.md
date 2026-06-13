@@ -51,7 +51,7 @@ Crea estos archivos si no existen:
 
 ```text
 docs/context/.changelog-pending.md
-docs/context/CHANGELOG.md
+CHANGELOG.md
 scripts/changelog.sh
 scripts/hooks/post-commit.changelog
 scripts/install-git-hooks.sh
@@ -109,7 +109,7 @@ git commit manual
   -> scripts/changelog.sh
   -> docs/context/.changelog-pending.md
   -> /changelog
-  -> docs/context/CHANGELOG.md
+  -> CHANGELOG.md
 ```
 
 El hook y el script solo capturan información mecánica.
@@ -149,7 +149,7 @@ No es el changelog final del proyecto.
 El changelog curado vive en:
 
 ```text
-docs/context/CHANGELOG.md
+CHANGELOG.md
 ```
 
 ---
@@ -175,7 +175,7 @@ docs/context/CHANGELOG.md
 
 ## Changelog curado
 
-Crea `docs/context/CHANGELOG.md`.
+Crea `CHANGELOG.md`.
 
 Debe seguir esta estructura:
 
@@ -222,7 +222,7 @@ Reglas:
 
 ## Versionado del changelog
 
-`docs/context/CHANGELOG.md` debe ser versionado en el repositorio.
+`CHANGELOG.md` debe ser versionado en el repositorio.
 
 Motivo:
 
@@ -242,7 +242,7 @@ Motivo:
 
 ## Marca de último commit procesado
 
-`docs/context/CHANGELOG.md` debe incluir una marca HTML al final del archivo:
+`CHANGELOG.md` debe incluir una marca HTML al final del archivo:
 
 ```html
 <!-- changelog:last-processed-commit=<hash> -->
@@ -263,7 +263,7 @@ todo el historial por defecto.
 
 Debe aplicar este orden:
 
-1. Si `docs/context/CHANGELOG.md` contiene una marca `changelog:last-processed-commit`,
+1. Si `CHANGELOG.md` contiene una marca `changelog:last-processed-commit`,
    audita solo commits posteriores a esa marca.
 2. Si no existe marca de último commit procesado, audita como máximo los últimos
    20 commits.
@@ -595,9 +595,9 @@ Crea:
 El subagente debe:
 
 * Leer `docs/context/.changelog-pending.md`.
-* Leer `docs/context/CHANGELOG.md`.
+* Leer `CHANGELOG.md`.
 * Revisar contexto Git reciente con comandos de solo lectura.
-* Actualizar `docs/context/CHANGELOG.md`.
+* Actualizar `CHANGELOG.md`.
 * Agrupar cambios según Keep a Changelog.
 * Omitir ruido.
 * Conservar solo cambios notables.
@@ -624,12 +624,12 @@ Este archivo es el prompt del comando `/changelog`.
 No lo recrees ni lo dupliques.
 
 El prompt del comando debe invocar al subagente de changelog y pedirle que
-actualice `docs/context/CHANGELOG.md` usando el buffer pendiente y el historial
+actualice `CHANGELOG.md` usando el buffer pendiente y el historial
 Git reciente.
 
 El comando debe pedir explícitamente:
 
-* Actualizar `docs/context/CHANGELOG.md`.
+* Actualizar `CHANGELOG.md`.
 * Leer `docs/context/.changelog-pending.md`.
 * Auditar commits recientes respetando el alcance definido.
 * Sugerir renombres para commits pobres.
@@ -682,7 +682,7 @@ docs/context/.changelog-pending.md
 No ignores:
 
 ```text
-docs/context/CHANGELOG.md
+CHANGELOG.md
 ```
 
 ## Reglas obligatorias
@@ -729,7 +729,7 @@ Al finalizar informa:
 * Si el hook quedó instalado o solo preparado.
 * Cómo instalar el hook.
 * Cómo ejecutar `/changelog`.
-* Si `docs/context/CHANGELOG.md` quedó listo y versionable.
+* Si `CHANGELOG.md` quedó listo y versionable.
 * Si `docs/context/.changelog-pending.md` quedó ignorado.
 * Cantidad máxima de commits que auditará el subagente por defecto.
 * Si se agregó o detectó la marca `changelog:last-processed-commit`.

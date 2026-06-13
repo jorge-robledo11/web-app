@@ -1,7 +1,7 @@
 .PHONY: help backend context \
         db-up db-down db-reset db-migrate db-create \
         db-logs db-status db-shell \
-        test lint format typecheck check clean visual-check
+        test lint format typecheck check clean visual-check hooks-install
 
 .DEFAULT_GOAL := help
 
@@ -72,4 +72,11 @@ clean: ## Elimina __pycache__, .pytest_cache, .ruff_cache, .mypy_cache, *.pyc
 # ╚══════════════════════════════════════════╝
 
 visual-check: ## Audit trail visual contrast feature‑activa
-	bash scripts/visual-check.sh
+	bash scripts/check-visual-trace.sh
+
+# ╔══════════════════════════════════════════╗
+# ║               TOOLING                    ║
+# ╚══════════════════════════════════════════╝
+
+hooks-install: ## Instala hooks Git del proyecto (post-commit changelog)
+	bash scripts/install-git-hooks.sh
