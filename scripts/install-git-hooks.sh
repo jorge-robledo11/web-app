@@ -21,7 +21,7 @@ skipped=0
 install_hook() {
   local name="$1"
   local src="$HOOKS_SRC/$name"
-  local dst="$HOOKS_DST/$name"
+  local dst="$HOOKS_DST/${name%%.changelog}"
 
   if [[ ! -f "$src" ]]; then
     echo "  [❌] $name: fuente no encontrada en $src"
