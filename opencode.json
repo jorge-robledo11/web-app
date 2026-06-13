@@ -6,11 +6,13 @@
   ],
   "command": {
     "improve-commits": {
+      "template": "Ejecuta el agente `improve-commits` siguiendo sus instrucciones propias. La fuente de verdad es `.opencode/agents/improve-commits.md`. Mantén todo en español.",
       "agent": "improve-commits",
       "subtask": true,
       "model": "opencode-go/deepseek-v4-flash"
     },
     "changelog": {
+      "template": "Ejecuta el agente `changelog` siguiendo sus instrucciones propias. La fuente de verdad es `.opencode/agents/changelog.md`. Mantén todo en español.",
       "agent": "changelog",
       "subtask": true,
       "model": "opencode-go/deepseek-v4-flash"
