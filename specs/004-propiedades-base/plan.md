@@ -14,7 +14,7 @@ cambios visuales.
 
 ## Technical Context
 
-**Language/Version**: Python 3.13+
+**Language/Version**: Python 3.13.13
 **Primary Dependencies**: FastAPI, SQLAlchemy 2.x async, Alembic, asyncpg, Pydantic v2
 **Storage**: PostgreSQL vía Docker Compose
 **Testing**: pytest + pytest-asyncio + httpx.AsyncClient + Testcontainers
@@ -30,7 +30,7 @@ cambios visuales.
 
 | Regla | Estado | Evidencia |
 |-------|--------|-----------|
-| II. Stack: Python 3.13+, uv, FastAPI, SQLAlchemy async, Alembic, Pydantic v2 | ✅ | plan usa stack canónico |
+| II. Stack: Python 3.13.13, uv, FastAPI, SQLAlchemy async, Alembic, Pydantic v2 | ✅ | plan usa stack canónico |
 | II. Stack: asyncpg para PostgreSQL | ✅ | seed script usa `create_async_engine` + asyncpg |
 | III. Prohibiciones: sin `Column`, `Query`, sesiones sync | ✅ | `Mapped[...]`, `mapped_column`, `AsyncSession` |
 | III. Prohibiciones: sin strings mágicos para estados | ✅ | `StrEnum` + `Enum` de SQLAlchemy |

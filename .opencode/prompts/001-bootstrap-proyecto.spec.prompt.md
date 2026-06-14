@@ -176,7 +176,7 @@ Dependencias esperadas:
 ## REGLAS DE CONSTITUCIÓN A RESPETAR
 
 - Stack inmutable según constitución vigente.
-- Python target: `3.13+`.
+- Python target: `3.13.13`.
 - PostgreSQL local con Docker o Docker Compose.
 - `uv` como único gestor de proyecto.
 - No usar Supabase.

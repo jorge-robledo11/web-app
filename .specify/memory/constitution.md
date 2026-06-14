@@ -1,34 +1,26 @@
 <!--
 Informe de impacto de sincronización
-- Cambio de versión: 1.0.0 -> 1.1.0
+- Cambio de versión: 1.2.0 -> 1.3.0
 - Secciones agregadas:
-  - VII. Modo interactivo de preguntas
-  - XVIII. Historial de versiones
+  - IX.5. Organización de tests (nueva subsección con estructura
+    obligatoria tests/unit/ y tests/integration/)
 - Secciones modificadas:
-  - VI. Flujo Spec Kit obligatorio
-  - XVII. Gobernanza
-- Secciones renumeradas:
-  - VII. Test-Driven Development -> VIII. Test-Driven Development
-  - VIII. Calidad y validación -> IX. Calidad y validación
-  - IX. Base de datos -> X. Base de datos
-  - X. Async-First -> XI. Async-First
-  - XI. Frontend y sistema visual -> XII. Frontend y sistema visual
-  - XII. Estructura obligatoria del repositorio -> XIII. Estructura obligatoria del repositorio
-  - XIII. Contratos de dominio -> XIV. Contratos de dominio
-  - XIV. Complexity Tracking -> XV. Complexity Tracking
-  - XV. Jerarquía de autoridad -> XVI. Jerarquía de autoridad
-  - XVI. Gobernanza -> XVII. Gobernanza
+  - XII. Frontend y sistema visual: subsección «Sistema visual
+    canónico» degradada de ## a ### para corregir nivel jerárquico
+  - XIII. Estructura obligatoria del repositorio: tests movidos de
+    app/modules/<feature>/tests/ a tests/unit/<feature>/ y
+    tests/integration/<feature>/ en raíz
 - Secciones eliminadas:
   - Ninguna
-- Artefactos relacionados a revisar:
-  - AGENTS.md
-  - .opencode/instructions/*.md
-  - .opencode/commands/*.md
-  - .specify/templates/*.md
+- Artefactos relacionados revisados:
+  - AGENTS.md ✅ ya usa 3.13.13
+  - .specify/templates/plan-template.md ✅ sin cambios necesarios
+  - .specify/templates/spec-template.md ✅ sin cambios necesarios
+  - .specify/templates/tasks-template.md ✅ sin cambios necesarios
+  - tests/conftest.py ✅ fixture async_client en raíz
+  - tests/integration/conftest.py ✅ Testcontainers PostgreSQL
 - Pendientes de seguimiento:
-  - Actualizar AGENTS.md con el resumen operativo del modo interactivo.
-  - Verificar que speckit.specify y speckit.clarify usen una pregunta a la vez.
-  - Verificar que los prompts custom de clarificación respeten este protocolo.
+  - Ninguno
 -->
 
 # Constitución del Proyecto Realtor
@@ -51,7 +43,7 @@ constitución.
 
 | Componente       | Herramienta                                                                          |
 | ---------------- | ------------------------------------------------------------------------------------ |
-| Runtime          | Python 3.13.13, gestionado con `uv`                                                    |
+| Runtime          | Python 3.13.13, gestionado con `uv`                                                   |
 | Empaquetado      | `pyproject.toml` + `uv.lock`                                                         |
 | HTTP             | FastAPI                                                                              |
 | Vistas           | Jinja2 server-rendered + HTMX                                                        |
@@ -210,7 +202,7 @@ Reglas de las opciones:
   implementación, pruebas o configuración.
 - La opción marcada con `← Recomendado` debe ser la más alineada con FastAPI,
   PostgreSQL local, SQLAlchemy async, Docker o Docker Compose, `uv`,
-  Python 3.13+ y esta constitución.
+  Python 3.13.13 y esta constitución.
 - La opción `D) Otro` siempre debe estar presente cuando existan alternativas
   personalizadas razonables.
 
@@ -323,6 +315,35 @@ Reglas de testing:
 * La base de datos de pruebas debe estar aislada.
 * Las pruebas deben ser deterministas y enfocadas en comportamiento observable.
 
+### Organización de tests
+
+La estructura de directorios de tests es obligatoria y no negociable:
+
+```text
+tests/
+├── conftest.py          # Fixtures compartidas (cliente HTTP, etc.)
+├── unit/                # Pruebas unitarias puras
+│   └── <feature>/       # Sin dependencias externas de ningún tipo
+└── integration/         # Pruebas de integración con infraestructura real
+    └── <feature>/       # PostgreSQL vía Testcontainers
+```
+
+Reglas obligatorias:
+
+* Los tests unitarios viven en `tests/unit/<feature>/`. Está PROHIBIDO que
+  dependan de base de datos, red, sistema de archivos o cualquier
+  infraestructura externa.
+* Los tests de integración viven en `tests/integration/<feature>/`. DEBEN
+  usar Testcontainers para PostgreSQL. Está PROHIBIDO conectarse a la base
+  de datos de desarrollo.
+* El directorio `tests/unit/` y `tests/integration/` son obligatorios en la
+  raíz del repositorio. No se aceptan tests dentro de `app/modules/`.
+* Las fixtures de infraestructura (conexión a BD, contenedores) solo pueden
+  definirse en `tests/integration/conftest.py`. Está PROHIBIDO definirlas en
+  `tests/conftest.py` raíz.
+* El contenedor PostgreSQL de Testcontainers debe ser `postgres:16-alpine`,
+  coherente con la imagen de desarrollo.
+
 ## X. Base de datos
 
 * PostgreSQL se ejecuta localmente con Docker o Docker Compose.
@@ -389,7 +410,7 @@ están protegidos contra modificaciones no autorizadas.
 * La spec `002-blindar-tokens-visuales` define el proceso completo de
   gobernanza visual.
 
-## Sistema visual canónico
+### Sistema visual canónico
 
 Para todo trabajo frontend, la definición canónica de tokens visuales vive en
 `.opencode/instructions/frontend.instructions.md`.
@@ -430,8 +451,6 @@ app/
       service.py
       templates/
         *.html
-      tests/
-        test_*.py
   static/
     css/
       app.css
@@ -448,6 +467,15 @@ app/
 alembic/
   env.py
   versions/
+tests/
+  conftest.py
+  unit/
+    <feature>/
+      test_*.py
+  integration/
+    conftest.py
+    <feature>/
+      test_*.py
 pyproject.toml
 uv.lock
 docker-compose.yaml
@@ -520,5 +548,12 @@ explícitamente y seguir la capa de mayor autoridad.
 * **v1.2.0** — Agregada la regla de blindaje de tokens visuales canónicos en
   la sección XII, exigiendo autorización explícita, justificación y trazabilidad
   en `tasks.md` con marcador `[visual]`.
+* **v1.3.0** — Agregada la subsección «Organización de tests» en la sección IX
+  con estructura obligatoria `tests/unit/` y `tests/integration/`, prohibición
+  de dependencias externas en tests unitarios, obligatoriedad de Testcontainers
+  en tests de integración, y prohibición de tests dentro de `app/modules/`.
+  Actualizada la estructura del repositorio en la sección XIII para reflejar
+  la nueva ubicación de tests. Corregido el nivel jerárquico de la
+  subsección «Sistema visual canónico».
 
-**Versión**: 1.2.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-10
+**Versión**: 1.3.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-14

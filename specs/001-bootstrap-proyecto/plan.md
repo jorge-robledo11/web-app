@@ -36,7 +36,7 @@ Smoke tests con mocks de sesión.
 
 **Metas de rendimiento**: `GET /health` < 500ms con BD disponible
 
-**Restricciones**: Python 3.13+, async-first para I/O, CSS 100% propio sin frameworks,
+**Restricciones**: Python 3.13.13, async-first para I/O, CSS 100% propio sin frameworks,
 cero dependencias CDN en runtime, sin Supabase, extensión `.yaml` nunca `.yml`
 
 **Escala/Alcance**: Bootstrap inicial; sin usuarios reales ni módulos de dominio.

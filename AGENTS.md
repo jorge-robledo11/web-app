@@ -20,7 +20,7 @@ commit DEBEN estar en español. NUNCA mezclar idiomas dentro de un mismo archivo
 
 ## Stack obligatorio inmutable
 
-* Python 3.13+, gestionado con `uv` (`pyproject.toml` + `uv.lock`).
+* Python 3.13.13, gestionado con `uv` (`pyproject.toml` + `uv.lock`).
 * FastAPI para HTTP.
 * Jinja2 server-rendered + HTMX para vistas.
 * SQLAlchemy 2.x async con `Mapped[...]`, `mapped_column`, `select()` y
@@ -149,7 +149,7 @@ Reglas de las opciones:
   implementación, pruebas o configuración.
 * La opción marcada con `← Recomendado` debe ser la más alineada con FastAPI,
   PostgreSQL local, SQLAlchemy async, Docker o Docker Compose, `uv`,
-  Python 3.13+ y la constitución.
+  Python 3.13.13 y la constitución.
 * La opción `D) Otro` debe estar presente cuando existan alternativas
   personalizadas razonables.
 

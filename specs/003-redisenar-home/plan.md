@@ -15,7 +15,7 @@ asíncronos nuevos. No se modifican tokens visuales canónicos ni `base.html`.
 
 ## Technical Context
 
-**Language/Version**: Python 3.13+
+**Language/Version**: Python 3.13.13
 
 **Primary Dependencies**: FastAPI, Jinja2, HTMX (vendoreado), SQLAlchemy 2.x async
 

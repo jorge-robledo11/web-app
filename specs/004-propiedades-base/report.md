@@ -52,7 +52,7 @@ con la constitución del proyecto.
 
 | Regla constitucional | Verificación | Estado |
 |---------------------|-------------|--------|
-| II. Stack inmutable | Python 3.13+, FastAPI, SQLAlchemy async, Alembic, asyncpg, Pydantic v2 | ✅ |
+| II. Stack inmutable | Python 3.13.13, FastAPI, SQLAlchemy async, Alembic, asyncpg, Pydantic v2 | ✅ |
 | III. Prohibiciones | Sin Column, Query, strings mágicos, psycopg2, .yml | ✅ |
 | IV. Vertical Slice | app/modules/propiedades/ con estructura completa | ✅ |
 | VIII. TDD | Pruebas en plan antes de implementación | ✅ |

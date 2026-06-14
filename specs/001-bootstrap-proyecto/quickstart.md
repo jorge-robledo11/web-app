@@ -4,7 +4,7 @@
 
 ## Prerrequisitos
 
-- Python 3.13+ (o `uv` capaz de descargarlo automáticamente)
+- Python 3.13.13 (o `uv` capaz de descargarlo automáticamente)
 - Docker y Docker Compose
 - `uv` instalado (https://docs.astral.sh/uv/)
 

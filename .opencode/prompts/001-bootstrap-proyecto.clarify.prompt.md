@@ -52,7 +52,7 @@ D) Otro — escribe tu respuesta
 
 3. La opción recomendada siempre debe estar marcada con `← Recomendado`. Debe
    ser la opción más alineada con FastAPI, PostgreSQL local, Docker, `uv`,
-   Python 3.13+ y la constitución del proyecto.
+   Python 3.13.13 y la constitución del proyecto.
 
 4. Si respondo `D` o escribo texto libre, acepta mi respuesta, confírmala en una
    línea y pasa a la siguiente pregunta.

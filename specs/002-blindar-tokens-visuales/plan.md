@@ -15,7 +15,7 @@ de gobernanza (constitución, `AGENTS.md`, `frontend.instructions.md`,
 
 ## Contexto técnico
 
-**Lenguaje/Versión**: Bash (script de verificación), Python 3.13 (proyecto)
+**Lenguaje/Versión**: Bash (script de verificación), Python 3.13.13 (proyecto)
 
 **Dependencias principales**: Ninguna nueva. El script usa solo `git` y `bash`
 estándar.
