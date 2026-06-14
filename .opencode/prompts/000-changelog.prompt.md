@@ -3,6 +3,9 @@ name: 000-changelog
 description: >
   Configura el sistema de changelog del proyecto: hook post-commit,
   changelog curado, subagente cronista y comando /changelog.
+usage: "@.opencode/prompts/000-changelog.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
 
 Implementa el sistema base de changelog y auditoría de mensajes de commit
