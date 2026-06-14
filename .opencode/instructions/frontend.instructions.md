@@ -128,7 +128,7 @@ radios o sombras en componentes.
 
 Los siguientes tokens son canónicos y deben mantenerse exactamente en `app/static/css/app.css`.
 
-No se permite sustituir la paleta por variantes “equivalentes”, reinterpretaciones estéticas 
+No se permite sustituir la paleta por variantes “equivalentes”, reinterpretaciones estéticas
 ni cambios implícitos durante la implementación.
 
 Cualquier cambio de token visual requiere:

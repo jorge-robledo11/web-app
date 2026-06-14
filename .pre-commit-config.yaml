@@ -1,0 +1,106 @@
+default_language_version:
+  python: python3.13
+
+repos:
+  # 1. Modernización de sintaxis Python
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+        args: [--py313-plus]
+
+  # 2. Ruff: lint + format rápido sobre archivos staged
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.17
+    hooks:
+      - id: ruff-check
+        args: [--fix, --unsafe-fixes]
+      - id: ruff-format
+
+  # 3. Verificaciones generales de archivos
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-toml
+      - id: check-json
+      - id: check-ast
+      - id: debug-statements
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: detect-private-key
+      - id: check-added-large-files
+        args: [--maxkb=750]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: end-of-file-fixer
+        exclude: ^app/static/vendor/htmx\.min\.js$
+      - id: trailing-whitespace
+        exclude: ^app/static/vendor/htmx\.min\.js$
+
+  # 4. Docstrings
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        files: ^(app|scripts)/.*\.py$
+
+  # 5. Checks del proyecto usando scripts separados
+  - repo: local
+    hooks:
+      - id: forbid-yml-files
+        name: prohibir archivos .yml
+        entry: >
+          bash -c 'files="$(git ls-files "*.yml" ":(exclude).specify/**")";
+          if [ -n "$files" ]; then
+            echo "$files";
+            echo "Usa .yaml, no .yml";
+            exit 1;
+          fi'
+        language: system
+        pass_filenames: false
+
+      - id: forbid-python-packaging-files
+        name: prohibir requirements.txt y setup.py
+        entry: bash -c 'test ! -e requirements.txt && test ! -e setup.py'
+        language: system
+        pass_filenames: false
+
+      - id: lint
+        name: lint del proyecto
+        entry: bash scripts/ci/lint.sh
+        language: system
+        pass_filenames: false
+
+      - id: format-project
+        name: format completo del proyecto
+        entry: bash scripts/ci/format.sh
+        language: system
+        pass_filenames: false
+
+      - id: typecheck
+        name: typecheck del proyecto
+        entry: bash scripts/ci/typecheck.sh
+        language: system
+        pass_filenames: false
+
+      - id: test
+        name: tests del proyecto
+        entry: bash scripts/ci/test.sh
+        language: system
+        pass_filenames: false
+
+      - id: visual-trace-check
+        name: check visual trace
+        entry: bash scripts/tools/check-visual-trace.sh
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+      - id: clean
+        name: limpiar caches del proyecto
+        entry: bash scripts/ci/clean.sh
+        language: system
+        pass_filenames: false
+        stages: [manual]

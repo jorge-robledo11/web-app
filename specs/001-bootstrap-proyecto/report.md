@@ -70,6 +70,6 @@ auditorías anteriores fueron verificadas:
 ## Conclusión
 
 * No se detectaron inconsistencias. Los 2 CRÍTICOS y 4 ADVERTENCIAS de auditorías
-anteriores están corregidos y verificados. 
-* Solo persisten 2 SUGERENCIAS no bloqueantes. 
+anteriores están corregidos y verificados.
+* Solo persisten 2 SUGERENCIAS no bloqueantes.
 * La feature está lista para `/speckit.tasks`.
