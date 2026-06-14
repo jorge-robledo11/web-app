@@ -1,0 +1,71 @@
+---
+name: 003-redisenar-home-plan
+description: >
+  Genera el plan técnico de la spec 003-redisenar-home.
+spec_kit_command: "/speckit.plan"
+usage: "/speckit.plan @.opencode/prompts/003-redisenar-home.plan.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
+---
+Genera `plan.md` para la feature activa `003-redisenar-home` usando el
+workflow canónico de Spec Kit.
+
+Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el comando
+ya puede resolverlas.
+
+## Reglas
+
+- Mantén todo en español.
+- No implementes código.
+- No generes `tasks.md`.
+- Respeta la constitución, `AGENTS.md`, `spec.md`, clarificaciones y las
+  instrucciones activas de `.opencode/instructions/*.instructions.md`.
+- Respeta la gobernanza visual vigente definida por `002-blindar-tokens-visuales`.
+- No agregues decisiones nuevas que no estén respaldadas por la spec o sus
+  clarificaciones.
+- Si detectas una ambigüedad que bloquee el plan, pausa y pregunta antes de
+  continuar.
+- Registra cualquier desviación en `Complexity Tracking`.
+
+## Alcance esperado
+
+El plan debe cubrir, cuando aplique:
+
+- Estructura técnica del rediseño de la Home.
+- Templates Jinja afectados.
+- Componentes o parciales reutilizados.
+- Cambios esperados en `app.css`.
+- Reglas de gobernanza visual aplicables.
+- Estados visuales relevantes: carga, vacío, error, éxito o navegación.
+- Criterios responsive.
+- Estrategia de pruebas.
+- Riesgos técnicos.
+- Dependencias o restricciones detectadas.
+
+## Contratos
+
+Si el plan genera archivos dentro de `contracts/*.yaml`, esos archivos DEBEN
+contener YAML válido y parseable.
+
+No escribas Markdown, texto narrativo libre ni bloques de código dentro de
+archivos `.yaml`.
+
+La estructura de cada contrato debe ser consistente, explícita y adecuada al tipo
+de contrato generado por Spec Kit.
+
+Si el contenido necesita explicación narrativa, contexto o notas de diseño, debe
+ir en `plan.md`, `research.md` o `quickstart.md`, no en `contracts/*.yaml`.
+
+Antes de finalizar, verifica que cada archivo `contracts/*.yaml` pueda abrirse
+como YAML válido sin errores de sintaxis.
+
+## Salida esperada
+
+Al finalizar, informa:
+
+- Ruta del `plan.md` generado o actualizado.
+- Artefactos generados o actualizados.
+- Si hubo preguntas interactivas.
+- Si se registraron desviaciones en `Complexity Tracking`.
+- Archivos visuales protegidos que podrían verse afectados.
+- Siguiente comando recomendado.
