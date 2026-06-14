@@ -1,7 +1,8 @@
 .PHONY: help backend context \
         db-up db-down db-reset db-migrate db-create \
-        db-logs db-status db-shell \
-        test lint format typecheck clean visual-check hooks-install
+        db-logs db-status \
+        auto-checks manual-checks ci \
+        test coverage clean visual-check hooks-install
 
 .DEFAULT_GOAL := help
 
@@ -30,46 +31,52 @@ db-up: ## Levanta PostgreSQL con Docker Compose
 db-down: ## Detiene PostgreSQL
 	bash scripts/dev/down.sh
 
-db-reset: ## Reinicia PostgreSQL BORRANDO datos (pide confirmación)
+db-reset: ## Reinicia PostgreSQL BORRANDO datos
 	bash scripts/dev/reset.sh
 
 db-migrate: ## Aplica migraciones pendientes de Alembic
 	bash scripts/dev/migrate.sh
 
-db-create: ## Crea nueva migración (requiere name="descripción")
+db-create: ## Crea nueva migración: make db-create name="descripción"
 	bash scripts/dev/create.sh "$(name)"
 
 db-logs: ## Muestra logs de PostgreSQL
 	docker compose logs db --tail=50
 
+db-status: ## Muestra el estado de los servicios Docker
+	docker compose ps
+
 # ╔══════════════════════════════════════════╗
-# ║          	  CI Y TESTS                 ║
+# ║          		  CI                     ║ 
 # ╚══════════════════════════════════════════╝
+
+auto-checks: ## Ejecuta validaciones automáticas de pre-commit
+	uv run pre-commit run --all-files
+
+manual-checks: ## Ejecuta hooks manuales de pre-commit
+	uv run pre-commit run --all-files --hook-stage manual
+
+ci: ## Ejecuta validaciones automáticas + manuales
+	auto-checks manual-checks 
 
 test: ## Ejecuta la suite de tests
 	bash scripts/ci/test.sh
 
-lint: ## Verifica linting y formato sin modificar archivos
-	bash scripts/ci/lint.sh
+coverage: ## Ejecuta tests con coverage
+	bash scripts/ci/coverage.sh
 
-format: ## Formatea código con ruff
-	bash scripts/ci/format.sh
-
-typecheck: ## Verifica tipos con mypy --strict
-	bash scripts/ci/typecheck.sh
-
-clean: ## Elimina __pycache__, .pytest_cache, .ruff_cache, .mypy_cache, *.pyc
+clean: ## Elimina caches y archivos temporales
 	bash scripts/ci/clean.sh
 
 # ╔══════════════════════════════════════════╗
 # ║               TOOLING                    ║
 # ╚══════════════════════════════════════════╝
 
-context: ## Genera el estado del repositorio en docs/context/repo-state.xml
+context: ## Genera el estado del repositorio con Repomix
 	bash scripts/tools/context.sh
 
-hooks-install: ## Instala hooks Git del proyecto (post-commit changelog)
+hooks-install: ## Instala hooks Git del proyecto
 	bash scripts/tools/install-git-hooks.sh
 
-visual-check: ## Audit trail visual contrast feature‑activa
+visual-check: ## Audita trazabilidad visual de la feature activa
 	bash scripts/tools/check-visual-trace.sh

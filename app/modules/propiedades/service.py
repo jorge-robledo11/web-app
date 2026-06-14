@@ -12,31 +12,31 @@ logger = logging.getLogger(__name__)
 
 
 def validar_estado(valor: str) -> EstadoPropiedad:
-    """Valida que un string corresponda a un estado del catálogo.
+	"""Valida que un string corresponda a un estado del catálogo.
 
-    Lanza ValueError si el estado no es válido.
-    """
-    try:
-        return EstadoPropiedad(valor)
-    except ValueError:
-        raise ValueError(
-            f"Estado '{valor}' no válido. Debe ser uno de: "
-            f'{[e.value for e in EstadoPropiedad]}'
-        ) from None
+	Lanza ValueError si el estado no es válido.
+	"""
+	try:
+		return EstadoPropiedad(valor)
+	except ValueError:
+		raise ValueError(
+			f"Estado '{valor}' no válido. Debe ser uno de: "
+			f'{[e.value for e in EstadoPropiedad]}'
+		) from None
 
 
 async def crear_propiedad(
-    session: AsyncSession,
-    payload: PropiedadIn,
+	session: AsyncSession,
+	payload: PropiedadIn,
 ) -> PropiedadOut:
-    """Crea una propiedad aplicando reglas de negocio."""
-    logger.info(
-        'propiedad.crear.inicio',
-        extra={'titulo': payload.titulo},
-    )
-    entidad = await repo_crear(session, payload)
-    logger.info(
-        'propiedad.crear.ok',
-        extra={'propiedad_id': str(entidad.id)},
-    )
-    return PropiedadOut.model_validate(entidad)
+	"""Crea una propiedad aplicando reglas de negocio."""
+	logger.info(
+		'propiedad.crear.inicio',
+		extra={'titulo': payload.titulo},
+	)
+	entidad = await repo_crear(session, payload)
+	logger.info(
+		'propiedad.crear.ok',
+		extra={'propiedad_id': str(entidad.id)},
+	)
+	return PropiedadOut.model_validate(entidad)

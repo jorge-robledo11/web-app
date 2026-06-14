@@ -16,8 +16,8 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    op.execute('CREATE EXTENSION IF NOT EXISTS pgcrypto')
+	op.execute('CREATE EXTENSION IF NOT EXISTS pgcrypto')
 
 
 def downgrade() -> None:
-    op.execute('DROP EXTENSION IF EXISTS pgcrypto')
+	op.execute('DROP EXTENSION IF EXISTS pgcrypto')
