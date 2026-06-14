@@ -8,32 +8,47 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 
 ### Added
 
-- Bootstrap del proyecto Realtor (spec 001): aplicación FastAPI con Jinja2 + HTMX, sistema de diseño CSS con tokens visuales canónicos, componentes compartidos (sidebar, navbar, cards de propiedad, tarjetas de métrica, badges de estado, alertas, campos de formulario), iconografía Lucide vendoreada en 13 iconos SVG outline, configuración Alembic con PostgreSQL vía Docker Compose y tests con pytest + httpx.
-- Infraestructura de changelog automatizado: hook `post-commit` que recuerda curar el changelog tras cada commit, script `changelog.sh` y agente cronista (`000-changelog.prompt.md`) para curaduría de CHANGELOG.md.
-- Gobernanza visual (spec 002): script `visual-check.sh` que verifica integridad de tokens CSS, contratos de trazabilidad `visual-trace.yaml` y tareas de blindaje documentadas en `tasks.md`.
-- Script `install-git-hooks.sh` para instalación de hooks de git en el repositorio.
-- Spec 003 (`rediseñar home`): spec.md, checklist de requisitos y prompts de Spec Kit creados.
-- Agente `improve-commits` para auditoría y corrección de mensajes de commit según Conventional Commits y convenciones del proyecto.
-- Instrucciones unificadas de convenciones (`conventions.instructions.md`) que consolidan nomenclatura, formato, commits, ramas, tests, CSS y gobernanza visual en un solo archivo de referencia.
+- Repositorio inicializado desde plantilla Specify con tooling Spec Kit, estructura de specs, workflows y scripts de automatización.
+- Constitución del proyecto Realtor v1.0 (`constitution.md`) con stack obligatorio, arquitectura de vertical slice, prohibiciones y reglas de calidad.
+- Infraestructura base (spec 001): Docker Compose con PostgreSQL, Alembic para migraciones, `.env.example`, `Makefile` con targets de desarrollo (`up`, `down`, `migrate`, `dev`, `reset`) y scripts de base de datos.
+- Bootstrap de la aplicación (spec 001): FastAPI con motor ASGI, SQLAlchemy 2.x async con `Mapped` y `mapped_column`, Jinja2 server-rendered + HTMX vendoreado, Pydantic v2 con `frozen=True`, pytest + pytest-asyncio + httpx.AsyncClient.
+- Sistema de diseño CSS completo en `app/static/css/app.css`: tokens visuales canónicos en `:root` (colores, sombras, radios, espaciado, tipografía, breakpoints), reset, layout sidebar + main, y CSS responsive desktop-first.
+- Ocho componentes compartidos en `app/templates/components/`: `_sidebar.html`, `_navbar.html`, `_card_propiedad.html`, `_tarjeta_metrica.html`, `_accesos_rapidos.html`, `_badge_estado.html`, `_alerta.html`, `_form_field.html`.
+- Trece iconos SVG outline de Lucide vendoreados en `app/static/icons/`: `layout-dashboard`, `building-2`, `users`, `file-text`, `wallet`, `wrench`, `settings`, `menu`, `x`, `check-circle-2`, `alert-triangle`, `alert-circle`, `info`.
+- Macro `icon()` en `app/templates/macros/icons.html` para inyectar iconos SVG inline con `currentColor`.
+- Layout base `app/templates/base.html` con sidebar fija, navbar superior y zona de flash messages.
+- Dashboard inicial con endpoint de health check y tests de cobertura.
+- Gobernanza visual (spec 002): script `scripts/tools/check-visual-trace.sh` que verifica integridad de tokens CSS comparando `:root` contra el contrato `visual-trace.yaml`; tareas de blindaje con marcadores `[visual]` en `tasks.md`.
+- Sección XII de la constitución: protección de tokens visuales canónicos y reglas de trazabilidad obligatoria para cualquier modificación.
+- Spec 003 (`rediseñar home`): spec.md, checklist de requisitos, contratos, data model, plan, research, quickstart y tareas.
+- Dashboard rediseñado (spec 003): tarjetas de métricas con estados de carga (`hx-indicator`), error y datos; sección de accesos rápidos con iconografía a 28px y espaciado consistente; componente `_actividad_item.html` con badge de tipo, descripción y fecha relativa; iconos `clock` y `calendar` agregados al set vendoreado; CSS responsive para los tres breakpoints (desktop, tablet 1023px, móvil 767px).
+- Infraestructura de changelog automatizado: hook `post-commit` vía `scripts/tools/changelog.sh` que recuerda curar el changelog tras cada commit; agente cronista (`.opencode/agents/changelog.md`) que cura `CHANGELOG.md` desde el historial Git usando la marca `last-processed-commit`.
+- Agente `improve-commits` (`.opencode/agents/improve-commits.md`) para auditoría y renombrado de mensajes de commit según Conventional Commits.
+- Instrucciones unificadas de convenciones (`conventions.instructions.md`) que consolidan nomenclatura, formato de commits, ramas, tests, CSS, iconografía y gobernanza visual.
+- Comandos `changelog` e `improve-commits` registrados en `opencode.json` con plantillas de ejecución y agentes asociados.
+- `openCode.json` en la raíz del repositorio para configuración declarativa de comandos y carga de instrucciones.
+- `scripts/tools/install-git-hooks.sh`: instalador de hooks Git que copia hooks desde `scripts/hooks/` a `.git/hooks/` con respaldo automático vía timestamp.
+- `scripts/tools/context.sh`: generador de contexto para repomix (`npx repomix --output docs/context/repo-state.xml`).
+- `.repomixignore`: reglas de exclusión para repomix (virtualenvs, cachés Python, artefactos de build, logs, IDE, binarios).
 
 ### Changed
 
-- Scripts del proyecto reorganizados: unificados bajo `scripts/`, movidos de `scripts/db/` a `scripts/`, Makefile actualizado con nuevos targets (`check`, `clean`, `context`, `create`, `format`, `lint`, `reset`, `typecheck`, `visual-check`).
-- Instrucciones por área renombradas de `*.md` a `*.instructions.md` (`backend`, `database`, `frontend`, `tests`) y referenciadas desde `opencode.json` en la raíz del repositorio.
-- Instrucciones de frontend extendidas con la sección 0 (tokens visuales canónicos como fuente operativa única) y reglas de trazabilidad para cambios visuales.
-- Constitución del proyecto (`.specify/memory/constitution.md`) ampliada con sección XII: protección de tokens visuales y reglas de gobernanza.
-- Agente `changelog` refactorizado: responsabilidad de auditoría de commits extraída al agente `improve-commits`; permisos reducidos (eliminados `git commit --amend`, `git rebase`, `git merge-base`, `mktemp`, `cat`).
-- Scripts del proyecto reorganizados en subdirectorios `ci/`, `dev/` y `tools/`; se agregaron `.repomixignore` y `scripts/tools/context.sh`, y se corrigió el hook post-commit para manejar el sufijo `.changelog`.
-- Agente `changelog` actualizado: eliminado el buffer intermedio `.changelog-pending.md`, la curaduría ahora usa exclusivamente el historial Git desde la marca `last-processed-commit`.
-- Agente `improve-commits` ampliado con reglas consolidadas de nomenclatura del proyecto.
+- Prompts de Spec Kit reorganizados con nomenclatura consistente: `<spec>.fase.prompt.md` (ej. `001-bootstrap-proyecto.plan.prompt.md`).
+- Instrucciones por área renombradas de `*.md` a `*.instructions.md` (`backend`, `database`, `frontend`, `tests`) y referenciadas desde `opencode.json` mediante el patrón `.opencode/instructions/*.instructions.md`.
+- Instrucciones de frontend extendidas con sección 0: tokens visuales canónicos como fuente operativa única, con lista explícita de valores obligatorios para `:root` y reglas de trazabilidad para cambios visuales.
+- Scripts del proyecto reorganizados en subdirectorios `ci/`, `dev/` y `tools/` con `Makefile` actualizado (`check`, `clean`, `context`, `create`, `format`, `lint`, `reset`, `typecheck`, `visual-check`).
+- Agente `changelog` refactorizado: responsabilidad de auditoría de commits extraída al agente `improve-commits`; permisos de escritura Git eliminados; eliminado el buffer intermedio `.changelog-pending.md`, la curaduría ahora usa exclusivamente `git log` desde la marca `last-processed-commit`.
+- Agente `improve-commits` ampliado con reglas consolidadas de nomenclatura del proyecto (tipos, scopes, descripciones).
+- Actualizados los 49 commits del historial de `main` para cumplir con Conventional Commits (tipos correctos, scopes de spec, descripciones en imperativo presente).
 
-### Added
+### Fixed
 
-- Implementado el rediseño del home (spec 003): dashboard completo con tarjetas de métricas que soportan estados de carga, error y datos; sección de accesos rápidos con iconografía mejorada (28px) y espaciado; componente de actividad reciente (`_actividad_item.html`) con badge de tipo, descripción y fecha; nuevos iconos Lucide `clock` y `calendar`; y CSS responsive para los tres breakpoints.
-- Comandos `changelog` e `improve-commits` registrados en `opencode.json` con plantillas de ejecución.
+- Instalación del hook `post-commit` corregida para manejar el sufijo `.changelog` en el nombre del archivo fuente al copiarlo a `.git/hooks/`.
+- Timeout del script `backend.sh` corregido para evitar falsos positivos en entornos lentos.
 
 ### Removed
 
-- Script `sync-agent-models.sh` y archivo `config/models.yaml` eliminados tras completar su uso transitorio.
+- Script `sync-agent-models.sh` y archivo `config/models.yaml`, de uso transitorio durante la configuración inicial de agentes.
+- Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
 
-<!-- changelog:last-processed-commit=3b16d6300f39593a605af947383e11736049add6 -->
+<!-- changelog:last-processed-commit=cd4c43b3ee66ed06306b572eb53f1b7b9edbe54d -->
