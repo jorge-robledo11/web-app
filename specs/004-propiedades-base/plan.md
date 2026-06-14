@@ -68,15 +68,20 @@ app/modules/propiedades/
 ├── repository.py        # Acceso a datos async
 ├── service.py           # Lógica de negocio (validación de estados, upsert)
 ├── routes.py            # Placeholder (sin endpoints en esta feature)
-├── templates/           # Placeholder (sin vistas en esta feature)
-└── tests/
+└── templates/           # Placeholder (sin vistas en esta feature)
+
+tests/
+├── conftest.py          # Fixtures compartidos (async_client, async_session)
+├── test_health.py       # Tests de health endpoint
+├── test_dashboard.py    # Tests de dashboard
+└── propiedades/
     ├── __init__.py
-    ├── conftest.py      # Fixtures: async session, testcontainers
     ├── test_models.py   # Pruebas de entidad y enum
     ├── test_schemas.py  # Pruebas de validación Pydantic
+    ├── test_migration.py
+    ├── test_seed.py     # Pruebas de carga inicial
     ├── test_repository.py
-    ├── test_service.py
-    └── test_seed.py     # Pruebas de carga inicial
+    └── test_service.py
 
 alembic/versions/
 └── 002_create_propiedades.py  # Migración de estructura
@@ -87,7 +92,7 @@ scripts/
 
 **Structure Decision**: Módulo vertical estándar bajo `app/modules/propiedades/`. El
 script de seed es independiente de la aplicación FastAPI, ejecutable vía
-`python scripts/seed_propiedades.py` después de `alembic upgrade head`.
+`python scripts/dev/seed_propiedades.py` después de `alembic upgrade head`.
 
 ## Complexity Tracking
 

@@ -11,8 +11,7 @@ Reglas inquebrantables heredadas de la constitución:
 - Prohibido bypass manual de migraciones pendientes.
 - ``DROP SCHEMA public`` solo está permitido cuando ``--allow-reset`` es
   explícito y ``APP_ENV`` distinto de ``prod``.
-- Toda conexión usa ``asyncpg`` vía ``create_async_engine`` con
-  ``ssl=require``.
+- Toda conexión usa ``asyncpg`` vía ``create_async_engine``.
 """
 
 import argparse
@@ -95,14 +94,7 @@ async def _detectar(head_objetivo: str) -> EstadoBase:
     """Consulta la base y clasifica el estado actual."""
     settings_obj = settings
     url = _to_asyncpg_url(settings_obj.DATABASE_URL)
-    engine = create_async_engine(
-        url,
-        connect_args={
-            "ssl": "require",
-            "statement_cache_size": 0,
-            "prepared_statement_cache_size": 0,
-        },
-    )
+    engine = create_async_engine(url)
     try:
         async with engine.connect() as conn:
             existe_alembic = await conn.scalar(
@@ -167,11 +159,6 @@ async def _ejecutar_reset() -> None:
     url = _to_asyncpg_url(settings_obj.DATABASE_URL)
     engine = create_async_engine(
         url,
-        connect_args={
-            "ssl": "require",
-            "statement_cache_size": 0,
-            "prepared_statement_cache_size": 0,
-        },
         isolation_level="AUTOCOMMIT",
     )
     try:

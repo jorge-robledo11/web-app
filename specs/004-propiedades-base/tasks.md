@@ -83,11 +83,11 @@
 - [ ] T4.3 [P] [US1] Prueba de estados válidos: `test_seed.py` — verifica que el 100% de propiedades tiene estado dentro del catálogo (SC-004)
 - [ ] T4.4 [P] [US1] Prueba de imagen determinista: `test_seed.py` — ejecuta seed 2 veces, verifica que cada propiedad tiene la misma imagen en ambas ejecuciones (FR-007, SC-005)
 - [ ] T4.5 [P] [US1] Prueba de timestamps server-side: `test_seed.py` — verifica que `created_at` y `updated_at` tienen valor no nulo generado por la BD, no enviado desde Python (FR-006, NFR-DB-006)
-- [ ] T4.6 [P] [US1] Prueba de ausencia de psycopg2: verifica que `scripts/seed_propiedades.py` no importa `psycopg2` ni `psycopg` (SC-009)
+- [ ] T4.6 [P] [US1] Prueba de ausencia de psycopg2: verifica que `scripts/dev/seed_propiedades.py` no importa `psycopg2` ni `psycopg` (SC-009)
 
 ### Implementation for Phase 4
 
-- [ ] T4.7 [US1] Crear `scripts/seed_propiedades.py`: script standalone con `create_async_engine(DATABASE_URL)`, 10 tuplas de propiedades de Miami según data-model, inserción vía `ON CONFLICT (titulo, direccion, ciudad) DO UPDATE` para cada propiedad individualmente, imagen determinista `f"https://images.unsplash.com/photo-{hash}?w=800"`, sin enviar `created_at` ni `updated_at`, usando solo `asyncpg` (FR-004, FR-005, FR-006, FR-007, NFR-DB-003, NFR-DB-004, NFR-DB-007, NFR-QA-005)
+- [ ] T4.7 [US1] Crear `scripts/dev/seed_propiedades.py`: script standalone con `create_async_engine(DATABASE_URL)`, 10 tuplas de propiedades de Miami según data-model, inserción vía `ON CONFLICT (titulo, direccion, ciudad) DO UPDATE` para cada propiedad individualmente, imagen determinista `f"https://images.unsplash.com/photo-{hash}?w=800"`, sin enviar `created_at` ni `updated_at`, usando solo `asyncpg` (FR-004, FR-005, FR-006, FR-007, NFR-DB-003, NFR-DB-004, NFR-DB-007, NFR-QA-005)
 
 **Checkpoint**: `test_seed.py` en verde. 10 propiedades cargadas idempotentemente.
 

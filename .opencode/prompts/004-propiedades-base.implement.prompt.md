@@ -9,6 +9,8 @@ execution_context: primary-build
 model_policy: inherit-primary
 ---
 
+Ejecuta `db-preflight` antes de `speckit.implement` sobre `004-propiedades-base`. Estamos en ambiente de desarrollo y autorizo reset destructivo solo cuando `db-preflight` detecte un estado que admita `--allow-reset`; en ese caso, intenta resolver por `reset --allow-reset`. Si `db-preflight` no admite reset para el estado detectado, detén el flujo y reporta el bloqueo sin continuar. Si el resultado de `db-preflight` deja `permite_implement=true` (incluyendo corrección automática si aplica), ejecuta inmediatamente el agente `speckit.implement` para implementar `specs/004-propiedades-base` siguiendo `specs/004-propiedades-base/tasks.md`.
+
 Implementa la feature activa `004-propiedades-base` siguiendo `tasks.md`.
 
 Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el comando

@@ -31,7 +31,7 @@ Esto ejecuta la migración `002_create_propiedades.py` que crea:
 ### 3. Ejecutar carga inicial de propiedades
 
 ```bash
-uv run python scripts/seed_propiedades.py
+uv run python scripts/dev/seed_propiedades.py
 ```
 
 Salida esperada:
@@ -43,7 +43,7 @@ Salida esperada:
 ### 4. Verificar idempotencia
 
 ```bash
-uv run python scripts/seed_propiedades.py
+uv run python scripts/dev/seed_propiedades.py
 ```
 
 Salida esperada:
@@ -81,7 +81,7 @@ Ambos deben finalizar sin hallazgos.
 ```bash
 docker compose exec db psql -U postgres -d realtor -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 uv run alembic upgrade head
-uv run python scripts/seed_propiedades.py
+uv run python scripts/dev/seed_propiedades.py
 ```
 
 ## Verificaciones rápidas
@@ -100,7 +100,7 @@ docker compose exec db psql -U postgres -d realtor -c "SELECT count(*) FROM prop
 # Esperado: 0
 
 # Verificar idempotencia: re-ejecutar seed y contar
-uv run python scripts/seed_propiedades.py
+uv run python scripts/dev/seed_propiedades.py
 docker compose exec db psql -U postgres -d realtor -c "SELECT count(*) FROM propiedades;"
 # Esperado: 10
 ```

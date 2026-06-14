@@ -95,7 +95,7 @@ enum:
   creation: implicit_by_column_ddl
 
 seed:
-  script: scripts/seed_propiedades.py
+  script: scripts/dev/seed_propiedades.py
   connection: create_async_engine + asyncpg
   strategy: upsert
   conflict_target: [titulo, direccion, ciudad]

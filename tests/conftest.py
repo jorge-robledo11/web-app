@@ -1,13 +1,16 @@
-"""Fixtures compartidos para tests de endpoints."""
+"""Fixtures compartidos para tests del proyecto Realtor."""
 
-import pytest
+from collections.abc import AsyncGenerator
+
+import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
 from app.main import app
 
 
-@pytest.fixture
-def async_client():
-    """Cliente HTTP asíncrono para tests de endpoints FastAPI."""
+@pytest_asyncio.fixture
+async def async_client() -> AsyncGenerator[AsyncClient]:
+    """Cliente HTTP asíncrono para tests de endpoints."""
     transport = ASGITransport(app=app)
-    return AsyncClient(transport=transport, base_url="http://test")
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        yield client
