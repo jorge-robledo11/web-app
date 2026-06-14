@@ -1,6 +1,5 @@
 """Pruebas de la carga inicial de propiedades (seed)."""
 
-
 import pytest
 
 from tests.integration.conftest import REPO_ROOT, _alembic, _seed
@@ -10,7 +9,8 @@ class TestSeedPropiedades:
     """Pruebas de integración del script de seed."""
 
     def test_primera_ejecucion_deja_10_propiedades(
-        self, postgres_url: str,
+        self,
+        postgres_url: str,
     ) -> None:
         """La primera ejecución debe crear 10 propiedades (FR-010, SC-002)."""
         _alembic(postgres_url, "upgrade", "head")
@@ -19,7 +19,8 @@ class TestSeedPropiedades:
         assert "10" in resultado.stdout
 
     def test_segunda_ejecucion_mantiene_cardinalidad(
-        self, postgres_url: str,
+        self,
+        postgres_url: str,
     ) -> None:
         """Dos ejecuciones deben mantener 10 propiedades (FR-005, SC-003)."""
         _alembic(postgres_url, "upgrade", "head")

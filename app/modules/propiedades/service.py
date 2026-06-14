@@ -26,7 +26,8 @@ def validar_estado(valor: str) -> EstadoPropiedad:
 
 
 async def crear_propiedad(
-    session: AsyncSession, payload: PropiedadIn,
+    session: AsyncSession,
+    payload: PropiedadIn,
 ) -> PropiedadOut:
     """Crea una propiedad aplicando reglas de negocio."""
     logger.info(

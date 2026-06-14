@@ -7,10 +7,10 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
+import app.modules.propiedades.models  # noqa: F401 - registrar modelo para autogenerate
 from alembic import context
 from app.config import settings
 from app.database import Base
-import app.modules.propiedades.models  # noqa: F401 - registrar modelo para autogenerate
 
 config = context.config
 

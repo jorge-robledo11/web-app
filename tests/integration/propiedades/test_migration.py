@@ -1,6 +1,5 @@
 """Pruebas de migración Alembic para la tabla propiedades."""
 
-
 import pytest
 
 from tests.integration.conftest import REPO_ROOT, _alembic
@@ -12,9 +11,7 @@ class TestMigracionPropiedades:
     def test_upgrade_head_crea_tabla(self, postgres_url: str) -> None:
         """alembic upgrade head debe crear la tabla propiedades (SC-001)."""
         resultado = _alembic(postgres_url, "upgrade", "head")
-        assert resultado.returncode == 0, (
-            f"upgrade head falló: {resultado.stderr}"
-        )
+        assert resultado.returncode == 0, f"upgrade head falló: {resultado.stderr}"
 
     def test_tabla_propiedades_existe(self, postgres_url: str) -> None:
         """La tabla propiedades debe existir tras upgrade."""
@@ -27,9 +24,7 @@ class TestMigracionPropiedades:
         """downgrade -1 debe revertir la migración sin errores (FR-008)."""
         _alembic(postgres_url, "upgrade", "head")
         resultado = _alembic(postgres_url, "downgrade", "-1")
-        assert resultado.returncode == 0, (
-            f"downgrade -1 falló: {resultado.stderr}"
-        )
+        assert resultado.returncode == 0, f"downgrade -1 falló: {resultado.stderr}"
 
     def test_ciclo_upgrade_downgrade_upgrade(self, postgres_url: str) -> None:
         """Ciclo completo upgrade → downgrade → upgrade sin errores (SC-006)."""
@@ -59,7 +54,8 @@ class TestMigracionPropiedades:
             downgrade_body = downgrade_block[:next_def]
         lines = downgrade_body.strip().split("\n")
         real_code = [
-            line for line in lines
+            line
+            for line in lines
             if (
                 line.strip()
                 and not line.strip().startswith("#")

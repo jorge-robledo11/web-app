@@ -40,10 +40,13 @@ class Propiedad(Base):
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     direccion: Mapped[str] = mapped_column(String(255), nullable=False)
     ciudad: Mapped[str] = mapped_column(
-        String(100), nullable=False, default="Miami",
+        String(100),
+        nullable=False,
+        default="Miami",
     )
     precio_mensual: Mapped[float] = mapped_column(
-        Numeric(10, 2), nullable=False,
+        Numeric(10, 2),
+        nullable=False,
     )
     habitaciones: Mapped[int] = mapped_column(Integer, nullable=False)
     banos: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -72,7 +75,9 @@ class Propiedad(Base):
 
     __table_args__ = (
         UniqueConstraint(
-            "titulo", "direccion", "ciudad",
+            "titulo",
+            "direccion",
+            "ciudad",
             name="uq_propiedades_identidad_negocio",
         ),
         Index("ix_propiedades_estado", "estado"),

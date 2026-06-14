@@ -28,7 +28,8 @@ async def crear(session: AsyncSession, payload: PropiedadIn) -> Propiedad:
 
 
 async def obtener_por_id(
-    session: AsyncSession, prop_id: uuid.UUID,
+    session: AsyncSession,
+    prop_id: uuid.UUID,
 ) -> Propiedad | None:
     """Obtiene una propiedad por su id o None."""
     stmt = select(Propiedad).where(Propiedad.id == prop_id)

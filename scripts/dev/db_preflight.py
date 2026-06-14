@@ -265,7 +265,8 @@ async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
                 estado,
                 "abort",
                 False,
-                "Hay tablas en 'public' sin tabla 'alembic_version'. Estado inconsistente.",
+                "Hay tablas en 'public' sin tabla 'alembic_version'. "
+                "Estado inconsistente.",
                 [
                     "Re-ejecuta con --allow-reset si la base es desechable.",
                     "Nunca uses 'alembic stamp' para enmascarar el drift.",

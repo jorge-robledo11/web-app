@@ -36,9 +36,18 @@ class TestPropiedad:
         """Debe tener al menos 11 columnas mapeadas (FR-001)."""
         columnas = [c.name for c in Propiedad.__table__.columns]
         esperadas = {
-            "id", "titulo", "direccion", "ciudad", "precio_mensual",
-            "habitaciones", "banos", "area", "estado", "imagen",
-            "created_at", "updated_at",
+            "id",
+            "titulo",
+            "direccion",
+            "ciudad",
+            "precio_mensual",
+            "habitaciones",
+            "banos",
+            "area",
+            "estado",
+            "imagen",
+            "created_at",
+            "updated_at",
         }
         assert esperadas.issubset(set(columnas))
 
@@ -96,8 +105,15 @@ class TestPropiedad:
     def test_columnas_not_null(self) -> None:
         """Las columnas de negocio deben ser NOT NULL."""
         columnas_requeridas = {
-            "titulo", "direccion", "ciudad", "precio_mensual",
-            "habitaciones", "banos", "area", "estado", "imagen",
+            "titulo",
+            "direccion",
+            "ciudad",
+            "precio_mensual",
+            "habitaciones",
+            "banos",
+            "area",
+            "estado",
+            "imagen",
         }
         for nombre in columnas_requeridas:
             assert not Propiedad.__table__.columns[nombre].nullable, (

@@ -31,7 +31,9 @@ class TestServicioPropiedades:
 
     @pytest.mark.asyncio
     async def test_crear_propiedad_retorna_dto(
-        self, async_session: AsyncSession, datos_validos: dict[str, object],
+        self,
+        async_session: AsyncSession,
+        datos_validos: dict[str, object],
     ) -> None:
         """crear_propiedad debe retornar PropiedadOut."""
         dto = PropiedadIn(**datos_validos)
@@ -53,7 +55,9 @@ class TestServicioPropiedades:
 
     @pytest.mark.asyncio
     async def test_crear_propiedad_rechaza_duplicado(
-        self, async_session: AsyncSession, datos_validos: dict[str, object],
+        self,
+        async_session: AsyncSession,
+        datos_validos: dict[str, object],
     ) -> None:
         """Crear duplicado por clave de negocio debe lanzar IntegrityError."""
         from sqlalchemy.exc import IntegrityError

@@ -1,7 +1,7 @@
 .PHONY: help backend context \
         db-up db-down db-reset db-migrate db-create \
         db-logs db-status db-shell \
-        test lint format typecheck check clean visual-check hooks-install
+        test lint format typecheck clean visual-check hooks-install
 
 .DEFAULT_GOAL := help
 
@@ -57,9 +57,6 @@ format: ## Formatea código con ruff
 
 typecheck: ## Verifica tipos con mypy --strict
 	bash scripts/ci/typecheck.sh
-
-check: ## Ejecuta lint + typecheck + test (verificación completa)
-	bash scripts/ci/check.sh
 
 clean: ## Elimina __pycache__, .pytest_cache, .ruff_cache, .mypy_cache, *.pyc
 	bash scripts/ci/clean.sh

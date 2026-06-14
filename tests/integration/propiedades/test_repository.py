@@ -36,7 +36,9 @@ class TestRepositorioPropiedades:
 
     @pytest.mark.asyncio
     async def test_crear_retorna_propiedad(
-        self, async_session: AsyncSession, propiedad_in: PropiedadIn,
+        self,
+        async_session: AsyncSession,
+        propiedad_in: PropiedadIn,
     ) -> None:
         """crear debe persistir y retornar una Propiedad con id."""
         prop = await crear(async_session, propiedad_in)
@@ -46,7 +48,9 @@ class TestRepositorioPropiedades:
 
     @pytest.mark.asyncio
     async def test_obtener_por_id_existente(
-        self, async_session: AsyncSession, propiedad_in: PropiedadIn,
+        self,
+        async_session: AsyncSession,
+        propiedad_in: PropiedadIn,
     ) -> None:
         """obtener_por_id debe encontrar una propiedad recién creada."""
         creada = await crear(async_session, propiedad_in)
@@ -56,16 +60,20 @@ class TestRepositorioPropiedades:
 
     @pytest.mark.asyncio
     async def test_obtener_por_id_inexistente(
-        self, async_session: AsyncSession,
+        self,
+        async_session: AsyncSession,
     ) -> None:
         """obtener_por_id debe retornar None para id inexistente."""
         import uuid
+
         inexistente = await obtener_por_id(async_session, uuid.uuid4())
         assert inexistente is None
 
     @pytest.mark.asyncio
     async def test_listar_devuelve_propiedades(
-        self, async_session: AsyncSession, propiedad_in: PropiedadIn,
+        self,
+        async_session: AsyncSession,
+        propiedad_in: PropiedadIn,
     ) -> None:
         """listar debe devolver al menos las propiedades creadas."""
         await crear(async_session, propiedad_in)
@@ -76,7 +84,9 @@ class TestRepositorioPropiedades:
 
     @pytest.mark.asyncio
     async def test_eliminar_remueve_propiedad(
-        self, async_session: AsyncSession, propiedad_in: PropiedadIn,
+        self,
+        async_session: AsyncSession,
+        propiedad_in: PropiedadIn,
     ) -> None:
         """eliminar debe remover la propiedad y retornar True."""
         creada = await crear(async_session, propiedad_in)
