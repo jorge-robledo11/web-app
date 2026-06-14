@@ -3,6 +3,9 @@ name: 001-bootstrap-proyecto-fix-report
 description: >
   Corrige los hallazgos del reporte de análisis de la feature
   001-bootstrap-proyecto.
+usage: "@.opencode/prompts/001-bootstrap-proyecto.fix-report.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
 
 Corrige los hallazgos documentados en `report.md` para la feature

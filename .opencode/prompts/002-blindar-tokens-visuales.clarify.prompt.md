@@ -3,9 +3,11 @@ name: 002-blindar-tokens-visuales-clarify
 description: >
   Identifica ambigüedades y guía la clarificación interactiva de la spec
   002-blindar-tokens-visuales.
+spec_kit_command: "/speckit.clarify"
+usage: "/speckit.clarify @.opencode/prompts/002-blindar-tokens-visuales.clarify.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.clarify
 
 Revisa la spec activa `002-blindar-tokens-visuales`.
 

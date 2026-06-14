@@ -3,6 +3,9 @@ name: 003-redisenar-home-fix-report
 description: >
   Corrige los hallazgos del reporte de análisis de la feature
   003-redisenar-home.
+usage: "@.opencode/prompts/003-redisenar-home.fix-report.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
 
 Corrige los hallazgos documentados en `report.md` para la feature

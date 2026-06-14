@@ -3,9 +3,11 @@ name: 003-redisenar-home-clarify
 description: >
   Identifica ambigüedades y guía la clarificación interactiva de la spec
   003-redisenar-home.
+spec_kit_command: "/speckit.clarify"
+usage: "/speckit.clarify @.opencode/prompts/003-redisenar-home.clarify.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.clarify
 
 Revisa la spec activa `003-redisenar-home`.
 

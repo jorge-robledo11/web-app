@@ -3,9 +3,11 @@ name: 001-bootstrap-proyecto-clarify
 description: >
   Identifica ambigüedades y guía la clarificación interactiva de la spec
   001-bootstrap-proyecto.
+spec_kit_command: "/speckit.clarify"
+usage: "/speckit.clarify @.opencode/prompts/001-bootstrap-proyecto.clarify.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.clarify
 
 Revisa la spec `001-bootstrap-proyecto`.
 

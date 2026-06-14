@@ -29,7 +29,7 @@ Puede crear o modificar únicamente archivos de soporte operativo:
 scripts/
 scripts/hooks/
 .opencode/agents/
-.opencode/commands/prompts/
+.opencode/prompts/
 .gitignore
 .repomixignore
 ```
@@ -62,7 +62,7 @@ scripts/install-git-hooks.sh
 Este archivo ya existe y contiene este prompt:
 
 ```text
-.opencode/commands/prompts/000-changelog.prompt.md
+.opencode/prompts/000-changelog.prompt.md
 ```
 
 No lo recrees, no lo dupliques y no lo sobreescribas.

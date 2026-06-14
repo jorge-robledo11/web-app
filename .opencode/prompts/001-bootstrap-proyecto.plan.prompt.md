@@ -1,9 +1,11 @@
 ---
 name: 001-bootstrap-proyecto-plan
 description: Genera el plan técnico de la spec 001-bootstrap-proyecto.
+spec_kit_command: "/speckit.plan"
+usage: "/speckit.plan @.opencode/prompts/001-bootstrap-proyecto.plan.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.plan
 
 Genera el `plan.md` para la feature activa `001-bootstrap-proyecto` usando el
 workflow canónico de Spec Kit.

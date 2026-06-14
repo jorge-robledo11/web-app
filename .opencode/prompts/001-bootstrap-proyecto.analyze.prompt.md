@@ -3,9 +3,11 @@ name: 001-bootstrap-proyecto-analyze
 description: >
   Genera un reporte de consistencia entre spec, plan y artefactos para
   001-bootstrap-proyecto.
+spec_kit_command: "/speckit.analyze"
+usage: "/speckit.analyze @.opencode/prompts/001-bootstrap-proyecto.analyze.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.analyze
 
 Audita la consistencia de la feature `001-bootstrap-proyecto` usando el workflow
 canónico de Spec Kit.

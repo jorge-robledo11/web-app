@@ -1,9 +1,11 @@
 ---
 name: 001-bootstrap-proyecto-spec
 description: Prompt fuente para crear la especificación fundacional del proyecto Realtor.
+spec_kit_command: "/speckit.specify"
+usage: "/speckit.specify @.opencode/prompts/001-bootstrap-proyecto.spec.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.specify
 
 Crea la spec `001-bootstrap-proyecto`.
 

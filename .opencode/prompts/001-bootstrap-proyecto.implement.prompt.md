@@ -3,9 +3,11 @@ name: 001-bootstrap-proyecto-implement
 description: >
   Implementa 001-bootstrap-proyecto siguiendo tasks.md, una fase a la vez y con
   confirmación manual entre fases.
+spec_kit_command: "/speckit.implement"
+usage: "/speckit.implement @.opencode/prompts/001-bootstrap-proyecto.implement.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.implement
 
 Implementa la feature activa `001-bootstrap-proyecto` siguiendo `tasks.md`.
 

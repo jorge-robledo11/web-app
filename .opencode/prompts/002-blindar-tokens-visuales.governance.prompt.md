@@ -3,9 +3,11 @@ name: 002-blindar-tokens-visuales-governance
 description: >
   Actualiza la gobernanza del proyecto para blindar los tokens visuales
   canónicos antes de crear la spec 002-blindar-tokens-visuales.
+spec_kit_command: "/speckit.constitution"
+usage: "/speckit.constitution @.opencode/prompts/002-blindar-tokens-visuales.governance.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.constitution
 
 Actualiza los archivos de gobernanza necesarios para soportar la futura spec
 `002-blindar-tokens-visuales`.

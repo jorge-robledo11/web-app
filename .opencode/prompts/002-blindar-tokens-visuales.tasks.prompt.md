@@ -3,9 +3,11 @@ name: 002-blindar-tokens-visuales-tasks
 description: >
   Genera tasks.md con tareas secuenciales, accionables y verificables para
   002-blindar-tokens-visuales.
+spec_kit_command: "/speckit.tasks"
+usage: "/speckit.tasks @.opencode/prompts/002-blindar-tokens-visuales.tasks.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.tasks
 
 Genera `tasks.md` para la feature activa `002-blindar-tokens-visuales` usando el
 workflow canónico de Spec Kit.

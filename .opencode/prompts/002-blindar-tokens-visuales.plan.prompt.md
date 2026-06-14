@@ -2,9 +2,11 @@
 name: 002-blindar-tokens-visuales-plan
 description: >
   Genera el plan técnico de la spec 002-blindar-tokens-visuales.
+spec_kit_command: "/speckit.plan"
+usage: "/speckit.plan @.opencode/prompts/002-blindar-tokens-visuales.plan.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.plan
 
 Genera `plan.md` para la feature activa `002-blindar-tokens-visuales` usando el
 workflow canónico de Spec Kit.

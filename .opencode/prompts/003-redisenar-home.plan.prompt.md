@@ -2,9 +2,11 @@
 name: 003-redisenar-home-plan
 description: >
   Genera el plan técnico de la spec 003-redisenar-home.
+spec_kit_command: "/speckit.plan"
+usage: "/speckit.plan @.opencode/prompts/003-redisenar-home.plan.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.plan
 
 Genera `plan.md` para la feature activa `003-redisenar-home` usando el
 workflow canónico de Spec Kit.

@@ -3,6 +3,9 @@ name: 002-blindar-tokens-visuales-fix-report
 description: >
   Corrige los hallazgos del reporte de análisis de la feature
   002-blindar-tokens-visuales.
+usage: "@.opencode/prompts/002-blindar-tokens-visuales.fix-report.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
 
 Corrige los hallazgos documentados en `report.md` para la feature

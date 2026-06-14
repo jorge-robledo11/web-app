@@ -3,9 +3,11 @@ name: 003-redisenar-home-analyze
 description: >
   Genera un reporte de consistencia entre spec, plan y artefactos para
   003-redisenar-home.
+spec_kit_command: "/speckit.analyze"
+usage: "/speckit.analyze @.opencode/prompts/003-redisenar-home.analyze.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.analyze
 
 Audita la consistencia de la feature `003-redisenar-home` usando el workflow
 canónico de Spec Kit.

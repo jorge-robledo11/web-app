@@ -3,9 +3,11 @@ name: 002-blindar-tokens-visuales-analyze
 description: >
   Genera un reporte de consistencia entre spec, plan y artefactos para
   002-blindar-tokens-visuales.
+spec_kit_command: "/speckit.analyze"
+usage: "/speckit.analyze @.opencode/prompts/002-blindar-tokens-visuales.analyze.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.analyze
 
 Audita la consistencia de la feature `002-blindar-tokens-visuales` usando el workflow
 canónico de Spec Kit.

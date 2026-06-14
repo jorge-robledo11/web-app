@@ -3,9 +3,11 @@ name: 001-bootstrap-proyecto-tasks
 description: >
   Genera tasks.md con tareas secuenciales, accionables y verificables para
   001-bootstrap-proyecto.
+spec_kit_command: "/speckit.tasks"
+usage: "/speckit.tasks @.opencode/prompts/001-bootstrap-proyecto.tasks.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.tasks
 
 Genera `tasks.md` para la feature activa `001-bootstrap-proyecto` usando el
 workflow canónico de Spec Kit.

@@ -3,9 +3,11 @@ name: 003-redisenar-home-tasks
 description: >
   Genera tasks.md con tareas secuenciales, accionables y verificables para
   003-redisenar-home.
+spec_kit_command: "/speckit.tasks"
+usage: "/speckit.tasks @.opencode/prompts/003-redisenar-home.tasks.prompt.md"
+execution_context: primary-build
+model_policy: inherit-primary
 ---
-
-/speckit.tasks
 
 Genera `tasks.md` para la feature activa `003-redisenar-home` usando el
 workflow canónico de Spec Kit.
