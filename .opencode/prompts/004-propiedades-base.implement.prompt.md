@@ -8,6 +8,7 @@ usage: "/speckit.implement @.opencode/prompts/003-redisenar-home.implement.promp
 execution_context: primary-build
 model_policy: inherit-primary
 ---
+
 Implementa la feature activa `003-redisenar-home` siguiendo `tasks.md`.
 
 Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el comando

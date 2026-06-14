@@ -8,6 +8,7 @@ usage: "/speckit.analyze @.opencode/prompts/003-redisenar-home.analyze.prompt.md
 execution_context: primary-build
 model_policy: inherit-primary
 ---
+
 Audita la consistencia de la feature `003-redisenar-home` usando el workflow
 canónico de Spec Kit.
 

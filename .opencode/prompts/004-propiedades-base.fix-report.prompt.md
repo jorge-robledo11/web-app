@@ -7,6 +7,7 @@ usage: "@.opencode/prompts/003-redisenar-home.fix-report.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
+
 Corrige los hallazgos documentados en `report.md` para la feature
 `003-redisenar-home`.
 

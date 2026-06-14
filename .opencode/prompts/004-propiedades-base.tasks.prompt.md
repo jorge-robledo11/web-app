@@ -8,6 +8,7 @@ usage: "/speckit.tasks @.opencode/prompts/003-redisenar-home.tasks.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
+
 Genera `tasks.md` para la feature activa `003-redisenar-home` usando el
 workflow canónico de Spec Kit.
 

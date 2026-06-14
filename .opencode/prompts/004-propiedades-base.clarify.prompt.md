@@ -1,14 +1,15 @@
 ---
-name: 003-redisenar-home-clarify
+name: 004-propiedades-base-clarify
 description: >
   Identifica ambigüedades y guía la clarificación interactiva de la spec
-  003-redisenar-home.
+  004-propiedades-base.
 spec_kit_command: "/speckit.clarify"
-usage: "/speckit.clarify @.opencode/prompts/003-redisenar-home.clarify.prompt.md"
+usage: "/speckit.clarify @.opencode/prompts/004-propiedades-base.clarify.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
-Revisa la spec activa `003-redisenar-home`.
+
+Revisa la spec activa `004-propiedades-base`.
 
 Identifica ambigüedades, decisiones implícitas o gaps que puedan afectar el
 plan, las tareas o la implementación.
