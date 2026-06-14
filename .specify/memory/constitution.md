@@ -95,11 +95,13 @@ Cada módulo DEBE contener estos artefactos:
 * `repository.py` — solo acceso a datos.
 * `service.py` — lógica de negocio del módulo.
 * `templates/` — plantillas Jinja2 del módulo.
-* `tests/` — pruebas unitarias, integración o endpoint del módulo.
 
 La lógica de negocio reside en `service.py`. `routes.py` y `repository.py` son
 capas de entrada e infraestructura sin reglas de negocio. La lógica compartida
 solo se extrae cuando exista duplicación real demostrable, nunca por anticipación.
+
+Las pruebas del proyecto viven fuera del módulo, en la raíz del repositorio,
+según la estructura obligatoria definida en la sección IX.5 y en la sección XIII.
 
 ## V. Spec-Driven Development
 

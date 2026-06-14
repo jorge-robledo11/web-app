@@ -64,7 +64,6 @@ Cada feature vive en `app/modules/<feature>/` con estos artefactos:
 * `repository.py`
 * `service.py`
 * `templates/`
-* `tests/`
 
 La lógica de negocio vive SIEMPRE en `service.py`. `routes.py` es delgado:
 parsea entrada, llama al servicio y retorna respuesta. `repository.py` solo hace
@@ -72,6 +71,8 @@ acceso a datos.
 
 La lógica compartida solo se extrae cuando exista duplicación real demostrable,
 nunca por anticipación.
+
+Las pruebas viven en la raíz del repositorio, no dentro del módulo.
 
 ## Spec-Driven Development
 
@@ -217,6 +218,16 @@ Las pruebas unitarias usan pytest. Las pruebas asíncronas usan pytest-asyncio.
 Las pruebas HTTP usan httpx.AsyncClient. Las pruebas de integración que requieran
 PostgreSQL usan Testcontainers.
 
+### Organización de tests
+
+* Los tests unitarios viven en `tests/unit/<feature>/`.
+* Los tests de integración viven en `tests/integration/<feature>/`.
+* No se aceptan tests dentro de `app/modules/`.
+* Las fixtures de infraestructura solo pueden definirse en
+  `tests/integration/conftest.py`.
+* Los tests de integración con PostgreSQL deben usar `postgres:16-alpine` vía
+  Testcontainers.
+
 ## Base de datos
 
 * PostgreSQL se ejecuta localmente con Docker o Docker Compose.
@@ -227,6 +238,14 @@ PostgreSQL usan Testcontainers.
 * `.env` nunca debe versionarse con secretos reales.
 * `.env.example` debe existir como plantilla.
 * La infraestructura local debe usar `.yaml`, nunca `.yml`.
+
+## Async-First
+
+Todo I/O del sistema debe ser asíncrono cuando forme parte del flujo web,
+persistencia o integración externa.
+
+Solo se permite `def` síncrono para cómputo en memoria, mapeos, cálculos o
+validaciones sin I/O.
 
 ## Frontend y sistema visual
 
@@ -261,7 +280,6 @@ app/
       repository.py
       service.py
       templates/
-      tests/
   static/
     css/
       app.css
@@ -275,6 +293,13 @@ app/
 alembic/
   env.py
   versions/
+tests/
+  conftest.py
+  unit/
+    <feature>/
+  integration/
+    conftest.py
+    <feature>/
 pyproject.toml
 uv.lock
 docker-compose.yaml
@@ -286,6 +311,18 @@ docker-compose.yaml
 Toda desviación del stack, arquitectura, estructura, flujo obligatorio o reglas
 de la constitución debe registrarse en la sección `Complexity Tracking` de
 `plan.md`.
+
+Debe incluir como mínimo qué regla se desvía, por qué, alternativas
+consideradas, riesgos introducidos, mitigaciones y validación prevista.
+
+## Contratos de dominio
+
+* Las entidades SQLAlchemy no se exponen como respuesta HTTP.
+* Las respuestas HTTP se mapean a DTOs Pydantic.
+* Todos los DTOs Pydantic deben usar `model_config = ConfigDict(frozen=True)`.
+* Los estados de dominio se modelan con `Enum` o tipos explícitos.
+* Los errores usan `HTTPException` o modelos de error tipados.
+* Los límites del sistema validan entradas antes de ejecutar lógica de negocio.
 
 ## Conflicto entre capas
 
