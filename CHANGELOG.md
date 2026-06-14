@@ -40,6 +40,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Agente `changelog` refactorizado: responsabilidad de auditoría de commits extraída al agente `improve-commits`; permisos de escritura Git eliminados; eliminado el buffer intermedio `.changelog-pending.md`, la curaduría ahora usa exclusivamente `git log` desde la marca `last-processed-commit`.
 - Agente `improve-commits` ampliado con reglas consolidadas de nomenclatura del proyecto (tipos, scopes, descripciones).
 - Actualizados los 49 commits del historial de `main` para cumplir con Conventional Commits (tipos correctos, scopes de spec, descripciones en imperativo presente).
+- Prompts de Spec Kit movidos de `.opencode/commands/prompts/` a `.opencode/prompts/` con frontmatter de ejecución estandarizado que incluye metadatos de restricciones, descripción y referencias (specs 001, 002, 003).
+- Comandos de `opencode.json` eliminados: los flujos de Spec Kit ahora se ejecutan exclusivamente mediante prompts estandarizados con metadatos de ejecución, simplificando la configuración declarativa del proyecto.
 
 ### Fixed
 
@@ -50,5 +52,6 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 
 - Script `sync-agent-models.sh` y archivo `config/models.yaml`, de uso transitorio durante la configuración inicial de agentes.
 - Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
+- Archivo `.repomixignore` eliminado y sus reglas de exclusión migradas a `.gitignore`.
 
-<!-- changelog:last-processed-commit=cd4c43b3ee66ed06306b572eb53f1b7b9edbe54d -->
+<!-- changelog:last-processed-commit=b96e7f114dd41c7f6c98b9adbb5dc6d21f470bb3 -->
