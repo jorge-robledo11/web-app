@@ -47,17 +47,20 @@ db-status: ## Muestra el estado de los servicios Docker
 	docker compose ps
 
 # ╔══════════════════════════════════════════╗
-# ║          		  CI                     ║ 
+# ║          		  CI                     ║
 # ╚══════════════════════════════════════════╝
 
 auto-checks: ## Ejecuta validaciones automáticas de pre-commit
 	uv run pre-commit run --all-files
 
-manual-checks: ## Ejecuta hooks manuales de pre-commit
-	uv run pre-commit run --all-files --hook-stage manual
+manual-checks: ## Ejecuta checks manuales del proyecto
+	bash scripts/ci/test.sh && \
+	bash scripts/ci/coverage.sh && \
+	bash scripts/ci/clean.sh
 
 ci: ## Ejecuta validaciones automáticas + manuales
-	auto-checks manual-checks 
+	$(MAKE) auto-checks
+	$(MAKE) manual-checks
 
 test: ## Ejecuta la suite de tests
 	bash scripts/ci/test.sh

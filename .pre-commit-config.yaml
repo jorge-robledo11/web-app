@@ -14,7 +14,7 @@ repos:
     rev: v0.15.17
     hooks:
       - id: ruff-check
-        args: [--fix, --check]
+        args: [--fix, .]
 
   # 3. Verificaciones generales de archivos
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -83,13 +83,6 @@ repos:
       - id: visual-trace-check
         name: check visual trace
         entry: bash scripts/tools/check-visual-trace.sh
-        language: system
-        pass_filenames: false
-        stages: [manual]
-
-      - id: format-project
-        name: format/fix completo del proyecto
-        entry: bash scripts/ci/format.sh
         language: system
         pass_filenames: false
         stages: [manual]
