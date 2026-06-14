@@ -278,5 +278,5 @@ Solo estas seis: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security
 > `.opencode/instructions/database.instructions.md`,
 > `.opencode/instructions/frontend.instructions.md`,
 > `.opencode/instructions/tests.instructions.md`,
-> `.opencode/commands/prompts/000-changelog.prompt.md`,
+> `.opencode/prompts/000-changelog.prompt.md`,
 > `specs/002-blindar-tokens-visuales/spec.md`.
