@@ -21,7 +21,7 @@ def validar_estado(valor: str) -> EstadoPropiedad:
     except ValueError:
         raise ValueError(
             f"Estado '{valor}' no válido. Debe ser uno de: "
-            f"{[e.value for e in EstadoPropiedad]}"
+            f'{[e.value for e in EstadoPropiedad]}'
         ) from None
 
 
@@ -31,12 +31,12 @@ async def crear_propiedad(
 ) -> PropiedadOut:
     """Crea una propiedad aplicando reglas de negocio."""
     logger.info(
-        "propiedad.crear.inicio",
-        extra={"titulo": payload.titulo},
+        'propiedad.crear.inicio',
+        extra={'titulo': payload.titulo},
     )
     entidad = await repo_crear(session, payload)
     logger.info(
-        "propiedad.crear.ok",
-        extra={"propiedad_id": str(entidad.id)},
+        'propiedad.crear.ok',
+        extra={'propiedad_id': str(entidad.id)},
     )
     return PropiedadOut.model_validate(entidad)

@@ -21,16 +21,16 @@ from app.database import Base
 class EstadoPropiedad(enum.StrEnum):
     """Catálogo cerrado de estados operativos de una propiedad."""
 
-    DISPONIBLE = "disponible"
-    RENTADA = "rentada"
-    MANTENIMIENTO = "mantenimiento"
-    INACTIVA = "inactiva"
+    DISPONIBLE = 'disponible'
+    RENTADA = 'rentada'
+    MANTENIMIENTO = 'mantenimiento'
+    INACTIVA = 'inactiva'
 
 
 class Propiedad(Base):
     """Propiedad inmobiliaria gestionada por el realtor."""
 
-    __tablename__ = "propiedades"
+    __tablename__ = 'propiedades'
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -42,7 +42,7 @@ class Propiedad(Base):
     ciudad: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
-        default="Miami",
+        default='Miami',
     )
     precio_mensual: Mapped[float] = mapped_column(
         Numeric(10, 2),
@@ -54,7 +54,7 @@ class Propiedad(Base):
     estado: Mapped[EstadoPropiedad] = mapped_column(
         Enum(
             EstadoPropiedad,
-            name="estado_propiedad",
+            name='estado_propiedad',
             create_type=True,
             values_callable=lambda x: [e.value for e in x],
         ),
@@ -75,20 +75,20 @@ class Propiedad(Base):
 
     __table_args__ = (
         UniqueConstraint(
-            "titulo",
-            "direccion",
-            "ciudad",
-            name="uq_propiedades_identidad_negocio",
+            'titulo',
+            'direccion',
+            'ciudad',
+            name='uq_propiedades_identidad_negocio',
         ),
-        Index("ix_propiedades_estado", "estado"),
-        Index("ix_propiedades_ciudad", "ciudad"),
-        Index("ix_propiedades_precio_mensual", "precio_mensual"),
-        {"comment": "Propiedades inmobiliarias del sistema Realtor"},
+        Index('ix_propiedades_estado', 'estado'),
+        Index('ix_propiedades_ciudad', 'ciudad'),
+        Index('ix_propiedades_precio_mensual', 'precio_mensual'),
+        {'comment': 'Propiedades inmobiliarias del sistema Realtor'},
     )
 
     def __repr__(self) -> str:
         """Representación legible para depuración."""
         return (
-            f"<Propiedad(id={self.id!r}, titulo={self.titulo!r}, "
-            f"estado={self.estado!r})>"
+            f'<Propiedad(id={self.id!r}, titulo={self.titulo!r}, '
+            f'estado={self.estado!r})>'
         )

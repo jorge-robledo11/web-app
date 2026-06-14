@@ -23,15 +23,15 @@ class TestRepositorioPropiedades:
     async def propiedad_in(self) -> PropiedadIn:
         """Fixture con datos válidos de entrada."""
         return PropiedadIn(
-            titulo="Casa Repo Test",
-            direccion="Av. Repositorio 456",
-            ciudad="Miami",
-            precio_mensual=Decimal("1800.00"),
+            titulo='Casa Repo Test',
+            direccion='Av. Repositorio 456',
+            ciudad='Miami',
+            precio_mensual=Decimal('1800.00'),
             habitaciones=2,
             banos=1,
             area=700,
             estado=EstadoPropiedad.DISPONIBLE,
-            imagen="https://example.com/repo.jpg",
+            imagen='https://example.com/repo.jpg',
         )
 
     @pytest.mark.asyncio
@@ -43,7 +43,7 @@ class TestRepositorioPropiedades:
         """crear debe persistir y retornar una Propiedad con id."""
         prop = await crear(async_session, propiedad_in)
         assert prop.id is not None
-        assert prop.titulo == "Casa Repo Test"
+        assert prop.titulo == 'Casa Repo Test'
         assert prop.estado == EstadoPropiedad.DISPONIBLE
 
     @pytest.mark.asyncio
@@ -80,7 +80,7 @@ class TestRepositorioPropiedades:
         todas = await listar(async_session)
         assert len(todas) >= 1
         titulos = {p.titulo for p in todas}
-        assert "Casa Repo Test" in titulos
+        assert 'Casa Repo Test' in titulos
 
     @pytest.mark.asyncio
     async def test_eliminar_remueve_propiedad(

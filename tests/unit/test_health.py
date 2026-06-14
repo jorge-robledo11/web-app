@@ -21,9 +21,9 @@ async def test_health_ok(async_client):
     app.dependency_overrides[get_session] = override_get_session
 
     try:
-        response = await async_client.get("/health")
+        response = await async_client.get('/health')
         assert response.status_code == 200
-        assert response.json() == {"status": "ok", "database": "ok"}
+        assert response.json() == {'status': 'ok', 'database': 'ok'}
     finally:
         app.dependency_overrides.pop(get_session, None)
 
@@ -40,11 +40,11 @@ async def test_health_db_unavailable(async_client):
     app.dependency_overrides[get_session] = override_get_session
 
     try:
-        response = await async_client.get("/health")
+        response = await async_client.get('/health')
         assert response.status_code == 503
         data = response.json()
-        assert data["status"] == "error"
-        assert data["database"] == "unavailable"
-        assert "detail" in data
+        assert data['status'] == 'error'
+        assert data['database'] == 'unavailable'
+        assert 'detail' in data
     finally:
         app.dependency_overrides.pop(get_session, None)

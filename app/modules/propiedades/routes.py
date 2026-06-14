@@ -6,4 +6,4 @@ una spec posterior que extienda esta feature con operaciones CRUD.
 
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/propiedades", tags=["propiedades"])
+router = APIRouter(prefix='/propiedades', tags=['propiedades'])

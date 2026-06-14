@@ -45,17 +45,17 @@ class EstadoBase:
 
 def _to_asyncpg_url(url: str) -> str:
     """Asegura que la URL use el driver asyncpg."""
-    if url.startswith("postgresql+asyncpg://"):
+    if url.startswith('postgresql+asyncpg://'):
         return url
-    if url.startswith("postgresql://"):
-        return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    if url.startswith('postgresql://'):
+        return url.replace('postgresql://', 'postgresql+asyncpg://', 1)
     return url
 
 
 def _obtener_heads() -> list[str]:
     """Lista las revisiones marcadas como head en el historial local."""
     resultado = subprocess.run(
-        [sys.executable, "-m", "alembic", "heads"],
+        [sys.executable, '-m', 'alembic', 'heads'],
         capture_output=True,
         text=True,
         cwd=REPO_ROOT,
@@ -73,7 +73,7 @@ def _obtener_heads() -> list[str]:
 def _listar_revisiones() -> list[str]:
     """Devuelve todas las revisiones conocidas por Alembic."""
     resultado = subprocess.run(
-        [sys.executable, "-m", "alembic", "history"],
+        [sys.executable, '-m', 'alembic', 'history'],
         capture_output=True,
         text=True,
         cwd=REPO_ROOT,
@@ -82,10 +82,10 @@ def _listar_revisiones() -> list[str]:
     revisiones: list[str] = []
     for linea in resultado.stdout.splitlines():
         recorte = linea.strip()
-        if "->" not in recorte:
+        if '->' not in recorte:
             continue
-        derecha = recorte.split("->", 1)[1].strip()
-        rev = derecha.split(",", 1)[0].strip().split()[0]
+        derecha = recorte.split('->', 1)[1].strip()
+        rev = derecha.split(',', 1)[0].strip().split()[0]
         revisiones.append(rev)
     return revisiones
 
@@ -102,7 +102,7 @@ async def _detectar(head_objetivo: str) -> EstadoBase:
             )
             tablas_app_raw = await conn.scalar(
                 text(
-                    "SELECT count(*) FROM information_schema.tables "
+                    'SELECT count(*) FROM information_schema.tables '
                     "WHERE table_schema = 'public' "
                     "AND table_name <> 'alembic_version'",
                 ),
@@ -110,7 +110,7 @@ async def _detectar(head_objetivo: str) -> EstadoBase:
             version_actual: str | None = None
             if existe_alembic is not None:
                 version_actual = await conn.scalar(
-                    text("SELECT version_num FROM alembic_version LIMIT 1"),
+                    text('SELECT version_num FROM alembic_version LIMIT 1'),
                 )
     finally:
         await engine.dispose()
@@ -118,19 +118,19 @@ async def _detectar(head_objetivo: str) -> EstadoBase:
     tablas_app = int(tablas_app_raw or 0)
 
     if existe_alembic is None and tablas_app == 0:
-        nombre = "EMPTY"
+        nombre = 'EMPTY'
     elif existe_alembic is None and tablas_app > 0:
-        nombre = "DRIFTED"
+        nombre = 'DRIFTED'
     elif version_actual == head_objetivo:
-        nombre = "VERSIONED_OK"
+        nombre = 'VERSIONED_OK'
     elif version_actual is not None:
         nombre = (
-            "VERSIONED_BEHIND"
+            'VERSIONED_BEHIND'
             if version_actual in _listar_revisiones()
-            else "VERSIONED_AHEAD"
+            else 'VERSIONED_AHEAD'
         )
     else:
-        nombre = "DRIFTED"
+        nombre = 'DRIFTED'
 
     return EstadoBase(
         nombre=nombre,
@@ -143,7 +143,7 @@ async def _detectar(head_objetivo: str) -> EstadoBase:
 def _ejecutar_upgrade() -> None:
     """Ejecuta ``alembic upgrade head`` heredando stdout/stderr."""
     subprocess.run(
-        [sys.executable, "-m", "alembic", "upgrade", "head"],
+        [sys.executable, '-m', 'alembic', 'upgrade', 'head'],
         cwd=REPO_ROOT,
         check=True,
     )
@@ -152,19 +152,19 @@ def _ejecutar_upgrade() -> None:
 async def _ejecutar_reset() -> None:
     """Resetea el schema ``public``. Bloqueado en producción."""
     settings_obj = settings
-    if settings_obj.APP_ENV == "prod":
+    if settings_obj.APP_ENV == 'prod':
         raise RuntimeError(
-            "Reset de schema bloqueado: APP_ENV=prod no admite acciones destructivas.",
+            'Reset de schema bloqueado: APP_ENV=prod no admite acciones destructivas.',
         )
     url = _to_asyncpg_url(settings_obj.DATABASE_URL)
     engine = create_async_engine(
         url,
-        isolation_level="AUTOCOMMIT",
+        isolation_level='AUTOCOMMIT',
     )
     try:
         async with engine.connect() as conn:
-            await conn.execute(text("DROP SCHEMA public CASCADE"))
-            await conn.execute(text("CREATE SCHEMA public"))
+            await conn.execute(text('DROP SCHEMA public CASCADE'))
+            await conn.execute(text('CREATE SCHEMA public'))
     finally:
         await engine.dispose()
 
@@ -179,15 +179,15 @@ def _resultado(
 ) -> dict[str, Any]:
     """Empaqueta el resultado para serializar a JSON."""
     return {
-        "estado": estado.nombre,
-        "version_actual": estado.version_actual,
-        "head_objetivo": estado.head_objetivo,
-        "tablas_app": estado.tablas_app,
-        "accion_ejecutada": accion,
-        "permite_implement": permite,
-        "mensaje": mensaje,
-        "siguientes_pasos": pasos,
-        "exit_code": exit_code,
+        'estado': estado.nombre,
+        'version_actual': estado.version_actual,
+        'head_objetivo': estado.head_objetivo,
+        'tablas_app': estado.tablas_app,
+        'accion_ejecutada': accion,
+        'permite_implement': permite,
+        'mensaje': mensaje,
+        'siguientes_pasos': pasos,
+        'exit_code': exit_code,
     }
 
 
@@ -195,15 +195,15 @@ async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
     """Aplica la matriz de decisión sobre el estado detectado."""
     heads = _obtener_heads()
     if len(heads) != 1:
-        estado_vacio = EstadoBase("MULTI_HEADS", None, None, 0)
+        estado_vacio = EstadoBase('MULTI_HEADS', None, None, 0)
         return _resultado(
             estado_vacio,
-            "abort",
+            'abort',
             False,
-            f"Se detectaron {len(heads)} heads en Alembic. Historial inconsistente.",
+            f'Se detectaron {len(heads)} heads en Alembic. Historial inconsistente.',
             [
                 "Ejecuta 'alembic heads' y resuelve con 'alembic merge'.",
-                "Vuelve a correr el preflight cuando exista un único head.",
+                'Vuelve a correr el preflight cuando exista un único head.',
             ],
             20,
         )
@@ -211,64 +211,64 @@ async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
     head = heads[0]
     estado = await _detectar(head)
 
-    if estado.nombre == "EMPTY":
+    if estado.nombre == 'EMPTY':
         _ejecutar_upgrade()
         return _resultado(
             estado,
-            "upgrade_head",
+            'upgrade_head',
             True,
             "Base vacía detectada. Se aplicó 'alembic upgrade head'.",
             [],
             10,
         )
 
-    if estado.nombre == "VERSIONED_OK":
+    if estado.nombre == 'VERSIONED_OK':
         return _resultado(
             estado,
-            "noop",
+            'noop',
             True,
-            "Base alineada con head. Listo para implement.",
+            'Base alineada con head. Listo para implement.',
             [],
             0,
         )
 
-    if estado.nombre == "VERSIONED_BEHIND":
+    if estado.nombre == 'VERSIONED_BEHIND':
         _ejecutar_upgrade()
         return _resultado(
             estado,
-            "upgrade_head",
+            'upgrade_head',
             True,
-            "Base detrás de head. Migraciones pendientes aplicadas.",
+            'Base detrás de head. Migraciones pendientes aplicadas.',
             [],
             10,
         )
 
-    if estado.nombre == "VERSIONED_AHEAD":
+    if estado.nombre == 'VERSIONED_AHEAD':
         return _resultado(
             estado,
-            "abort",
+            'abort',
             False,
             (
                 f"La base reporta la revisión '{estado.version_actual}' que no "
-                "existe en el historial local."
+                'existe en el historial local.'
             ),
             [
-                "Sincroniza el repositorio con la rama que generó esa revisión.",
-                "O re-ejecuta con --allow-reset si la base es desechable.",
+                'Sincroniza el repositorio con la rama que generó esa revisión.',
+                'O re-ejecuta con --allow-reset si la base es desechable.',
             ],
             20,
         )
 
-    if estado.nombre == "DRIFTED":
+    if estado.nombre == 'DRIFTED':
         if not allow_reset:
             return _resultado(
                 estado,
-                "abort",
+                'abort',
                 False,
                 "Hay tablas en 'public' sin tabla 'alembic_version'. "
-                "Estado inconsistente.",
+                'Estado inconsistente.',
                 [
-                    "Re-ejecuta con --allow-reset si la base es desechable.",
+                    'Re-ejecuta con --allow-reset si la base es desechable.',
                     "Nunca uses 'alembic stamp' para enmascarar el drift.",
                 ],
                 20,
@@ -277,7 +277,7 @@ async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
         _ejecutar_upgrade()
         return _resultado(
             estado,
-            "reset_public",
+            'reset_public',
             True,
             "Schema 'public' reseteado y 'alembic upgrade head' aplicado.",
             [],
@@ -286,10 +286,10 @@ async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
 
     return _resultado(
         estado,
-        "abort",
+        'abort',
         False,
-        f"Estado no clasificado: {estado.nombre}.",
-        ["Reporta este caso para extender la matriz de decisión."],
+        f'Estado no clasificado: {estado.nombre}.',
+        ['Reporta este caso para extender la matriz de decisión.'],
         20,
     )
 
@@ -297,12 +297,12 @@ async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
 def main() -> int:
     """Punto de entrada CLI del preflight."""
     parser = argparse.ArgumentParser(
-        description="Preflight de base de datos para el flujo Speckit.",
+        description='Preflight de base de datos para el flujo Speckit.',
     )
     parser.add_argument(
-        "--allow-reset",
-        action="store_true",
-        help="Autoriza DROP/CREATE SCHEMA public en escenario DRIFTED.",
+        '--allow-reset',
+        action='store_true',
+        help='Autoriza DROP/CREATE SCHEMA public en escenario DRIFTED.',
     )
     args = parser.parse_args()
 
@@ -310,39 +310,39 @@ def main() -> int:
         resultado = asyncio.run(_ejecutar(allow_reset=args.allow_reset))
     except subprocess.CalledProcessError as exc:
         resultado = {
-            "estado": "ALEMBIC_FAIL",
-            "version_actual": None,
-            "head_objetivo": None,
-            "tablas_app": 0,
-            "accion_ejecutada": "abort",
-            "permite_implement": False,
-            "mensaje": f"Falló un comando de Alembic: {exc}",
-            "siguientes_pasos": [
-                "Revisa la salida de Alembic impresa arriba.",
-                "Corrige la migración o el historial antes de reintentar.",
+            'estado': 'ALEMBIC_FAIL',
+            'version_actual': None,
+            'head_objetivo': None,
+            'tablas_app': 0,
+            'accion_ejecutada': 'abort',
+            'permite_implement': False,
+            'mensaje': f'Falló un comando de Alembic: {exc}',
+            'siguientes_pasos': [
+                'Revisa la salida de Alembic impresa arriba.',
+                'Corrige la migración o el historial antes de reintentar.',
             ],
-            "exit_code": 20,
+            'exit_code': 20,
         }
     except Exception as exc:  # noqa: BLE001 - reportar cualquier fallo de conexión
         resultado = {
-            "estado": "CONN_FAIL",
-            "version_actual": None,
-            "head_objetivo": None,
-            "tablas_app": 0,
-            "accion_ejecutada": "abort",
-            "permite_implement": False,
-            "mensaje": f"Fallo de conexión o configuración: {exc}",
-            "siguientes_pasos": [
-                "Verifica DATABASE_URL y conectividad con PostgreSQL.",
-                "Confirma que el archivo .env esté presente y sea legible.",
+            'estado': 'CONN_FAIL',
+            'version_actual': None,
+            'head_objetivo': None,
+            'tablas_app': 0,
+            'accion_ejecutada': 'abort',
+            'permite_implement': False,
+            'mensaje': f'Fallo de conexión o configuración: {exc}',
+            'siguientes_pasos': [
+                'Verifica DATABASE_URL y conectividad con PostgreSQL.',
+                'Confirma que el archivo .env esté presente y sea legible.',
             ],
-            "exit_code": 20,
+            'exit_code': 20,
         }
 
-    exit_code = int(resultado.pop("exit_code"))
+    exit_code = int(resultado.pop('exit_code'))
     print(json.dumps(resultado, ensure_ascii=False, indent=2))
     return exit_code
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())

@@ -17,14 +17,14 @@ from app.modules.propiedades import models  # noqa: F401 - registrar modelo
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def postgres_url() -> str:
     """Levanta PostgreSQL efímero una vez por sesión y retorna la URL asyncpg."""
-    postgres = PostgresContainer("postgres:16-alpine")
+    postgres = PostgresContainer('postgres:16-alpine')
     postgres.start()
     raw = postgres.get_connection_url()
-    url = raw.replace("postgresql://", "postgresql+asyncpg://", 1)
-    url = url.replace("postgresql+psycopg2://", "postgresql+asyncpg://", 1)
+    url = raw.replace('postgresql://', 'postgresql+asyncpg://', 1)
+    url = url.replace('postgresql+psycopg2://', 'postgresql+asyncpg://', 1)
     yield url
     postgres.stop()
 
@@ -46,9 +46,9 @@ async def async_session(
 
 def _alembic(url: str, *args: str) -> subprocess.CompletedProcess[str]:
     """Ejecuta alembic apuntando a la URL del contenedor."""
-    env = os.environ | {"DATABASE_URL": url}
+    env = os.environ | {'DATABASE_URL': url}
     return subprocess.run(
-        [sys.executable, "-m", "alembic", *args],
+        [sys.executable, '-m', 'alembic', *args],
         capture_output=True,
         text=True,
         cwd=REPO_ROOT,
@@ -58,9 +58,9 @@ def _alembic(url: str, *args: str) -> subprocess.CompletedProcess[str]:
 
 def _seed(url: str) -> subprocess.CompletedProcess[str]:
     """Ejecuta el seed apuntando a la URL del contenedor."""
-    env = os.environ | {"DATABASE_URL": url}
+    env = os.environ | {'DATABASE_URL': url}
     return subprocess.run(
-        [sys.executable, str(REPO_ROOT / "scripts" / "dev" / "seed_propiedades.py")],
+        [sys.executable, str(REPO_ROOT / 'scripts' / 'dev' / 'seed_propiedades.py')],
         capture_output=True,
         text=True,
         cwd=REPO_ROOT,
