@@ -1,15 +1,15 @@
 ---
-name: 003-redisenar-home-fix-report
+name: 004-propiedades-base-fix-report
 description: >
   Corrige los hallazgos del reporte de análisis de la feature
-  003-redisenar-home.
-usage: "@.opencode/prompts/003-redisenar-home.fix-report.prompt.md"
+  004-propiedades-base.
+usage: "@.opencode/prompts/004-propiedades-base.fix-report.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
 
 Corrige los hallazgos documentados en `report.md` para la feature
-`003-redisenar-home`.
+`004-propiedades-base`.
 
 Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el
 workflow ya puede resolverlas.
@@ -70,7 +70,7 @@ Al corregir hallazgos, verifica especialmente:
 - Ausencia de decisiones visuales no justificadas.
 - Claridad de criterios responsive.
 - Consistencia de estados visuales: carga, vacío, error, éxito o navegación.
-- Que ninguna corrección amplíe el alcance funcional de `003-redisenar-home`.
+- Que ninguna corrección amplíe el alcance funcional de `004-propiedades-base`.
 
 ## Salida esperada
 
@@ -87,5 +87,5 @@ Al finalizar, informa:
 Después de corregir, recomienda volver a ejecutar:
 
 ```text
-/003-redisenar-home-analyze
+/004-propiedades-base-analyze
 ```

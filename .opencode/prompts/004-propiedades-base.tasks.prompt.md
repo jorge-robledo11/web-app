@@ -1,15 +1,15 @@
 ---
-name: 003-redisenar-home-tasks
+name: 004-propiedades-base-tasks
 description: >
   Genera tasks.md con tareas secuenciales, accionables y verificables para
-  003-redisenar-home.
+  004-propiedades-base.
 spec_kit_command: "/speckit.tasks"
-usage: "/speckit.tasks @.opencode/prompts/003-redisenar-home.tasks.prompt.md"
+usage: "/speckit.tasks @.opencode/prompts/004-propiedades-base.tasks.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
 
-Genera `tasks.md` para la feature activa `003-redisenar-home` usando el
+Genera `tasks.md` para la feature activa `004-propiedades-base` usando el
 workflow canónico de Spec Kit.
 
 Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el comando

@@ -1,15 +1,15 @@
 ---
-name: 003-redisenar-home-implement
+name: 004-propiedades-base-implement
 description: >
-  Implementa 003-redisenar-home siguiendo tasks.md, una fase a la vez y con
+  Implementa 004-propiedades-base siguiendo tasks.md, una fase a la vez y con
   confirmación manual entre fases.
 spec_kit_command: "/speckit.implement"
-usage: "/speckit.implement @.opencode/prompts/003-redisenar-home.implement.prompt.md"
+usage: "/speckit.implement @.opencode/prompts/004-propiedades-base.implement.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
 
-Implementa la feature activa `003-redisenar-home` siguiendo `tasks.md`.
+Implementa la feature activa `004-propiedades-base` siguiendo `tasks.md`.
 
 Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el comando
 ya puede resolverlas.

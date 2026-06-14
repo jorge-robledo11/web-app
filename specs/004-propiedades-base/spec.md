@@ -113,6 +113,24 @@ Sin ella, ninguna feature puede considerarse completa.
 - Alembic reporta una revisión que no existe en `alembic/versions/`: la
   mitigación es reset de schema `public` + `upgrade head`, nunca `alembic stamp`.
 
+## Clarificaciones
+
+Sesión de clarificación ejecutada el 2026-06-14. No se detectaron ambigüedades
+materiales. Las decisiones abiertas identificadas por el prompt de `specify`
+fueron resueltas mediante las 10 asunciones documentadas en la sección
+correspondiente:
+
+| Decisión | Resolución | Asunción # |
+|----------|-----------|------------|
+| Datos concretos vs dataset realista | Dataset sintético verosímil de alquiler en Miami | 1 |
+| Precio: centavos, decimal o monetario | Decimal representando USD (ej. `2500.00`) | 2 |
+| Área: sq ft, m² o ambos | Pies cuadrados (sq ft) | 3 |
+| Imagen: URL externa, local o determinista | URL determinista por UUID | 4 |
+| Ciudad fija vs expansión futura | Campo abierto, seed en Miami | 5 |
+| Distribución de estados iniciales | Variada entre los 4 estados | 6 |
+
+La spec está lista para planificación.
+
 ## Requisitos
 
 ### Requisitos funcionales

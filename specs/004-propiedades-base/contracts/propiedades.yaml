@@ -1,0 +1,221 @@
+# Contrato de entidad Propiedad y seed
+# Feature: 004-propiedades-base
+# Tipo: data-model-contract
+# Versión: 1.0.0
+
+entity:
+  name: Propiedad
+  table: propiedades
+  module: app.modules.propiedades
+
+  columns:
+    - name: id
+      type: UUID
+      primary_key: true
+      server_default: gen_random_uuid()
+
+    - name: titulo
+      type: String(255)
+      nullable: false
+
+    - name: direccion
+      type: String(255)
+      nullable: false
+
+    - name: ciudad
+      type: String(100)
+      nullable: false
+      default: Miami
+
+    - name: precio_mensual
+      type: Numeric(10, 2)
+      nullable: false
+      constraint: "> 0"
+
+    - name: habitaciones
+      type: Integer
+      nullable: false
+      constraint: ">= 1"
+
+    - name: banos
+      type: Integer
+      nullable: false
+      constraint: ">= 1"
+
+    - name: area
+      type: Integer
+      nullable: false
+      constraint: "> 0"
+      unit: sq_ft
+
+    - name: estado
+      type: Enum(EstadoPropiedad)
+      nullable: false
+      enum_name: estado_propiedad
+      create_type: true
+
+    - name: imagen
+      type: String(512)
+      nullable: false
+
+    - name: created_at
+      type: TIMESTAMPTZ
+      nullable: false
+      server_default: now()
+      python_managed: false
+
+    - name: updated_at
+      type: TIMESTAMPTZ
+      nullable: false
+      server_default: now()
+      onupdate: now()
+      python_managed: false
+
+  unique_constraints:
+    - name: uq_propiedades_identidad_negocio
+      columns: [titulo, direccion, ciudad]
+
+  indexes:
+    - name: ix_propiedades_estado
+      columns: [estado]
+    - name: ix_propiedades_ciudad
+      columns: [ciudad]
+    - name: ix_propiedades_precio_mensual
+      columns: [precio_mensual]
+
+enum:
+  name: EstadoPropiedad
+  db_name: estado_propiedad
+  values:
+    - disponible
+    - rentada
+    - mantenimiento
+    - inactiva
+  strategy: create_type_once
+  creation: implicit_by_column_ddl
+
+seed:
+  script: scripts/seed_propiedades.py
+  connection: create_async_engine + asyncpg
+  strategy: upsert
+  conflict_target: [titulo, direccion, ciudad]
+  conflict_action: DO UPDATE
+  idempotent: true
+  cardinality: 10
+  city: Miami
+
+  properties:
+    - titulo: Sunny Palms Apartments
+      direccion: 123 Ocean Drive
+      ciudad: Miami
+      precio_mensual: 2500.00
+      habitaciones: 2
+      banos: 1
+      area: 850
+      estado: disponible
+
+    - titulo: Bayfront Lofts
+      direccion: 456 Biscayne Blvd
+      ciudad: Miami
+      precio_mensual: 3200.00
+      habitaciones: 3
+      banos: 2
+      area: 1200
+      estado: disponible
+
+    - titulo: Coconut Grove Studio
+      direccion: 789 Main Highway
+      ciudad: Miami
+      precio_mensual: 1800.00
+      habitaciones: 1
+      banos: 1
+      area: 550
+      estado: disponible
+
+    - titulo: Brickell Heights
+      direccion: 1000 Brickell Ave
+      ciudad: Miami
+      precio_mensual: 4200.00
+      habitaciones: 3
+      banos: 2
+      area: 1500
+      estado: disponible
+
+    - titulo: Little Havana Casa
+      direccion: 234 Calle Ocho
+      ciudad: Miami
+      precio_mensual: 1500.00
+      habitaciones: 2
+      banos: 1
+      area: 700
+      estado: rentada
+
+    - titulo: Design District Loft
+      direccion: 567 NE 2nd Ave
+      ciudad: Miami
+      precio_mensual: 3800.00
+      habitaciones: 2
+      banos: 2
+      area: 1100
+      estado: rentada
+
+    - titulo: Wynwood Arts Residence
+      direccion: 890 NW 3rd Ave
+      ciudad: Miami
+      precio_mensual: 2900.00
+      habitaciones: 2
+      banos: 1
+      area: 950
+      estado: rentada
+
+    - titulo: Coral Gables Manor
+      direccion: 345 Miracle Mile
+      ciudad: Miami
+      precio_mensual: 5500.00
+      habitaciones: 4
+      banos: 3
+      area: 2200
+      estado: mantenimiento
+
+    - titulo: Key Biscayne Villa
+      direccion: 678 Crandon Blvd
+      ciudad: Miami
+      precio_mensual: 6500.00
+      habitaciones: 4
+      banos: 3
+      area: 2800
+      estado: mantenimiento
+
+    - titulo: South Beach Retreat
+      direccion: 901 Collins Ave
+      ciudad: Miami
+      precio_mensual: 2000.00
+      habitaciones: 1
+      banos: 1
+      area: 600
+      estado: inactiva
+
+  image_strategy:
+    type: deterministic_url
+    base: https://images.unsplash.com/photo-
+    param: w=800
+    seed: int(uuid.UUID(prop.id).int % 1000)
+
+migration:
+  structure_revision: 002_create_propiedades
+  reversible: true
+  downgrade_actions:
+    - drop_table: propiedades
+    - drop_type: estado_propiedad
+  forbidden:
+    - alembic stamp
+    - op.execute(sql, params)
+    - ":param::uuid in sa.text"
+  required:
+    - op.get_bind().execute(sa.text(...), {...})
+    - CAST(:param AS uuid)
+
+governance:
+  visual_impact: none
+  visual_files_modified: []
+  requires_visual_trace: false

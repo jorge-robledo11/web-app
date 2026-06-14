@@ -1,15 +1,15 @@
 ---
-name: 003-redisenar-home-analyze
+name: 004-propiedades-base-analyze
 description: >
   Genera un reporte de consistencia entre spec, plan y artefactos para
-  003-redisenar-home.
+  004-propiedades-base.
 spec_kit_command: "/speckit.analyze"
-usage: "/speckit.analyze @.opencode/prompts/003-redisenar-home.analyze.prompt.md"
+usage: "/speckit.analyze @.opencode/prompts/004-propiedades-base.analyze.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
 
-Audita la consistencia de la feature `003-redisenar-home` usando el workflow
+Audita la consistencia de la feature `004-propiedades-base` usando el workflow
 canónico de Spec Kit.
 
 Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el comando
@@ -49,7 +49,7 @@ Revisa, como mínimo:
 El reporte debe estar en español y organizado con estos niveles de severidad:
 
 - **CRÍTICO**: debe corregirse antes de `/speckit.tasks`.
-- **ADVERTENCIA**: debería atenderse o documentarse.
+- **ADVERTENCIA**: debería corregirse también.
 - **SUGERENCIA**: considerar para iteraciones futuras.
 
 ## Hallazgos
