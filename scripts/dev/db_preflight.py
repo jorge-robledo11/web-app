@@ -1,4 +1,5 @@
-"""Preflight de base de datos para el flujo Speckit.
+"""
+Preflight de base de datos para el flujo Speckit.
 
 Detecta el estado real de la base apuntada por ``DATABASE_URL`` y
 aplica automáticamente la acción correcta antes de ejecutar
@@ -35,7 +36,9 @@ from app.config import settings  # noqa: E402
 
 @dataclass(frozen=True)
 class EstadoBase:
-	"""Snapshot del estado actual de la base."""
+	"""
+	Snapshot del estado actual de la base.
+	"""
 
 	nombre: str
 	version_actual: str | None
@@ -44,7 +47,9 @@ class EstadoBase:
 
 
 def _to_asyncpg_url(url: str) -> str:
-	"""Asegura que la URL use el driver asyncpg."""
+	"""
+	Asegura que la URL use el driver asyncpg.
+	"""
 	if url.startswith('postgresql+asyncpg://'):
 		return url
 	if url.startswith('postgresql://'):
@@ -53,7 +58,9 @@ def _to_asyncpg_url(url: str) -> str:
 
 
 def _obtener_heads() -> list[str]:
-	"""Lista las revisiones marcadas como head en el historial local."""
+	"""
+	Lista las revisiones marcadas como head en el historial local.
+	"""
 	resultado = subprocess.run(
 		[sys.executable, '-m', 'alembic', 'heads'],
 		capture_output=True,
@@ -71,7 +78,9 @@ def _obtener_heads() -> list[str]:
 
 
 def _listar_revisiones() -> list[str]:
-	"""Devuelve todas las revisiones conocidas por Alembic."""
+	"""
+	Devuelve todas las revisiones conocidas por Alembic.
+	"""
 	resultado = subprocess.run(
 		[sys.executable, '-m', 'alembic', 'history'],
 		capture_output=True,
@@ -91,7 +100,9 @@ def _listar_revisiones() -> list[str]:
 
 
 async def _detectar(head_objetivo: str) -> EstadoBase:
-	"""Consulta la base y clasifica el estado actual."""
+	"""
+	Consulta la base y clasifica el estado actual.
+	"""
 	settings_obj = settings
 	url = _to_asyncpg_url(settings_obj.DATABASE_URL)
 	engine = create_async_engine(url)
@@ -141,7 +152,9 @@ async def _detectar(head_objetivo: str) -> EstadoBase:
 
 
 def _ejecutar_upgrade() -> None:
-	"""Ejecuta ``alembic upgrade head`` heredando stdout/stderr."""
+	"""
+	Ejecuta ``alembic upgrade head`` heredando stdout/stderr.
+	"""
 	subprocess.run(
 		[sys.executable, '-m', 'alembic', 'upgrade', 'head'],
 		cwd=REPO_ROOT,
@@ -150,7 +163,9 @@ def _ejecutar_upgrade() -> None:
 
 
 async def _ejecutar_reset() -> None:
-	"""Resetea el schema ``public``. Bloqueado en producción."""
+	"""
+	Resetea el schema ``public``. Bloqueado en producción.
+	"""
 	settings_obj = settings
 	if settings_obj.APP_ENV == 'prod':
 		raise RuntimeError(
@@ -177,7 +192,9 @@ def _resultado(
 	pasos: list[str],
 	exit_code: int,
 ) -> dict[str, Any]:
-	"""Empaqueta el resultado para serializar a JSON."""
+	"""
+	Empaqueta el resultado para serializar a JSON.
+	"""
 	return {
 		'estado': estado.nombre,
 		'version_actual': estado.version_actual,
@@ -192,7 +209,9 @@ def _resultado(
 
 
 async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
-	"""Aplica la matriz de decisión sobre el estado detectado."""
+	"""
+	Aplica la matriz de decisión sobre el estado detectado.
+	"""
 	heads = _obtener_heads()
 	if len(heads) != 1:
 		estado_vacio = EstadoBase('MULTI_HEADS', None, None, 0)
@@ -295,7 +314,9 @@ async def _ejecutar(allow_reset: bool) -> dict[str, Any]:
 
 
 def main() -> int:
-	"""Punto de entrada CLI del preflight."""
+	"""
+	Punto de entrada CLI del preflight.
+	"""
 	parser = argparse.ArgumentParser(
 		description='Preflight de base de datos para el flujo Speckit.',
 	)

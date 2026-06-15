@@ -32,7 +32,9 @@ templates = Jinja2Templates(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-	"""Inicializa y libera recursos al arrancar y apagar la aplicación."""
+	"""
+	Inicializa y libera recursos al arrancar y apagar la aplicación.
+	"""
 	yield
 	await engine.dispose()
 
@@ -53,7 +55,9 @@ app.mount(
 
 @app.get('/health')
 async def health(session: SessionDep):
-	"""Verifica conectividad de la aplicación y la base de datos."""
+	"""
+	Verifica conectividad de la aplicación y la base de datos.
+	"""
 	try:
 		async with asyncio.timeout(2):
 			await session.execute(text('SELECT 1'))
@@ -73,7 +77,9 @@ async def health(session: SessionDep):
 
 @app.get('/', response_class=HTMLResponse)
 async def dashboard(request: Request):
-	"""Renderiza el dashboard demo con datos hardcodeados."""
+	"""
+	Renderiza el dashboard demo con datos hardcodeados.
+	"""
 	metricas = [
 		{
 			'label': 'Propiedades activas',

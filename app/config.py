@@ -4,7 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-	"""Parámetros de entorno validados con pydantic-settings."""
+	"""
+	Parámetros de entorno validados con pydantic-settings.
+	"""
 
 	model_config = SettingsConfigDict(
 		env_file='.env',

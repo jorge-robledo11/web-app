@@ -286,6 +286,7 @@ de hooks declarativos, sin depender de comandos manuales dispersos.
 | `pyupgrade` | pyupgrade | Modernización de sintaxis Python (`--py313-plus`) |
 | `ruff-check` | Ruff | Lint con autofix (`E`, `F`, `I`, `B`, `UP`, `ASYNC`) |
 | `ruff-format` | Ruff | Formateo automático (respeta `[tool.ruff.format]` en `pyproject.toml`) |
+| `format-docstrings` | script local | Convierte docstrings single-line de def/class a multi-línea |
 | `pydocstyle` | pydocstyle | Validación de docstrings (convención Google) |
 | `check-yaml` | pre-commit-hooks | Valida archivos YAML |
 | `check-toml` | pre-commit-hooks | Valida archivos TOML |

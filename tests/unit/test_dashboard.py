@@ -5,7 +5,9 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_dashboard_ok(async_client):
-	"""Verifica que GET / retorna el dashboard con sidebar y 3 tarjetas."""
+	"""
+	Verifica que GET / retorna el dashboard con sidebar y 3 tarjetas.
+	"""
 	response = await async_client.get('/')
 
 	assert response.status_code == 200
@@ -20,7 +22,9 @@ async def test_dashboard_ok(async_client):
 
 @pytest.mark.asyncio
 async def test_metricas_estado_datos(async_client):
-	"""Verifica que las métricas en estado normal renderizan contenido."""
+	"""
+	Verifica que las métricas en estado normal renderizan contenido.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -31,7 +35,9 @@ async def test_metricas_estado_datos(async_client):
 
 @pytest.mark.asyncio
 async def test_metricas_tendencias_presentes(async_client):
-	"""Verifica que las métricas incluyen tendencias con dirección y texto."""
+	"""
+	Verifica que las métricas incluyen tendencias con dirección y texto.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -43,7 +49,9 @@ async def test_metricas_tendencias_presentes(async_client):
 
 @pytest.mark.asyncio
 async def test_metricas_estado_carga_estructura(async_client):
-	"""Verifica que el template incluye la estructura para estado de carga."""
+	"""
+	Verifica que el template incluye la estructura para estado de carga.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -52,7 +60,9 @@ async def test_metricas_estado_carga_estructura(async_client):
 
 @pytest.mark.asyncio
 async def test_metricas_estado_error_estructura(async_client):
-	"""Verifica que el template incluye la estructura para estado de error."""
+	"""
+	Verifica que el template incluye la estructura para estado de error.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -61,7 +71,9 @@ async def test_metricas_estado_error_estructura(async_client):
 
 @pytest.mark.asyncio
 async def test_accesos_rapidos_presentes(async_client):
-	"""Verifica que la sección de accesos rápidos tiene 4 tarjetas cliqueables."""
+	"""
+	Verifica que la sección de accesos rápidos tiene 4 tarjetas cliqueables.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -71,7 +83,9 @@ async def test_accesos_rapidos_presentes(async_client):
 
 @pytest.mark.asyncio
 async def test_accesos_rapidos_urls(async_client):
-	"""Verifica que cada acceso rápido tiene icono y label."""
+	"""
+	Verifica que cada acceso rápido tiene icono y label.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -84,7 +98,9 @@ async def test_accesos_rapidos_urls(async_client):
 
 @pytest.mark.asyncio
 async def test_actividad_reciente_presente(async_client):
-	"""Verifica que la sección de actividad reciente tiene 3 items."""
+	"""
+	Verifica que la sección de actividad reciente tiene 3 items.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -94,7 +110,9 @@ async def test_actividad_reciente_presente(async_client):
 
 @pytest.mark.asyncio
 async def test_actividad_reciente_tipos(async_client):
-	"""Verifica que los items de actividad tienen badges de tipo."""
+	"""
+	Verifica que los items de actividad tienen badges de tipo.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 
@@ -108,7 +126,9 @@ async def test_actividad_reciente_tipos(async_client):
 
 @pytest.mark.asyncio
 async def test_dashboard_orden_secciones(async_client):
-	"""Verifica el orden vertical fijo: Métricas → Accesos → Actividad."""
+	"""
+	Verifica el orden vertical fijo: Métricas → Accesos → Actividad.
+	"""
 	response = await async_client.get('/')
 	html = response.text
 

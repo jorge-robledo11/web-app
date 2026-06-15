@@ -1,4 +1,5 @@
-"""bootstrap: instala extensión pgcrypto
+"""
+bootstrap: instala extensión pgcrypto
 
 Revision ID: 001_bootstrap
 Revises: None

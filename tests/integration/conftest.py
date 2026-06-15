@@ -19,7 +19,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 @pytest.fixture(scope='session')
 def postgres_url() -> str:
-	"""Levanta PostgreSQL efímero una vez por sesión y retorna la URL asyncpg."""
+	"""
+	Levanta PostgreSQL efímero una vez por sesión y retorna la URL asyncpg.
+	"""
 	postgres = PostgresContainer('postgres:16-alpine')
 	postgres.start()
 	raw = postgres.get_connection_url()
@@ -33,7 +35,9 @@ def postgres_url() -> str:
 async def async_session(
 	postgres_url: str,
 ) -> AsyncGenerator[AsyncSession]:
-	"""Sesión de BD contra el contenedor efímero, rollback por test."""
+	"""
+	Sesión de BD contra el contenedor efímero, rollback por test.
+	"""
 	engine = create_async_engine(postgres_url, echo=False)
 	async with engine.begin() as conn:
 		await conn.run_sync(Base.metadata.create_all)
@@ -45,7 +49,9 @@ async def async_session(
 
 
 def _alembic(url: str, *args: str) -> subprocess.CompletedProcess[str]:
-	"""Ejecuta alembic apuntando a la URL del contenedor."""
+	"""
+	Ejecuta alembic apuntando a la URL del contenedor.
+	"""
 	env = os.environ | {'DATABASE_URL': url}
 	return subprocess.run(
 		[sys.executable, '-m', 'alembic', *args],
@@ -57,7 +63,9 @@ def _alembic(url: str, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 def _seed(url: str) -> subprocess.CompletedProcess[str]:
-	"""Ejecuta el seed apuntando a la URL del contenedor."""
+	"""
+	Ejecuta el seed apuntando a la URL del contenedor.
+	"""
 	env = os.environ | {'DATABASE_URL': url}
 	return subprocess.run(
 		[sys.executable, str(REPO_ROOT / 'scripts' / 'dev' / 'seed_propiedades.py')],

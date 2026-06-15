@@ -1,4 +1,5 @@
-"""crear enum estado_propiedad y tabla propiedades
+"""
+crear enum estado_propiedad y tabla propiedades
 
 Revision ID: d7d37c034e18
 Revises: 001_bootstrap

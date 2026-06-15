@@ -17,11 +17,15 @@ from app.modules.propiedades.schemas import PropiedadIn
 
 
 class TestRepositorioPropiedades:
-	"""Pruebas de acceso a datos para Propiedad."""
+	"""
+	Pruebas de acceso a datos para Propiedad.
+	"""
 
 	@pytest_asyncio.fixture
 	async def propiedad_in(self) -> PropiedadIn:
-		"""Fixture con datos válidos de entrada."""
+		"""
+		Fixture con datos válidos de entrada.
+		"""
 		return PropiedadIn(
 			titulo='Casa Repo Test',
 			direccion='Av. Repositorio 456',
@@ -40,7 +44,9 @@ class TestRepositorioPropiedades:
 		async_session: AsyncSession,
 		propiedad_in: PropiedadIn,
 	) -> None:
-		"""crear debe persistir y retornar una Propiedad con id."""
+		"""
+		crear debe persistir y retornar una Propiedad con id.
+		"""
 		prop = await crear(async_session, propiedad_in)
 		assert prop.id is not None
 		assert prop.titulo == 'Casa Repo Test'
@@ -52,7 +58,9 @@ class TestRepositorioPropiedades:
 		async_session: AsyncSession,
 		propiedad_in: PropiedadIn,
 	) -> None:
-		"""obtener_por_id debe encontrar una propiedad recién creada."""
+		"""
+		obtener_por_id debe encontrar una propiedad recién creada.
+		"""
 		creada = await crear(async_session, propiedad_in)
 		encontrada = await obtener_por_id(async_session, creada.id)
 		assert encontrada is not None
@@ -63,7 +71,9 @@ class TestRepositorioPropiedades:
 		self,
 		async_session: AsyncSession,
 	) -> None:
-		"""obtener_por_id debe retornar None para id inexistente."""
+		"""
+		obtener_por_id debe retornar None para id inexistente.
+		"""
 		import uuid
 
 		inexistente = await obtener_por_id(async_session, uuid.uuid4())
@@ -75,7 +85,9 @@ class TestRepositorioPropiedades:
 		async_session: AsyncSession,
 		propiedad_in: PropiedadIn,
 	) -> None:
-		"""listar debe devolver al menos las propiedades creadas."""
+		"""
+		listar debe devolver al menos las propiedades creadas.
+		"""
 		await crear(async_session, propiedad_in)
 		todas = await listar(async_session)
 		assert len(todas) >= 1
@@ -88,7 +100,9 @@ class TestRepositorioPropiedades:
 		async_session: AsyncSession,
 		propiedad_in: PropiedadIn,
 	) -> None:
-		"""eliminar debe remover la propiedad y retornar True."""
+		"""
+		eliminar debe remover la propiedad y retornar True.
+		"""
 		creada = await crear(async_session, propiedad_in)
 		resultado = await eliminar(async_session, creada.id)
 		assert resultado is True

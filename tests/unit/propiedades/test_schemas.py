@@ -7,10 +7,14 @@ from app.modules.propiedades.schemas import PropiedadIn, PropiedadOut
 
 
 class TestPropiedadIn:
-	"""Pruebas del DTO de entrada PropiedadIn."""
+	"""
+	Pruebas del DTO de entrada PropiedadIn.
+	"""
 
 	def test_es_frozen(self) -> None:
-		"""El DTO debe ser inmutable (frozen=True)."""
+		"""
+		El DTO debe ser inmutable (frozen=True).
+		"""
 		datos = {
 			'titulo': 'Casa Test',
 			'direccion': 'Calle 123',
@@ -27,7 +31,9 @@ class TestPropiedadIn:
 			prop.titulo = 'otro'  # type: ignore[misc]
 
 	def test_estado_invalido_rechazado(self) -> None:
-		"""Debe rechazar un estado fuera del catálogo (FR-003)."""
+		"""
+		Debe rechazar un estado fuera del catálogo (FR-003).
+		"""
 		datos = {
 			'titulo': 'Casa Test',
 			'direccion': 'Calle 123',
@@ -43,7 +49,9 @@ class TestPropiedadIn:
 			PropiedadIn(**datos)  # type: ignore[arg-type]
 
 	def test_estados_validos_aceptados(self) -> None:
-		"""Debe aceptar los 4 estados del catálogo."""
+		"""
+		Debe aceptar los 4 estados del catálogo.
+		"""
 		for estado in ('disponible', 'rentada', 'mantenimiento', 'inactiva'):
 			datos = {
 				'titulo': 'Casa Test',
@@ -60,7 +68,9 @@ class TestPropiedadIn:
 			assert prop.estado == estado
 
 	def test_precio_mensual_debe_ser_positivo(self) -> None:
-		"""El precio mensual debe ser mayor a 0."""
+		"""
+		El precio mensual debe ser mayor a 0.
+		"""
 		datos = {
 			'titulo': 'Casa Test',
 			'direccion': 'Calle 123',
@@ -76,12 +86,16 @@ class TestPropiedadIn:
 			PropiedadIn(**datos)  # type: ignore[arg-type]
 
 	def test_campos_obligatorios(self) -> None:
-		"""Todos los campos deben ser obligatorios."""
+		"""
+		Todos los campos deben ser obligatorios.
+		"""
 		with pytest.raises(ValidationError):
 			PropiedadIn(titulo='Solo título')  # type: ignore[call-arg]
 
 	def test_sin_id_ni_timestamps(self) -> None:
-		"""PropiedadIn no debe aceptar id, created_at ni updated_at."""
+		"""
+		PropiedadIn no debe aceptar id, created_at ni updated_at.
+		"""
 		datos = {
 			'id': '00000000-0000-0000-0000-000000000001',
 			'titulo': 'Casa Test',
@@ -99,10 +113,14 @@ class TestPropiedadIn:
 
 
 class TestPropiedadOut:
-	"""Pruebas del DTO de salida PropiedadOut."""
+	"""
+	Pruebas del DTO de salida PropiedadOut.
+	"""
 
 	def test_incluye_id_y_timestamps(self) -> None:
-		"""PropiedadOut debe incluir id, created_at y updated_at."""
+		"""
+		PropiedadOut debe incluir id, created_at y updated_at.
+		"""
 		datos = {
 			'id': '00000000-0000-0000-0000-000000000001',
 			'titulo': 'Casa Test',
@@ -123,7 +141,9 @@ class TestPropiedadOut:
 		assert prop.updated_at is not None
 
 	def test_es_frozen(self) -> None:
-		"""El DTO debe ser inmutable."""
+		"""
+		El DTO debe ser inmutable.
+		"""
 		datos = {
 			'id': '00000000-0000-0000-0000-000000000001',
 			'titulo': 'Casa Test',

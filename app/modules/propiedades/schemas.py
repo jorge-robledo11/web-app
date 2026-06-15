@@ -10,7 +10,9 @@ from app.modules.propiedades.models import EstadoPropiedad
 
 
 class PropiedadIn(BaseModel):
-	"""DTO de entrada para crear o actualizar una propiedad."""
+	"""
+	DTO de entrada para crear o actualizar una propiedad.
+	"""
 
 	model_config = ConfigDict(frozen=True, extra='forbid')
 
@@ -27,7 +29,9 @@ class PropiedadIn(BaseModel):
 	@field_validator('estado', mode='before')
 	@classmethod
 	def validar_estado(cls, v: object) -> EstadoPropiedad:
-		"""Valida que el estado pertenezca al catálogo cerrado."""
+		"""
+		Valida que el estado pertenezca al catálogo cerrado.
+		"""
 		if isinstance(v, EstadoPropiedad):
 			return v
 		if isinstance(v, str):
@@ -42,7 +46,9 @@ class PropiedadIn(BaseModel):
 
 
 class PropiedadOut(BaseModel):
-	"""DTO de salida con todos los campos, incluyendo id y timestamps."""
+	"""
+	DTO de salida con todos los campos, incluyendo id y timestamps.
+	"""
 
 	model_config = ConfigDict(frozen=True, from_attributes=True)
 

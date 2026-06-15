@@ -1,4 +1,5 @@
-"""Carga inicial idempotente de 10 propiedades de Miami.
+"""
+Carga inicial idempotente de 10 propiedades de Miami.
 
 Ejecutar después de ``alembic upgrade head``::
 
@@ -149,19 +150,25 @@ UPSERT_SQL = """
 
 
 def _imagen_determinista(prop_id: uuid.UUID, seed: int) -> str:
-	"""URL de imagen estable a partir de UUID y semilla."""
+	"""
+	URL de imagen estable a partir de UUID y semilla.
+	"""
 	hash_val = hashlib.md5(f'{prop_id}-{seed}'.encode()).hexdigest()[:8]
 	return f'https://images.unsplash.com/photo-{hash_val}?w=800'
 
 
 def _uuid_negocio(titulo: str, direccion: str, ciudad: str) -> uuid.UUID:
-	"""UUID v5 determinista a partir de clave de negocio."""
+	"""
+	UUID v5 determinista a partir de clave de negocio.
+	"""
 	namespace = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
 	return uuid.uuid5(namespace, f'{titulo}|{direccion}|{ciudad}')
 
 
 async def _cargar() -> int:
-	"""Ejecuta carga inicial. Retorna cantidad de propiedades."""
+	"""
+	Ejecuta carga inicial. Retorna cantidad de propiedades.
+	"""
 	if not settings.DATABASE_URL:
 		print('[seed] ERROR: DATABASE_URL no configurada', file=sys.stderr)
 		sys.exit(1)
@@ -202,7 +209,9 @@ async def _cargar() -> int:
 
 
 def main() -> None:
-	"""Punto de entrada."""
+	"""
+	Punto de entrada.
+	"""
 	total = asyncio.run(_cargar())
 	assert total == 10, f'Se esperaban 10 propiedades, se encontraron {total}'
 

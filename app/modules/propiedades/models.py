@@ -19,7 +19,9 @@ from app.database import Base
 
 
 class EstadoPropiedad(enum.StrEnum):
-	"""Catálogo cerrado de estados operativos de una propiedad."""
+	"""
+	Catálogo cerrado de estados operativos de una propiedad.
+	"""
 
 	DISPONIBLE = 'disponible'
 	RENTADA = 'rentada'
@@ -28,7 +30,9 @@ class EstadoPropiedad(enum.StrEnum):
 
 
 class Propiedad(Base):
-	"""Propiedad inmobiliaria gestionada por el realtor."""
+	"""
+	Propiedad inmobiliaria gestionada por el realtor.
+	"""
 
 	__tablename__ = 'propiedades'
 
@@ -87,7 +91,9 @@ class Propiedad(Base):
 	)
 
 	def __repr__(self) -> str:
-		"""Representación legible para depuración."""
+		"""
+		Representación legible para depuración.
+		"""
 		return (
 			f'<Propiedad(id={self.id!r}, titulo={self.titulo!r}, '
 			f'estado={self.estado!r})>'

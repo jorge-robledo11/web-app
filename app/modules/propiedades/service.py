@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 def validar_estado(valor: str) -> EstadoPropiedad:
-	"""Valida que un string corresponda a un estado del catálogo.
+	"""
+	Valida que un string corresponda a un estado del catálogo.
 
 	Lanza ValueError si el estado no es válido.
 	"""
@@ -29,7 +30,9 @@ async def crear_propiedad(
 	session: AsyncSession,
 	payload: PropiedadIn,
 ) -> PropiedadOut:
-	"""Crea una propiedad aplicando reglas de negocio."""
+	"""
+	Crea una propiedad aplicando reglas de negocio.
+	"""
 	logger.info(
 		'propiedad.crear.inicio',
 		extra={'titulo': payload.titulo},

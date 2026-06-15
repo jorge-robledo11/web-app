@@ -11,7 +11,9 @@ from app.main import app
 
 @pytest.mark.asyncio
 async def test_health_ok(async_client):
-	"""Verifica que /health retorna 200 cuando la base de datos responde."""
+	"""
+	Verifica que /health retorna 200 cuando la base de datos responde.
+	"""
 	mock_session = AsyncMock()
 	mock_session.execute = AsyncMock()
 
@@ -30,7 +32,9 @@ async def test_health_ok(async_client):
 
 @pytest.mark.asyncio
 async def test_health_db_unavailable(async_client):
-	"""Verifica que /health retorna 503 cuando la base de datos no responde."""
+	"""
+	Verifica que /health retorna 503 cuando la base de datos no responde.
+	"""
 	mock_session = AsyncMock()
 	mock_session.execute = AsyncMock(side_effect=SQLAlchemyError())
 

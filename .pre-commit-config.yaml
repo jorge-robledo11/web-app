@@ -40,14 +40,24 @@ repos:
       - id: trailing-whitespace
         exclude: ^app/static/vendor/htmx\.min\.js$
 
-  # 4. Docstrings
+  # 4. Docstrings multi-línea (convierte multi-línea en def/class)
+  - repo: local
+    hooks:
+      - id: format-docstrings
+        name: formatear docstrings a multi-línea
+        entry: uv run python scripts/ci/format-docstrings.py
+        language: system
+        files: ^(app|scripts|tests)/.*\.py$
+        pass_filenames: true
+
+  # 5. Validación de docstrings
   - repo: https://github.com/PyCQA/pydocstyle
     rev: 6.3.0
     hooks:
       - id: pydocstyle
         files: ^(app|scripts)/.*\.py$
 
-  # 5. Checks del proyecto usando scripts separados
+  # 6. Checks del proyecto usando scripts separados
   - repo: local
     hooks:
       - id: forbid-yml-files
