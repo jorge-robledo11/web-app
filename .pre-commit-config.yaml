@@ -9,16 +9,25 @@ repos:
       - id: pyupgrade
         args: [--py313-plus]
 
-  # 2. Ruff: lint/autofix rápido sobre archivos staged
+  # 2. Ruff: lint/autofix + format sobre archivos Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.17
     hooks:
       - id: ruff-check
-        args: [--fix, .]
+        args: [--fix, --unsafe-fixes]
       - id: ruff-format
-        args: [.]
 
-  # 3. Verificaciones generales de archivos
+  # 3. Docstrings single-line a multilínea después de ruff-format
+  - repo: local
+    hooks:
+      - id: format-docstrings
+        name: formatear docstrings a multilínea
+        entry: uv run python scripts/ci/format-docstrings.py
+        language: system
+        types: [python]
+        pass_filenames: true
+
+  # 4. Verificaciones generales de archivos
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -40,22 +49,12 @@ repos:
       - id: trailing-whitespace
         exclude: ^app/static/vendor/htmx\.min\.js$
 
-  # 4. Docstrings multi-línea (convierte multi-línea en def/class)
-  - repo: local
-    hooks:
-      - id: format-docstrings
-        name: formatear docstrings a multi-línea
-        entry: uv run python scripts/ci/format-docstrings.py
-        language: system
-        files: ^(app|scripts|tests)/.*\.py$
-        pass_filenames: true
-
   # 5. Validación de docstrings
   - repo: https://github.com/PyCQA/pydocstyle
     rev: 6.3.0
     hooks:
       - id: pydocstyle
-        files: ^(app|scripts)/.*\.py$
+        types: [python]
 
   # 6. Checks del proyecto usando scripts separados
   - repo: local

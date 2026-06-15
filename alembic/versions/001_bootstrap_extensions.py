@@ -1,5 +1,5 @@
 """
-bootstrap: instala extensión pgcrypto
+Bootstrap: instala extensión pgcrypto.
 
 Revision ID: 001_bootstrap
 Revises: None
@@ -17,8 +17,14 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
+	"""
+	Aplica la migración.
+	"""
 	op.execute('CREATE EXTENSION IF NOT EXISTS pgcrypto')
 
 
 def downgrade() -> None:
+	"""
+	Revierte la migración.
+	"""
 	op.execute('DROP EXTENSION IF EXISTS pgcrypto')

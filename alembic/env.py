@@ -22,7 +22,9 @@ config.set_main_option('sqlalchemy.url', settings.DATABASE_URL)
 
 
 def run_migrations_offline() -> None:
-	"""Ejecuta migraciones en modo offline."""
+	"""
+	Ejecuta migraciones en modo offline.
+	"""
 	url = config.get_main_option('sqlalchemy.url')
 	context.configure(
 		url=url,
@@ -35,14 +37,18 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-	"""Ejecuta migraciones sobre una conexión activa."""
+	"""
+	Ejecuta migraciones sobre una conexión activa.
+	"""
 	context.configure(connection=connection, target_metadata=target_metadata)
 	with context.begin_transaction():
 		context.run_migrations()
 
 
 async def run_async_migrations() -> None:
-	"""Crea un motor async y ejecuta las migraciones."""
+	"""
+	Crea un motor async y ejecuta las migraciones.
+	"""
 	connectable = create_async_engine(
 		settings.DATABASE_URL,
 		poolclass=pool.NullPool,
@@ -53,7 +59,9 @@ async def run_async_migrations() -> None:
 
 
 def run_migrations_online() -> None:
-	"""Ejecuta migraciones en modo online."""
+	"""
+	Ejecuta migraciones en modo online.
+	"""
 	asyncio.run(run_async_migrations())
 
 
