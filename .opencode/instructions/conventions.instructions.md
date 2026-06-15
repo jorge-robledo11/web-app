@@ -273,7 +273,60 @@ Solo estas seis: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security
 
 ---
 
-> **Fuentes**: `AGENTS.md`, `.specify/memory/constitution.md` (v1.2.0),
+## 12. Pre-commit y calidad automatizada
+
+El entry point unificado de calidad es `.pre-commit-config.yaml`. Todo el
+formateo, lint, typecheck y validaciones de docstrings se ejecutan a través
+de hooks declarativos, sin depender de comandos manuales dispersos.
+
+### Hooks automáticos (se ejecutan en cada commit)
+
+| Hook | Herramienta | Propósito |
+|------|------------|-----------|
+| `pyupgrade` | pyupgrade | Modernización de sintaxis Python (`--py313-plus`) |
+| `ruff-check` | Ruff | Lint con autofix (`E`, `F`, `I`, `B`, `UP`, `ASYNC`) |
+| `ruff-format` | Ruff | Formateo automático (respeta `[tool.ruff.format]` en `pyproject.toml`) |
+| `pydocstyle` | pydocstyle | Validación de docstrings (convención Google) |
+| `check-yaml` | pre-commit-hooks | Valida archivos YAML |
+| `check-toml` | pre-commit-hooks | Valida archivos TOML |
+| `check-json` | pre-commit-hooks | Valida archivos JSON |
+| `check-ast` | pre-commit-hooks | Valida sintaxis Python |
+| `debug-statements` | pre-commit-hooks | Prohíbe `breakpoint()` y `pdb` |
+| `check-merge-conflict` | pre-commit-hooks | Prohíbe marcadores de merge |
+| `check-case-conflict` | pre-commit-hooks | Detecta conflictos case-insensitive |
+| `detect-private-key` | pre-commit-hooks | Prohíbe claves privadas commiteadas |
+| `check-added-large-files` | pre-commit-hooks | Rechaza archivos >750KB |
+| `mixed-line-ending` | pre-commit-hooks | Fuerza LF |
+| `end-of-file-fixer` | pre-commit-hooks | Asegura nueva línea al final |
+| `trailing-whitespace` | pre-commit-hooks | Elimina espacios al final |
+| `forbid-yml-files` | script local | Prohíbe extensión `.yml` |
+| `forbid-python-packaging-files` | script local | Prohíbe `requirements.txt` y `setup.py` |
+| `typecheck` | mypy | Typecheck `--strict` en `app/modules/` |
+
+### Hooks manuales (ejecución bajo demanda)
+
+| Hook | Comando | Propósito |
+|------|---------|-----------|
+| `test` | `make test` | Suite de tests completa |
+| `coverage` | `make coverage` | Tests con coverage ≥80% |
+| `clean` | `make clean` | Limpieza de cachés |
+| `visual-trace-check` | `make visual-check` | Auditoría de trazabilidad visual |
+
+### Comandos Makefile equivalentes
+
+```bash
+make auto-checks       # pre-commit run --all-files
+make ci                # auto-checks + tests + coverage + clean
+make test              # pytest
+make coverage          # pytest con coverage
+make clean             # limpia cachés
+make visual-check      # auditoría visual
+make hooks-install     # instala hooks Git del proyecto
+```
+
+---
+
+> **Fuentes**: `AGENTS.md`, `.specify/memory/constitution.md` (v1.3.1),
 > `.opencode/instructions/backend.instructions.md`,
 > `.opencode/instructions/database.instructions.md`,
 > `.opencode/instructions/frontend.instructions.md`,

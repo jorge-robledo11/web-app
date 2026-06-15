@@ -31,6 +31,9 @@ commit DEBEN estar en español. NUNCA mezclar idiomas dentro de un mismo archivo
 * pytest + pytest-asyncio + httpx.AsyncClient para tests.
 * Testcontainers para pruebas de integración con infraestructura real.
 * Ruff + mypy `--strict` mínimo en `app/modules/`.
+* pyupgrade para modernización de sintaxis Python.
+* pydocstyle para convenciones de docstrings.
+* `.pre-commit-config.yaml` como entry point unificado de calidad.
 * Iconografía SVG outline de Lucide vendoreada en `app/static/icons/`.
 
 ## Prohibiciones absolutas
@@ -209,9 +212,13 @@ Antes de cerrar una implementación, ejecutar como mínimo:
 ```bash
 uv sync
 uv run pytest
-uv run ruff check .
-uv run ruff format --check .
-uv run mypy --strict app/modules/
+```
+
+La validación de formato, lint, typecheck y docstrings está unificada en el
+pre-commit (`make auto-checks`). Para validación completa:
+
+```bash
+make ci                   # auto-checks + tests + coverage + clean
 ```
 
 Las pruebas unitarias usan pytest. Las pruebas asíncronas usan pytest-asyncio.
@@ -300,6 +307,7 @@ tests/
   integration/
     conftest.py
     <feature>/
+.pre-commit-config.yaml
 pyproject.toml
 uv.lock
 docker-compose.yaml

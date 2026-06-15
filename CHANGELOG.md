@@ -30,6 +30,16 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - `scripts/tools/install-git-hooks.sh`: instalador de hooks Git que copia hooks desde `scripts/hooks/` a `.git/hooks/` con respaldo automático vía timestamp.
 - `scripts/tools/context.sh`: generador de contexto para repomix (`npx repomix --output docs/context/repo-state.xml`).
 - `.repomixignore`: reglas de exclusión para repomix (virtualenvs, cachés Python, artefactos de build, logs, IDE, binarios).
+- Hook `ruff-format` en `.pre-commit-config.yaml` con auto-formateo (respeta `[tool.ruff.format]` en `pyproject.toml`).
+- Sección «Pre-commit y calidad automatizada» en `conventions.instructions.md` documentando hooks automáticos, manuales y comandos Makefile equivalentes.
+- `.pre-commit-config.yaml`, `pyupgrade`, `ruff-format` y `pydocstyle` registrados en el stack obligatorio de la constitución y `AGENTS.md`.
+- Módulo `propiedades` (spec 004): modelos SQLAlchemy, repositorio async, servicio con lógica de negocio, esquemas Pydantic y rutas FastAPI para la gestión de propiedades inmobiliarias.
+- Migración Alembic `002_create_propiedades.py` con la tabla `propiedades`, incluyendo columnas, constraints, índices y claves foráneas.
+- Scripts de base de datos: `seed_propiedades.py` para datos de prueba y `db_preflight.py` para validación del estado de migraciones antes de operaciones.
+- Tests del módulo `propiedades`: tests unitarios de modelos y esquemas; tests de integración con Testcontainers para repositorio, servicio, migración y seed.
+- Skill `db-preflight` para validación automatizada del estado de la base de datos antes de ejecutar implementaciones Spec Kit.
+- Documentación completa de spec 004: spec, plan, tasks, modelo de datos, contratos YAML, checklist de requisitos, quickstart, research y report.
+- Prompts de Spec Kit para spec 004: 7 prompts (spec, clarify, plan, analyze, tasks, implement, fix-report) con frontmatter estandarizado.
 
 ### Changed
 
@@ -42,11 +52,17 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Actualizados los 49 commits del historial de `main` para cumplir con Conventional Commits (tipos correctos, scopes de spec, descripciones en imperativo presente).
 - Prompts de Spec Kit movidos de `.opencode/commands/prompts/` a `.opencode/prompts/` con frontmatter de ejecución estandarizado que incluye metadatos de restricciones, descripción y referencias (specs 001, 002, 003).
 - Comandos de `opencode.json` eliminados: los flujos de Spec Kit ahora se ejecutan exclusivamente mediante prompts estandarizados con metadatos de ejecución, simplificando la configuración declarativa del proyecto.
+- Constitución actualizada (v1.3.1): sección IX de calidad reemplaza comandos manuales por `make auto-checks`/`make ci` como entry point unificado; stack ampliado con `pre-commit`, `pyupgrade`, `ruff-format` y `pydocstyle`; estructura del repositorio incluye `.pre-commit-config.yaml`.
+- `conventions.instructions.md`: versión de constitución corregida (`v1.2.0` → `v1.3.1`); sección 12 agregada con tabla completa de hooks pre-commit.
+- Makefile y CI: simplificado el hook manual `format-project` eliminándolo de `.pre-commit-config.yaml`; separados `manual-checks` en scripts directos (`test.sh`, `coverage.sh`, `clean.sh`); corregido `ruff-check` para usar `--fix .` en lugar de `--fix --check`; actualizada la receta `ci` para usar `$(MAKE)` llamadas explícitas.
 
 ### Fixed
 
 - Instalación del hook `post-commit` corregida para manejar el sufijo `.changelog` en el nombre del archivo fuente al copiarlo a `.git/hooks/`.
 - Timeout del script `backend.sh` corregido para evitar falsos positivos en entornos lentos.
+- Contradicción interna en constitución (v1.3.0) sobre ubicación de tests: `tests/` eliminado de `app/modules/<feature>/` en la sección IV; ahora solo reside en raíz (`tests/unit/`, `tests/integration/`) según IX.5 y XIII.
+- `backend.instructions.md` corregido: eliminada referencia a `tests/` dentro del módulo; texto ahora apunta a `tests/unit/<feature>/` y `tests/integration/<feature>/` en la raíz.
+- `AGENTS.md` sincronizado con constitución v1.3.1: eliminado `tests/` de artefactos del módulo, agregadas secciones `Órganización de tests`, `Async-First`, `Contratos de dominio`, y árbol de estructura actualizado.
 
 ### Removed
 
@@ -54,4 +70,4 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
 - Archivo `.repomixignore` eliminado y sus reglas de exclusión migradas a `.gitignore`.
 
-<!-- changelog:last-processed-commit=b96e7f114dd41c7f6c98b9adbb5dc6d21f470bb3 -->
+<!-- changelog:last-processed-commit=10df3eb90ff9414cea24571f9811f95b4fd002da -->

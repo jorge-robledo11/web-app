@@ -35,5 +35,10 @@ build/
 # Logs
 *.log
 
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+
 context/
 .repomixignore

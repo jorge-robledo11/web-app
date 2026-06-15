@@ -8,8 +8,11 @@ applyTo: "app/modules/**/*.py"
 
 Cada feature en `app/modules/<feature>/` contiene exactamente:
 `routes.py`, `schemas.py`, `models.py`, `repository.py`, `service.py`,
-`templates/`, `tests/`. No agregues otros archivos sin justificación en el
+`templates/`. No agregues otros archivos sin justificación en el
 `plan.md` de la spec.
+
+Las pruebas viven en la raíz del repositorio (`tests/unit/<feature>/`,
+`tests/integration/<feature>/`), no dentro del módulo.
 
 ## routes.py (endpoints delgados)
 

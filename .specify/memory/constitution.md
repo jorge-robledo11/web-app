@@ -54,6 +54,8 @@ constitución.
 | Tests            | pytest + pytest-asyncio + httpx.AsyncClient                                          |
 | Integración      | Testcontainers cuando se requiera infraestructura real                               |
 | Calidad estática | Ruff + mypy `--strict` mínimo en `app/modules/`                                      |
+| Pre-commit       | pyupgrade, ruff (lint + format), pydocstyle, check-yaml, check-toml, end-of-file     |
+| Automatización   | `.pre-commit-config.yaml` como entry point unificado de calidad                      |
 | Iconografía      | SVG outline de Lucide vendoreados en `app/static/icons/`                             |
 
 ## III. Prohibiciones absolutas
@@ -298,14 +300,21 @@ Reglas complementarias:
 
 Toda implementación debe poder validarse localmente con comandos reproducibles.
 
-Comandos mínimos esperados:
+El entry point unificado de calidad es el pre-commit, configurado en
+`.pre-commit-config.yaml`. Los comandos equivalentes son:
+
+```bash
+make auto-checks          # pre-commit run --all-files (hooks automáticos)
+make ci                   # auto-checks + tests + coverage + clean
+```
+
+Comandos individuales de referencia (ya cubiertos por pre-commit):
 
 ```bash
 uv sync
-uv run pytest
-uv run ruff check .
-uv run ruff format --check .
-uv run mypy --strict app/modules/
+uv run ruff check .       # cubierto por ruff-check hook
+uv run ruff format .      # cubierto por ruff-format hook
+uv run mypy --strict app/modules/  # cubierto por typecheck hook
 ```
 
 Reglas de testing:
@@ -478,6 +487,7 @@ tests/
     conftest.py
     <feature>/
       test_*.py
+.pre-commit-config.yaml
 pyproject.toml
 uv.lock
 docker-compose.yaml
@@ -557,5 +567,11 @@ explícitamente y seguir la capa de mayor autoridad.
   Actualizada la estructura del repositorio en la sección XIII para reflejar
   la nueva ubicación de tests. Corregido el nivel jerárquico de la
   subsección «Sistema visual canónico».
+* **v1.3.1** — Documentado `.pre-commit-config.yaml` como entry point unificado
+  de calidad en las secciones II, IX y XIII. Agregados pyupgrade, ruff-format y
+  pydocstyle al stack. Actualizados los comandos de validación para referenciar
+  `make auto-checks`/`make ci`. Corregida la instrucción `backend.instructions.md`
+  para eliminar `tests/` de los artefactos del módulo. Sincronizados `AGENTS.md`
+  y `conventions.instructions.md` con estos cambios.
 
-**Versión**: 1.3.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-14
+**Versión**: 1.3.1 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-15
