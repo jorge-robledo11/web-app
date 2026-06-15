@@ -51,7 +51,7 @@ db-status: ## Muestra el estado de los servicios Docker
 # ╚══════════════════════════════════════════╝
 
 auto-checks: ## Ejecuta validaciones automáticas de pre-commit
-	uv run pre-commit run --all-files || uv run pre-commit run --all-files
+	bash scripts/ci/auto-checks.sh
 
 manual-checks: ## Ejecuta checks manuales del proyecto
 	bash scripts/ci/test.sh && \
