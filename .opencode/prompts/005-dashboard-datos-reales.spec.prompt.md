@@ -311,6 +311,7 @@ incluir como mínimo:
 * Edge Cases.
 * Riesgos y dependencias.
 * Preguntas abiertas solo si faltan decisiones materiales.
+* Checklist de calidad en `checklists/requirements.md`.
 
 ## Reglas obligatorias
 

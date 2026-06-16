@@ -186,5 +186,6 @@ Dependencias esperadas:
 - No crear módulos de dominio en esta spec.
 - Usa la ruta de feature resuelta por Spec Kit.
 - No crees specs manualmente en rutas alternativas.
+- La spec DEBE incluir checklist de calidad en `checklists/requirements.md`.
 
 Siguiente fase: `001-bootstrap-proyecto.clarify.prompt.md`

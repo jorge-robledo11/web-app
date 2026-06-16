@@ -262,6 +262,7 @@ incluir como mínimo:
 * Assumptions.
 * Edge Cases.
 * Trazabilidad de reglas de negocio y restricciones técnicas.
+* Checklist de calidad en `checklists/requirements.md`.
 
 ## Reglas obligatorias
 

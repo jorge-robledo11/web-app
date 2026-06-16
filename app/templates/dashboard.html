@@ -4,11 +4,20 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+{% if vacio %}
+<div class="dashboard--empty">
+  <span class="icon" style="width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">{{ icon("info", size=20) }}</span>
+  <span>No hay datos disponibles</span>
+</div>
+{% else %}
 <section class="metricas">
   {% for metrica in metricas %}
     {% with label=metrica.label, valor=metrica.valor, icono=metrica.icono, tendencia=metrica.tendencia, estado=metrica.estado %}
       {% include "components/_tarjeta_metrica.html" %}
     {% endwith %}
+    {% if metrica.marcador %}
+    <small class="tarjeta-metrica__marcador">{{ metrica.marcador }}</small>
+    {% endif %}
   {% endfor %}
 </section>
 
@@ -43,4 +52,5 @@
   </div>
   {% endif %}
 </section>
+{% endif %}
 {% endblock %}

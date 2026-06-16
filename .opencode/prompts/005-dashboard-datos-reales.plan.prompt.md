@@ -164,7 +164,9 @@ uv run pytest tests/unit/test_dashboard.py tests/integration/dashboard/ -q
 Al finalizar, informa:
 
 - Ruta del `plan.md` generado o actualizado.
-- Artefactos generados o actualizados.
+- Phase 0: `research.md`
+- Phase 1: `data-model.md`, `quickstart.md`
+- Contratos: `contracts/*.yaml` (si aplica)
 - Si hubo preguntas interactivas.
 - Si se registraron desviaciones en `Complexity Tracking`.
 - Módulos o archivos backend que podrían verse afectados.

@@ -2,10 +2,10 @@
 
 import uuid
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.modules.propiedades.models import Propiedad
+from app.modules.propiedades.models import EstadoPropiedad, Propiedad
 from app.modules.propiedades.schemas import PropiedadIn
 
 
@@ -60,3 +60,24 @@ async def eliminar(session: AsyncSession, prop_id: uuid.UUID) -> bool:
 	await session.delete(prop)
 	await session.flush()
 	return True
+
+
+async def contar_por_estado(
+	session: AsyncSession,
+	estado: EstadoPropiedad,
+) -> int:
+	"""
+	Cuenta propiedades por estado del catálogo.
+	"""
+	stmt = select(func.count(Propiedad.id)).where(Propiedad.estado == estado)
+	result = await session.execute(stmt)
+	return result.scalar_one()
+
+
+async def contar_total(session: AsyncSession) -> int:
+	"""
+	Cuenta el total de propiedades persistidas.
+	"""
+	stmt = select(func.count(Propiedad.id))
+	result = await session.execute(stmt)
+	return result.scalar_one()

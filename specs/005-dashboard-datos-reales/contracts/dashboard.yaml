@@ -1,0 +1,127 @@
+# Contrato del endpoint GET /
+# Feature: 005-dashboard-datos-reales
+# Actualiza: specs/003-redisenar-home/contracts/dashboard.yaml
+# Tipo: endpoint-contract
+# Versión: 2.0.0
+
+endpoint:
+  method: GET
+  path: /
+  response_type: HTMLResponse
+  template: dashboard.html
+  handler: app.modules.dashboard.routes.dashboard
+
+contexto:
+  request:
+    type: Request
+    source: fastapi
+  metricas:
+    type: list[dict]
+    required: true
+    count: 4
+    order:
+      - label: "Propiedades disponibles"
+        icono: building-2
+        fuente: "contar_por_estado(DISPONIBLE)"
+      - label: "Propiedades rentadas"
+        icono: check-circle-2
+        fuente: "contar_por_estado(RENTADA)"
+      - label: Ingresos
+        icono: wallet
+        fuente: hardcoded
+        operativo: false
+      - label: Vencidos
+        icono: clock
+        fuente: hardcoded
+        operativo: false
+    items:
+      label: string
+      valor: integer
+      icono: string
+      tendencia:
+        type: dict
+        optional: true
+        presente_solo_en: [metricas_no_operativas_demo, metricas_con_historico]
+        keys:
+          direccion: "up | down"
+          texto: string
+      marcador:
+        type: string
+        optional: true
+        presente_solo_en: [metricas_no_operativas]
+        values: ["No disponible"]
+      estado:
+        type: string
+        default: datos
+        values: [datos, carga, error]
+  accesos:
+    type: list[dict]
+    required: true
+    items:
+      icono: string
+      label: string
+      url: string
+    valores:
+      - icono: building-2
+        label: Propiedades
+        url: "#"
+      - icono: users
+        label: Inquilinos
+        url: "#"
+      - icono: file-text
+        label: Contratos
+        url: "#"
+      - icono: wallet
+        label: Pagos
+        url: "#"
+  actividad:
+    type: list[dict]
+    required: true
+    items:
+      tipo: string
+      descripcion: string
+      fecha: string
+      badge_variante: string
+      estado:
+        type: string
+        default: datos
+        values: [datos, vacio, error]
+  actividad_estado:
+    type: string
+    required: true
+    default: datos
+    values: [datos, vacio, error]
+  vacio:
+    type: boolean
+    required: true
+    description: "True cuando contar_total() == 0. Activa el estado vacío del dashboard."
+
+layout:
+  orden: [metricas, accesos, actividad]
+  base_template: base.html
+  blocks_overrideados: [title, content]
+
+estados_visuales:
+  metricas:
+    datos: ".tarjeta-metrica"
+    carga: ".tarjeta-metrica.is-loading"
+    error: ".tarjeta-metrica.is-error"
+  accesos:
+    datos: ".accesos-rapidos"
+  actividad:
+    datos: ".actividad"
+    vacio: ".actividad--empty"
+    error: ".actividad--error"
+  dashboard:
+    vacio: ".dashboard--empty"
+
+iconos_requeridos:
+  metricas: [building-2, check-circle-2, wallet, clock]
+  accesos: [building-2, users, file-text, wallet]
+  todos_existentes: true
+
+governance:
+  visual_impact: "dashboard.html modificado solo en contenido (métricas, marcador, estado vacío)"
+  visual_files_modified: [app/templates/dashboard.html]
+  requires_visual_trace: false
+  justification: "Cambio de datos dentro del contrato existente. Sin alteración de layout, estilos ni tokens."

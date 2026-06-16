@@ -12,8 +12,14 @@ workflow canónico de Spec Kit.
 
 ## Artefactos generados
 
-Si el plan genera archivos como `research.md`, `data-model.md`, `quickstart.md`,
-`contracts/*.md` u otros artefactos de planificación, esos archivos DEBEN:
+El plan DEBE generar los siguientes artefactos:
+
+- `research.md` — decisiones de diseño y alternativas consideradas.
+- `data-model.md` — modelo de datos y relaciones.
+- `quickstart.md` — pasos de verificación rápida.
+- `contracts/*.yaml` — contratos de la feature (si aplica).
+
+Si el plan genera archivos adicionales, esos archivos DEBEN:
 
 - Estar escritos en Markdown válido.
 - Ser claros, explícitos y consistentes con el estilo de Spec Kit.

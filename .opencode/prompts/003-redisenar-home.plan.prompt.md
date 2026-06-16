@@ -65,7 +65,9 @@ como YAML válido sin errores de sintaxis.
 Al finalizar, informa:
 
 - Ruta del `plan.md` generado o actualizado.
-- Artefactos generados o actualizados.
+- Phase 0: `research.md`
+- Phase 1: `data-model.md`, `quickstart.md`
+- Contratos: `contracts/*.yaml` (si aplica)
 - Si hubo preguntas interactivas.
 - Si se registraron desviaciones en `Complexity Tracking`.
 - Archivos visuales protegidos que podrían verse afectados.
