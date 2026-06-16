@@ -1,24 +1,18 @@
 <!--
 Informe de impacto de sincronización
-- Cambio de versión: 1.2.0 -> 1.3.0
-- Secciones agregadas:
-  - IX.5. Organización de tests (nueva subsección con estructura
-    obligatoria tests/unit/ y tests/integration/)
+- Cambio de versión: 1.3.1 -> 1.3.2
 - Secciones modificadas:
-  - XII. Frontend y sistema visual: subsección «Sistema visual
-    canónico» degradada de ## a ### para corregir nivel jerárquico
-  - XIII. Estructura obligatoria del repositorio: tests movidos de
-    app/modules/<feature>/tests/ a tests/unit/<feature>/ y
-    tests/integration/<feature>/ en raíz
+  - II. Stack: fila Pre-commit ampliada con format-docstrings
+  - XIII. Estructura: agregado .repomixignore al árbol del repositorio
+- Secciones agregadas:
+  - Ninguna
 - Secciones eliminadas:
   - Ninguna
 - Artefactos relacionados revisados:
-  - AGENTS.md ✅ ya usa 3.13.13
   - .specify/templates/plan-template.md ✅ sin cambios necesarios
   - .specify/templates/spec-template.md ✅ sin cambios necesarios
   - .specify/templates/tasks-template.md ✅ sin cambios necesarios
-  - tests/conftest.py ✅ fixture async_client en raíz
-  - tests/integration/conftest.py ✅ Testcontainers PostgreSQL
+  - AGENTS.md ✅ ya sincronizado con v1.3.1
 - Pendientes de seguimiento:
   - Ninguno
 -->
@@ -54,7 +48,7 @@ constitución.
 | Tests            | pytest + pytest-asyncio + httpx.AsyncClient                                          |
 | Integración      | Testcontainers cuando se requiera infraestructura real                               |
 | Calidad estática | Ruff + mypy `--strict` mínimo en `app/modules/`                                      |
-| Pre-commit       | pyupgrade, ruff (lint + format), pydocstyle, check-yaml, check-toml, end-of-file     |
+| Pre-commit       | pyupgrade, ruff (lint + format), format-docstrings, pydocstyle, check-yaml, check-toml     |
 | Automatización   | `.pre-commit-config.yaml` como entry point unificado de calidad                      |
 | Iconografía      | SVG outline de Lucide vendoreados en `app/static/icons/`                             |
 
@@ -488,6 +482,7 @@ tests/
     <feature>/
       test_*.py
 .pre-commit-config.yaml
+.repomixignore
 pyproject.toml
 uv.lock
 docker-compose.yaml
@@ -573,5 +568,8 @@ explícitamente y seguir la capa de mayor autoridad.
   `make auto-checks`/`make ci`. Corregida la instrucción `backend.instructions.md`
   para eliminar `tests/` de los artefactos del módulo. Sincronizados `AGENTS.md`
   y `conventions.instructions.md` con estos cambios.
+* **v1.3.2** — Actualizado el informe de impacto de sincronización. Agregado
+  `format-docstrings` a la fila Pre-commit del stack. Agregado `.repomixignore`
+  a la estructura obligatoria del repositorio.
 
-**Versión**: 1.3.1 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-15
+**Versión**: 1.3.2 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-15

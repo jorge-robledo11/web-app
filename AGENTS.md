@@ -1,7 +1,7 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/002-blindar-tokens-visuales/plan.md
+at specs/003-redisenar-home/plan.md
 <!-- SPECKIT END -->
 
 # Instrucciones — Proyecto Realtor
@@ -308,6 +308,7 @@ tests/
     conftest.py
     <feature>/
 .pre-commit-config.yaml
+.repomixignore
 pyproject.toml
 uv.lock
 docker-compose.yaml

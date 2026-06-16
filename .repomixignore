@@ -76,6 +76,10 @@ uv.lock
 repo-state.*
 report.md
 
+# Coverage
+.coverage
+.coverage.*
+
 # Imágenes, capturas o binarios pesados
 *.png
 *.jpg

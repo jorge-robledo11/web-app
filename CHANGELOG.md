@@ -40,6 +40,10 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Skill `db-preflight` para validación automatizada del estado de la base de datos antes de ejecutar implementaciones Spec Kit.
 - Documentación completa de spec 004: spec, plan, tasks, modelo de datos, contratos YAML, checklist de requisitos, quickstart, research y report.
 - Prompts de Spec Kit para spec 004: 7 prompts (spec, clarify, plan, analyze, tasks, implement, fix-report) con frontmatter estandarizado.
+- Hook `format-docstrings` como script local en `scripts/ci/format-docstrings.py` que convierte docstrings single-line de funciones y clases a formato multi-línea respetando la convención Google de pydocstyle; integrado en `.pre-commit-config.yaml` después de `ruff-format` y antes de `pydocstyle`.
+- `.repomixignore` restaurado con sus 94 líneas de patrones de exclusión originales; eliminada su entrada de `.gitignore` para que git lo trackee nuevamente.
+- Comandos PonyTail de auditoría y gestión de deuda técnica registrados en `opencode.json` y `Makefile`.
+- Script `scripts/ci/auto-checks.sh` para ejecución optimizada de pre-commit con captura de salida y reintento en caso de error.
 
 ### Changed
 
@@ -55,6 +59,9 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Constitución actualizada (v1.3.1): sección IX de calidad reemplaza comandos manuales por `make auto-checks`/`make ci` como entry point unificado; stack ampliado con `pre-commit`, `pyupgrade`, `ruff-format` y `pydocstyle`; estructura del repositorio incluye `.pre-commit-config.yaml`.
 - `conventions.instructions.md`: versión de constitución corregida (`v1.2.0` → `v1.3.1`); sección 12 agregada con tabla completa de hooks pre-commit.
 - Makefile y CI: simplificado el hook manual `format-project` eliminándolo de `.pre-commit-config.yaml`; separados `manual-checks` en scripts directos (`test.sh`, `coverage.sh`, `clean.sh`); corregido `ruff-check` para usar `--fix .` en lugar de `--fix --check`; actualizada la receta `ci` para usar `$(MAKE)` llamadas explícitas.
+- `pyproject.toml`: agregada regla `D107` a la lista de ignorados de `pydocstyle` (docstring faltante en `__init__`).
+- `conventions.instructions.md`: agregada fila `format-docstrings` en la tabla de hooks automáticos de la sección 12.
+- `.pre-commit-config.yaml`: reorganizado el orden de hooks ubicando `format-docstrings` después de `ruff-format` y antes de las verificaciones generales; agregado `fail_fast: true` para abortar ante el primer fallo.
 
 ### Fixed
 
@@ -63,6 +70,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Contradicción interna en constitución (v1.3.0) sobre ubicación de tests: `tests/` eliminado de `app/modules/<feature>/` en la sección IV; ahora solo reside en raíz (`tests/unit/`, `tests/integration/`) según IX.5 y XIII.
 - `backend.instructions.md` corregido: eliminada referencia a `tests/` dentro del módulo; texto ahora apunta a `tests/unit/<feature>/` y `tests/integration/<feature>/` en la raíz.
 - `AGENTS.md` sincronizado con constitución v1.3.1: eliminado `tests/` de artefactos del módulo, agregadas secciones `Órganización de tests`, `Async-First`, `Contratos de dominio`, y árbol de estructura actualizado.
+- Hook `format-docstrings`: reemplazado `inspect.cleandoc` por extracción directa del cuerpo desde líneas fuente mediante `_extract_body` y `_common_indent`, ignorando líneas vacías en la indentación para evitar ciclos de formato con `ruff format` y `trailing-whitespace`.
 
 ### Removed
 
@@ -70,4 +78,4 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
 - Archivo `.repomixignore` eliminado y sus reglas de exclusión migradas a `.gitignore`.
 
-<!-- changelog:last-processed-commit=10df3eb90ff9414cea24571f9811f95b4fd002da -->
+<!-- changelog:last-processed-commit=866d98cef607929ffea58d9284a66f3b500bd21c -->
