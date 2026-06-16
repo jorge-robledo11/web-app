@@ -55,8 +55,8 @@ auto-checks: ## Ejecuta validaciones automáticas de pre-commit
 
 manual-checks: ## Ejecuta checks manuales del proyecto
 	bash scripts/ci/test.sh && \
-	bash scripts/ci/coverage.sh && \
-	bash scripts/ci/clean.sh
+	bash scripts/ci/coverage.sh
+	# bash scripts/ci/clean.sh
 
 ci: ## Ejecuta validaciones automáticas + manuales
 	$(MAKE) auto-checks

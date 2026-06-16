@@ -3,5 +3,8 @@
   "instructions": [
     "AGENTS.md",
     ".opencode/instructions/*.instructions.md"
+  ],
+  "plugin": [
+    "./.opencode/vendor/ponytail/plugins/ponytail.mjs"
   ]
 }
