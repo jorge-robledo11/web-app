@@ -93,3 +93,5 @@ Genera o actualiza `spec.md` para `003-redisenar-home` con:
 - Sección de impacto visual obligatoria.
 - Relación explícita con `frontend.instructions.md`, `AGENTS.md` y la constitución.
 - Reglas claras para evitar cambios visuales no autorizados.
+
+Siguiente fase: `003-redisenar-home.clarify.prompt.md`

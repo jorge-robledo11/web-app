@@ -135,21 +135,29 @@ Toda feature debe seguir este flujo obligatorio:
 /speckit.clarify
 /speckit.plan
 /speckit.analyze
+fix-report (solo si analyze encuentra hallazgos)
+/speckit.analyze (confirma 0 hallazgos antes de tasks)
 /speckit.tasks
 /speckit.implement
 ```
 
 Ninguna fase puede saltarse. Cada fase depende de los artefactos generados por la
-fase anterior.
+fase anterior. El loop `analyze → fix-report → analyze` garantiza que `tasks.md`
+se genere sobre artefactos limpios.
 
 Reglas del flujo:
 
 * `specify` crea o actualiza `spec.md`.
 * `clarify` resuelve ambigüedades antes del plan.
 * `plan` crea `plan.md` con decisiones técnicas y dependencias.
-* `analyze` valida consistencia entre spec, plan y restricciones.
+* `analyze` valida consistencia entre spec, plan y restricciones. Genera
+  `report.md`.
+* `fix-report` corrige hallazgos críticos y advertencias detectados por
+  `analyze`. Se ejecuta solo si `report.md` contiene hallazgos.
+* `analyze` se re-ejecuta tras `fix-report` para confirmar cero hallazgos.
 * `tasks` crea `tasks.md` con tareas pequeñas, ordenadas y verificables.
-* `implement` modifica código real solo después de existir spec, plan y tasks.
+* `implement` modifica código real solo después de existir spec, plan, report
+  limpio y tasks.
 
 Los comandos `speckit.specify` y `speckit.clarify` deben operar en modo
 interactivo cuando existan decisiones abiertas. El comando `speckit.plan` puede

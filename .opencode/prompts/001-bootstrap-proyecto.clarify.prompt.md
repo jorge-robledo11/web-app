@@ -81,3 +81,5 @@ N) No
 ```
 
 Empieza ahora con la Pregunta 1.
+
+Siguiente fase: `001-bootstrap-proyecto.plan.prompt.md`

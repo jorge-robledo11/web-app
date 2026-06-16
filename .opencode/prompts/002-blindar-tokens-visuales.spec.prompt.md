@@ -91,3 +91,5 @@ Genera o actualiza `spec.md` para `002-blindar-tokens-visuales` con:
 - Definición de qué cuenta como cambio visual global.
 - Regla de trazabilidad obligatoria en `tasks.md`.
 - Relación explícita con `frontend.instructions.md` y la constitución.
+
+Siguiente fase: `002-blindar-tokens-visuales.clarify.prompt.md`

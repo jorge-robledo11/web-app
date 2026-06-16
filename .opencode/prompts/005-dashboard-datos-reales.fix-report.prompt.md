@@ -1,15 +1,15 @@
 ---
-name: 003-redisenar-home-fix-report
+name: 005-dashboard-datos-reales-fix-report
 description: >
   Corrige los hallazgos del reporte de análisis de la feature
-  003-redisenar-home.
-usage: "@.opencode/prompts/003-redisenar-home.fix-report.prompt.md"
+  005-dashboard-datos-reales.
+usage: "@.opencode/prompts/005-dashboard-datos-reales.fix-report.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
 
 Corrige los hallazgos documentados en `report.md` para la feature
-`003-redisenar-home`.
+`005-dashboard-datos-reales`.
 
 Usa la feature activa resuelta por Spec Kit. No asumas rutas fijas si el
 workflow ya puede resolverlas.
@@ -61,6 +61,32 @@ introduzcan nuevas decisiones.
   escribas Markdown, texto narrativo libre ni bloques de código dentro de
   archivos `.yaml`.
 
+## Verificaciones específicas de esta feature
+
+Al corregir hallazgos, verifica especialmente:
+
+- Que ninguna corrección introduzca scope creep (módulos de rentas, pagos o
+  contratos).
+- Que ninguna corrección invente cálculos de ingresos o vencidos.
+- Que ninguna corrección proponga endpoints adicionales sin justificación
+  funcional concreta.
+- Que ninguna corrección modifique tokens visuales, CSS, iconografía o
+  componentes compartidos.
+- Que el contrato de contexto de la home permanezca compatible con
+  `dashboard.html`.
+- Que el estado vacío se active con cero propiedades totales.
+- Que las métricas no operativas mantengan valor `0` y marcador
+  "No disponible".
+- Que el orden de métricas sea: disponibles, rentadas, ingresos, vencidos.
+- Que ninguna corrección amplíe el alcance funcional de
+  `005-dashboard-datos-reales`.
+- Si `report.md` detecta lógica de dashboard en `app/main.py`, corregirla
+  moviéndola al slice `app/modules/dashboard/`.
+- Si `GET /` no está definido en `app/modules/dashboard/routes.py`, corregirlo
+  salvo que exista una limitación técnica documentada y aprobada.
+- Si `service.py` o `repository.py` no respetan responsabilidades del slice,
+  corregir la separación.
+
 ## Criterios de corrección
 
 Al corregir hallazgos, verifica especialmente:
@@ -68,9 +94,10 @@ Al corregir hallazgos, verifica especialmente:
 - Coherencia entre `spec.md`, `plan.md` y artefactos generados.
 - Trazabilidad de cambios visuales protegidos.
 - Ausencia de decisiones visuales no justificadas.
-- Claridad de criterios responsive.
-- Consistencia de estados visuales: carga, vacío, error, éxito o navegación.
-- Que ninguna corrección amplíe el alcance funcional de `003-redisenar-home`.
+- Consistencia de estados: datos, vacío, error en métricas.
+- Que las métricas no operativas estén claramente diferenciadas de las reales.
+- Que ninguna corrección amplíe el alcance funcional de
+  `005-dashboard-datos-reales`.
 
 ## Salida esperada
 
@@ -82,7 +109,17 @@ Al finalizar, informa:
 - Hallazgos pendientes, si existen.
 - Si hubo correcciones relacionadas con gobernanza visual.
 - Si los contratos YAML siguen siendo válidos, cuando existan.
-- Siguiente fase obligatoria: re-ejecutar análisis para confirmar cero hallazgos:
-  `003-redisenar-home.analyze.prompt.md`.
-- Si el segundo analyze confirma cero hallazgos, continuar con:
-  `003-redisenar-home.tasks.prompt.md`.
+- Siguiente comando recomendado.
+
+Después de corregir, la siguiente fase obligatoria es re-ejecutar el análisis
+para confirmar cero hallazgos:
+
+```text
+/speckit.analyze @.opencode/prompts/005-dashboard-datos-reales.analyze.prompt.md
+```
+
+Si el segundo analyze confirma cero hallazgos, continuar con:
+
+```text
+/speckit.tasks @.opencode/prompts/005-dashboard-datos-reales.tasks.prompt.md
+```

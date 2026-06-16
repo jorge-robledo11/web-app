@@ -75,4 +75,6 @@ Al finalizar, indica:
 - Cantidad de hallazgos por severidad.
 - Si los contratos YAML fueron validados, cuando existan.
 - Si hubo inconsistencias relacionadas con gobernanza visual.
-- Siguiente comando recomendado.
+- Si hay hallazgos, siguiente fase: `003-redisenar-home.fix-report.prompt.md`.
+- Si no hay hallazgos (cero críticos y cero advertencias), siguiente fase:
+  `003-redisenar-home.tasks.prompt.md`.

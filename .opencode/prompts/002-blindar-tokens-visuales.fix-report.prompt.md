@@ -62,10 +62,7 @@ Al finalizar, informa:
 - Hallazgos críticos corregidos.
 - Advertencias corregidas, si aplica.
 - Hallazgos pendientes, si existen.
-- Siguiente comando recomendado.
-
-Después de corregir, recomienda volver a ejecutar:
-
-```text
-/002-blindar-tokens-visuales-analyze
-```
+- Siguiente fase obligatoria: re-ejecutar análisis para confirmar cero hallazgos:
+  `002-blindar-tokens-visuales.analyze.prompt.md`.
+- Si el segundo analyze confirma cero hallazgos, continuar con:
+  `002-blindar-tokens-visuales.tasks.prompt.md`.

@@ -33,3 +33,5 @@ ya puede resolverlas.
 
 Al finalizar, muestra un resumen de decisiones y actualiza `spec.md` añadiendo o
 ajustando la sección `Clarificaciones`.
+
+Siguiente fase: `002-blindar-tokens-visuales.plan.prompt.md`

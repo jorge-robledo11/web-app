@@ -1,7 +1,7 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/003-redisenar-home/plan.md
+at specs/005-dashboard-datos-reales/spec.md
 <!-- SPECKIT END -->
 
 # Instrucciones — Proyecto Realtor
@@ -107,11 +107,14 @@ Toda feature debe seguir este flujo:
 /speckit.clarify
 /speckit.plan
 /speckit.analyze
+fix-report (solo si analyze encuentra hallazgos)
+/speckit.analyze (confirma 0 hallazgos antes de tasks)
 /speckit.tasks
 /speckit.implement
 ```
 
-Ninguna fase puede saltarse.
+Ninguna fase puede saltarse. El loop `analyze → fix-report → analyze` garantiza
+que `tasks.md` se genere sobre artefactos limpios sin hallazgos pendientes.
 
 ## Modo interactivo de preguntas
 

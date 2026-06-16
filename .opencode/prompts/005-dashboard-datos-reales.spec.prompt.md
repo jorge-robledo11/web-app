@@ -4,7 +4,7 @@ description: >
   Crea la spec 005-dashboard-datos-reales para reemplazar métricas mockeadas
   del dashboard principal por datos reales de propiedades persistidas.
 spec_kit_command: "/speckit.specify"
-usage: "/speckit.specify @.opencode/prompts/005-dashboard-datos-reales.tasks.prompt.md"
+usage: "/speckit.specify @.opencode/prompts/005-dashboard-datos-reales.spec.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---

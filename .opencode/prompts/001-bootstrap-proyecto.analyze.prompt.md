@@ -51,4 +51,6 @@ Al finalizar, indica:
 
 - Ruta del `report.md` generado o actualizado.
 - Cantidad de hallazgos por severidad.
-- Siguiente comando recomendado.
+- Si hay hallazgos, siguiente fase: `001-bootstrap-proyecto.fix-report.prompt.md`.
+- Si no hay hallazgos (cero críticos y cero advertencias), siguiente fase:
+  `001-bootstrap-proyecto.tasks.prompt.md`.

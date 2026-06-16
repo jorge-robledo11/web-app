@@ -51,3 +51,5 @@ Considera especialmente si la spec deja claro:
 
 Al finalizar, muestra un resumen de decisiones y actualiza `spec.md` añadiendo o
 ajustando la sección `Clarificaciones`.
+
+Siguiente fase: `003-redisenar-home.plan.prompt.md`

@@ -82,10 +82,7 @@ Al finalizar, informa:
 - Hallazgos pendientes, si existen.
 - Si hubo correcciones relacionadas con gobernanza visual.
 - Si los contratos YAML siguen siendo válidos, cuando existan.
-- Siguiente comando recomendado.
-
-Después de corregir, recomienda volver a ejecutar:
-
-```text
-/004-propiedades-base-analyze
-```
+- Siguiente fase obligatoria: re-ejecutar análisis para confirmar cero hallazgos:
+  `004-propiedades-base.analyze.prompt.md`.
+- Si el segundo analyze confirma cero hallazgos, continuar con:
+  `004-propiedades-base.tasks.prompt.md`.
