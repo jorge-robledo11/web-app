@@ -3,12 +3,18 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.dashboard.repository import obtener_metricas
+from app.modules.dashboard.schemas import (
+	AccesoDashboard,
+	ActividadDashboard,
+	ContextoDashboard,
+	MetricaDashboard,
+)
 
 
 def _construir_metricas(
 	disponibles: int,
 	rentadas: int,
-) -> list[dict[str, object]]:
+) -> list[MetricaDashboard]:
 	"""
 	Construye la lista de métricas en orden fijo.
 
@@ -45,7 +51,7 @@ def _construir_metricas(
 	]
 
 
-def _accesos() -> list[dict[str, str]]:
+def _accesos() -> list[AccesoDashboard]:
 	"""
 	Accesos rápidos hardcodeados del dashboard demo.
 	"""
@@ -57,7 +63,7 @@ def _accesos() -> list[dict[str, str]]:
 	]
 
 
-def _actividad() -> list[dict[str, str]]:
+def _actividad() -> list[ActividadDashboard]:
 	"""
 	Actividad reciente hardcodeada de demo.
 	"""
@@ -86,7 +92,7 @@ def _actividad() -> list[dict[str, str]]:
 	]
 
 
-async def construir_contexto(session: AsyncSession) -> dict[str, object]:
+async def construir_contexto(session: AsyncSession) -> ContextoDashboard:
 	"""
 	Construye el contexto para el template dashboard.html.
 

@@ -5,6 +5,6 @@ Este archivo es un placeholder. Los endpoints HTTP se agregarán en
 una spec posterior que extienda esta feature con operaciones CRUD.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter  # pragma: no cover
 
-router = APIRouter(prefix='/propiedades', tags=['propiedades'])
+router = APIRouter(prefix='/propiedades', tags=['propiedades'])  # pragma: no cover

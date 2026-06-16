@@ -12,21 +12,13 @@
 {% else %}
 <section class="metricas">
   {% for metrica in metricas %}
-    {% with label=metrica.label, valor=metrica.valor, icono=metrica.icono, tendencia=metrica.tendencia, estado=metrica.estado %}
+    {% with label=metrica.label, valor=metrica.valor, icono=metrica.icono, tendencia=metrica.tendencia, estado=metrica.estado, marcador=metrica.marcador %}
       {% include "components/_tarjeta_metrica.html" %}
     {% endwith %}
-    {% if metrica.marcador %}
-    <small class="tarjeta-metrica__marcador">{{ metrica.marcador }}</small>
-    {% endif %}
   {% endfor %}
 </section>
 
-{% with titulo="Accesos rápidos", accesos=[
-    {"icono": "building-2", "label": "Propiedades", "url": "#"},
-    {"icono": "users", "label": "Inquilinos", "url": "#"},
-    {"icono": "file-text", "label": "Contratos", "url": "#"},
-    {"icono": "wallet", "label": "Pagos", "url": "#"},
-] %}
+{% with titulo="Accesos rápidos", accesos=accesos %}
   {% include "components/_accesos_rapidos.html" %}
 {% endwith %}
 

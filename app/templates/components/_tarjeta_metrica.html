@@ -1,11 +1,12 @@
-{# Tarjeta de métrica: KPI con número, label, icono, tendencia y estados.
+{# Tarjeta de métrica: KPI con número, label, icono, tendencia, marcador y estados.
 
-  Recibe:
-    - label: texto descriptivo
-    - valor: número de la métrica
-    - icono: nombre del icono Lucide
-    - tendencia: diccionario opcional { direccion: "up"|"down", texto: str }
-    - estado: "datos" | "carga" | "error" (default "datos")
+   Recibe:
+     - label: texto descriptivo
+     - valor: número de la métrica
+     - icono: nombre del icono Lucide
+     - tendencia: diccionario opcional { direccion: "up"|"down", texto: str }
+     - marcador: texto opcional (ej. "No disponible") renderizado dentro de la tarjeta
+     - estado: "datos" | "carga" | "error" (default "datos")
 #}
 {% from "macros/icons.html" import icon %}
 
@@ -28,6 +29,9 @@
     <div class="tarjeta-metrica__tendencia tarjeta-metrica__tendencia--{{ tendencia.direccion }}">
       {{ tendencia.texto }}
     </div>
+    {% endif %}
+    {% if marcador is defined and marcador %}
+    <div class="text-muted">{{ marcador }}</div>
     {% endif %}
   </div>
 

@@ -21,6 +21,9 @@ class Base(DeclarativeBase):
 async def get_session() -> AsyncGenerator[AsyncSession]:
 	"""
 	Provee una AsyncSession por request. Usar con Depends(get_session).
+
+	El cuerpo (yield) solo se ejerce vía FastAPI dependency injection;
+	los tests unitarios usan dependency_overrides.
 	"""
 	async with AsyncSessionLocal() as session:
-		yield session
+		yield session  # pragma: no cover

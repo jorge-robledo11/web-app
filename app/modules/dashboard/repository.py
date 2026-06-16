@@ -2,11 +2,12 @@
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.modules.dashboard.schemas import MetricasPropiedades
 from app.modules.propiedades.models import EstadoPropiedad
 from app.modules.propiedades.repository import contar_por_estado, contar_total
 
 
-async def obtener_metricas(session: AsyncSession) -> dict[str, int]:
+async def obtener_metricas(session: AsyncSession) -> MetricasPropiedades:
 	"""
 	Obtiene los conteos de propiedades por estado y total.
 

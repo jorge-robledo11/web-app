@@ -147,3 +147,26 @@ class TestPropiedad:
 			assert not Propiedad.__table__.columns[nombre].nullable, (
 				f'Columna {nombre} debería ser NOT NULL'
 			)
+
+	def test_repr_incluye_id_titulo_estado(self) -> None:
+		"""
+		El __repr__ debe incluir id, titulo y estado.
+		"""
+		prop = Propiedad(
+			id='00000000-0000-0000-0000-000000000001',
+			titulo='Casa Test',
+			direccion='Calle 1',
+			ciudad='Miami',
+			precio_mensual=1000,
+			habitaciones=1,
+			banos=1,
+			area=100,
+			estado=EstadoPropiedad.DISPONIBLE,
+			imagen='https://example.com/img.jpg',
+		)
+		reproduccion = repr(prop)
+
+		assert 'Propiedad' in reproduccion
+		assert '00000000-0000-0000-0000-000000000001' in reproduccion
+		assert 'Casa Test' in reproduccion
+		assert 'disponible' in reproduccion

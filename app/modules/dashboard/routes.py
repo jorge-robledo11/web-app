@@ -7,7 +7,7 @@ desde base de datos.
 
 import logging
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, cast
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -42,7 +42,7 @@ async def dashboard(
 	Renderiza el dashboard principal con métricas reales desde base de datos.
 	"""
 	logger.info('dashboard.render.inicio')
-	ctx = await construir_contexto(session)
+	ctx: dict[str, object] = cast(dict[str, object], await construir_contexto(session))
 	ctx['request'] = request
 	tmpl = templates.get_template('dashboard.html')
 	logger.info('dashboard.render.fin', extra={'vacio': ctx['vacio']})

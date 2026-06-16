@@ -111,6 +111,24 @@ class TestPropiedadIn:
 		with pytest.raises(ValidationError):
 			PropiedadIn(**datos)  # type: ignore[arg-type]
 
+	def test_estado_tipo_no_soportado(self) -> None:
+		"""
+		Debe rechazar un estado que no es str ni EstadoPropiedad.
+		"""
+		datos = {
+			'titulo': 'Casa Test',
+			'direccion': 'Calle 123',
+			'ciudad': 'Miami',
+			'precio_mensual': 2500.00,
+			'habitaciones': 2,
+			'banos': 1,
+			'area': 850,
+			'estado': 42,
+			'imagen': 'https://example.com/img.jpg',
+		}
+		with pytest.raises(ValidationError):
+			PropiedadIn(**datos)  # type: ignore[arg-type]
+
 
 class TestPropiedadOut:
 	"""

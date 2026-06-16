@@ -8,18 +8,28 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.propiedades.models import EstadoPropiedad
 from app.modules.propiedades.repository import (
+	contar_por_estado,
+	contar_total,
 	crear,
 	eliminar,
 	listar,
 	obtener_por_id,
 )
 from app.modules.propiedades.schemas import PropiedadIn
+from tests.integration.conftest import setup_db
 
 
 class TestRepositorioPropiedades:
 	"""
 	Pruebas de acceso a datos para Propiedad.
 	"""
+
+	@pytest_asyncio.fixture(autouse=True)
+	async def _setup_schema(self, postgres_url: str) -> None:
+		"""
+		Prepara el esquema con alembic antes de cada test.
+		"""
+		setup_db(postgres_url)
 
 	@pytest_asyncio.fixture
 	async def propiedad_in(self) -> PropiedadIn:
@@ -107,3 +117,64 @@ class TestRepositorioPropiedades:
 		resultado = await eliminar(async_session, creada.id)
 		assert resultado is True
 		assert await obtener_por_id(async_session, creada.id) is None
+
+	@pytest.mark.asyncio
+	async def test_eliminar_id_inexistente_retorna_false(
+		self,
+		async_session: AsyncSession,
+	) -> None:
+		"""
+		eliminar debe retornar False cuando el id no existe.
+		"""
+		import uuid
+
+		resultado = await eliminar(async_session, uuid.uuid4())
+		assert resultado is False
+
+	@pytest.mark.asyncio
+	async def test_contar_por_estado_con_datos(
+		self,
+		async_session: AsyncSession,
+		propiedad_in: PropiedadIn,
+	) -> None:
+		"""
+		contar_por_estado debe contar propiedades de un estado específico.
+		"""
+		await crear(async_session, propiedad_in)
+		conteo = await contar_por_estado(async_session, EstadoPropiedad.DISPONIBLE)
+		assert conteo >= 1
+
+	@pytest.mark.asyncio
+	async def test_contar_por_estado_sin_datos(
+		self,
+		async_session: AsyncSession,
+	) -> None:
+		"""
+		contar_por_estado debe retornar 0 si no hay propiedades de ese estado.
+		"""
+		conteo = await contar_por_estado(async_session, EstadoPropiedad.RENTADA)
+		assert conteo == 0
+
+	@pytest.mark.asyncio
+	async def test_contar_total_con_datos(
+		self,
+		async_session: AsyncSession,
+		propiedad_in: PropiedadIn,
+	) -> None:
+		"""
+		contar_total debe contar todas las propiedades.
+		"""
+		await crear(async_session, propiedad_in)
+		conteo = await contar_total(async_session)
+		assert conteo >= 1
+
+	@pytest.mark.asyncio
+	async def test_contar_total_sin_datos(
+		self,
+		async_session: AsyncSession,
+	) -> None:
+		"""
+		contar_total debe retornar 0 si no hay propiedades.
+		"""
+		conteo = await contar_total(async_session)
+		assert conteo == 0
