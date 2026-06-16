@@ -88,8 +88,10 @@ def _actividad() -> list[dict[str, str]]:
 
 async def construir_contexto(session: AsyncSession) -> dict[str, object]:
 	"""
-	Orquesta el repositorio de dashboard y construye el contexto
-	para el template dashboard.html.
+	Construye el contexto para el template dashboard.html.
+
+	Orquesta el repositorio de dashboard, obtiene conteos y arma
+	las listas de métricas, accesos y actividad.
 	"""
 	metricas_raw = await obtener_metricas(session)
 	disponibles = metricas_raw['disponibles']

@@ -17,7 +17,9 @@ def _setup_db(postgres_url: str) -> None:
 
 
 @pytest.mark.asyncio
-async def test_dashboard_metricas_reales(postgres_url: str, async_session: AsyncSession):
+async def test_dashboard_metricas_reales(
+	postgres_url: str, async_session: AsyncSession
+):
 	"""
 	Verifica que GET / muestra conteos reales del seed (4 disponibles, 3 rentadas).
 	"""
@@ -62,6 +64,7 @@ async def test_dashboard_estado_vacio(postgres_url: str, async_session: AsyncSes
 	try:
 		# Truncar datos para asegurar estado vacío
 		from sqlalchemy import text as sa_text
+
 		await async_session.execute(sa_text('DELETE FROM propiedades'))
 		await async_session.commit()
 
@@ -79,7 +82,9 @@ async def test_dashboard_estado_vacio(postgres_url: str, async_session: AsyncSes
 
 
 @pytest.mark.asyncio
-async def test_dashboard_orden_secciones(postgres_url: str, async_session: AsyncSession):
+async def test_dashboard_orden_secciones(
+	postgres_url: str, async_session: AsyncSession
+):
 	"""
 	Verifica el orden vertical: métricas → accesos rápidos → actividad.
 	"""
@@ -110,7 +115,9 @@ async def test_dashboard_orden_secciones(postgres_url: str, async_session: Async
 
 
 @pytest.mark.asyncio
-async def test_dashboard_accesos_rapidos(postgres_url: str, async_session: AsyncSession):
+async def test_dashboard_accesos_rapidos(
+	postgres_url: str, async_session: AsyncSession
+):
 	"""
 	Verifica que los accesos rápidos tienen 4 items sin cambios.
 	"""

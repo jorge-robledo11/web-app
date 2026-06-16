@@ -1,8 +1,35 @@
 """Pruebas de migración Alembic para la tabla propiedades."""
 
+import asyncio
+
 import pytest
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from tests.integration.conftest import REPO_ROOT, _alembic
+
+
+def _reset_db(postgres_url: str) -> None:
+	"""
+	Reinicia el esquema public para asegurar un estado limpio.
+
+	Usa DROP SCHEMA + CREATE SCHEMA como mitigación documentada en la
+	constitución (NFR-DB-008), vía asyncpg sin depender de psycopg2.
+	Luego aplica upgrade head desde cero.
+	"""
+
+	async def _run() -> None:
+		engine = create_async_engine(postgres_url)
+		async with engine.begin() as conn:
+			await conn.execute(text('DROP SCHEMA public CASCADE'))
+			await conn.execute(text('CREATE SCHEMA public'))
+		await engine.dispose()
+
+	asyncio.run(_run())
+
+	resultado = _alembic(postgres_url, 'upgrade', 'head')
+	msg = f'upgrade head tras reset falló: {resultado.stderr}'
+	assert resultado.returncode == 0, msg
 
 
 class TestMigracionPropiedades:
@@ -14,14 +41,18 @@ class TestMigracionPropiedades:
 		"""
 		alembic upgrade head debe crear la tabla propiedades (SC-001).
 		"""
-		resultado = _alembic(postgres_url, 'upgrade', 'head')
-		assert resultado.returncode == 0, f'upgrade head falló: {resultado.stderr}'
+		_reset_db(postgres_url)
+		# La tabla ya fue creada por _reset_db, verificamos que upgrade
+		# sobre un esquema limpio retorna 0.
+		resultado = _alembic(postgres_url, 'current')
+		assert resultado.returncode == 0
+		assert 'd7d37c034e18' in resultado.stdout, 'head no está en d7d37c034e18'
 
 	def test_tabla_propiedades_existe(self, postgres_url: str) -> None:
 		"""
 		La tabla propiedades debe existir tras upgrade.
 		"""
-		_alembic(postgres_url, 'upgrade', 'head')
+		_reset_db(postgres_url)
 		resultado = _alembic(postgres_url, 'current')
 		assert resultado.returncode == 0
 		assert 'head' in resultado.stdout
@@ -30,7 +61,7 @@ class TestMigracionPropiedades:
 		"""
 		downgrade -1 debe revertir la migración sin errores (FR-008).
 		"""
-		_alembic(postgres_url, 'upgrade', 'head')
+		_reset_db(postgres_url)
 		resultado = _alembic(postgres_url, 'downgrade', '-1')
 		assert resultado.returncode == 0, f'downgrade -1 falló: {resultado.stderr}'
 
@@ -38,8 +69,7 @@ class TestMigracionPropiedades:
 		"""
 		Ciclo completo upgrade → downgrade → upgrade sin errores (SC-006).
 		"""
-		r1 = _alembic(postgres_url, 'upgrade', 'head')
-		assert r1.returncode == 0, f'upgrade 1 falló: {r1.stderr}'
+		_reset_db(postgres_url)
 
 		r2 = _alembic(postgres_url, 'downgrade', '-1')
 		assert r2.returncode == 0, f'downgrade falló: {r2.stderr}'

@@ -44,6 +44,17 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - `.repomixignore` restaurado con sus 94 líneas de patrones de exclusión originales; eliminada su entrada de `.gitignore` para que git lo trackee nuevamente.
 - Comandos PonyTail de auditoría y gestión de deuda técnica registrados en `opencode.json` y `Makefile`.
 - Script `scripts/ci/auto-checks.sh` para ejecución optimizada de pre-commit con captura de salida y reintento en caso de error.
+- Flujo Spec Kit expandido de 6 a 8 pasos en constitución (v1.4.0) y AGENTS.md: integrado el loop `analyze → fix-report → analyze` para garantizar cero hallazgos antes de generar `tasks.md`; `report.md` pasa a ser requisito previo a la implementación.
+- Módulo vertical `dashboard` (spec 005): servicio, repositorio, rutas y esquemas Pydantic para la página principal del sistema; endpoint `GET /` migrado de `app/main.py` a `app/modules/dashboard/routes.py`.
+- Funciones `contar_por_estado()` y `contar_total()` en el repositorio de propiedades para consultas agregadas por estado del catálogo, utilizadas por el dashboard.
+- Métricas reales desde base de datos en el dashboard: propiedades disponibles y rentadas calculadas con datos persistidos.
+- Métricas no operativas (ingresos y vencidos) con valor 0 y marcador "No disponible" hasta que exista el módulo de transacciones.
+- Estado vacío del dashboard: se activa automáticamente cuando no hay propiedades en la base de datos, mostrando mensaje informativo en lugar de las secciones de métricas, accesos y actividad.
+- Template `dashboard.html` actualizado con métricas dinámicas desde el servicio, estado vacío condicional y marcador visual de métrica no disponible.
+- 9 tests unitarios del servicio de dashboard con mocks del repositorio (`tests/unit/dashboard/test_service.py`).
+- 6 tests de integración del dashboard con Testcontainers: endpoint, estado vacío, orden vertical de secciones, accesos rápidos, presencia de sidebar/navbar y respuesta HTTP 200 (`tests/integration/dashboard/test_dashboard.py`).
+- Artefactos completos de spec 005 en `specs/005-dashboard-datos-reales/`: spec, plan, tasks, report de análisis, research, modelo de datos, quickstart, checklist de requisitos y contratos YAML.
+- 7 prompts de Spec Kit para spec 005 en `.opencode/prompts/` con frontmatter estandarizado (specify, clarify, plan, analyze, tasks, implement, fix-report).
 
 ### Changed
 
@@ -62,6 +73,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - `pyproject.toml`: agregada regla `D107` a la lista de ignorados de `pydocstyle` (docstring faltante en `__init__`).
 - `conventions.instructions.md`: agregada fila `format-docstrings` en la tabla de hooks automáticos de la sección 12.
 - `.pre-commit-config.yaml`: reorganizado el orden de hooks ubicando `format-docstrings` después de `ruff-format` y antes de las verificaciones generales; agregado `fail_fast: true` para abortar ante el primer fallo.
+- Prompts de specs 001-004: añadido campo `siguiente_fase` en frontmatter para trazabilidad del avance entre fases de Spec Kit.
 
 ### Fixed
 
@@ -78,4 +90,4 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
 - Archivo `.repomixignore` eliminado y sus reglas de exclusión migradas a `.gitignore`.
 
-<!-- changelog:last-processed-commit=866d98cef607929ffea58d9284a66f3b500bd21c -->
+<!-- changelog:last-processed-commit=4ac91e8701c117e6714f9629c4a5282830fbdf12 -->
