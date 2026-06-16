@@ -51,9 +51,9 @@ Crea estos archivos si no existen:
 
 ```text
 CHANGELOG.md
-scripts/changelog.sh
+scripts/tools/changelog.sh
 scripts/hooks/post-commit.changelog
-scripts/install-git-hooks.sh
+scripts/tools/install-git-hooks.sh
 .opencode/agents/changelog.md
 ```
 
@@ -105,7 +105,7 @@ El flujo debe ser:
 ```text
 git commit manual
   -> .git/hooks/post-commit
-  -> scripts/changelog.sh (recordatorio)
+  -> scripts/tools/changelog.sh (recordatorio)
   -> /changelog
   -> CHANGELOG.md
 ```
@@ -446,7 +446,7 @@ Debe advertir:
 * Reescribir historial compartido puede afectar a otras personas.
 * Antes de reescribir, el usuario debe confirmar que la rama no fue compartida.
 
-## Script `scripts/changelog.sh`
+## Script `scripts/tools/changelog.sh`
 
 Crea un script Bash seguro que:
 
@@ -484,7 +484,7 @@ scripts/hooks/post-commit.changelog
 Debe ejecutar:
 
 ```bash
-scripts/changelog.sh
+scripts/tools/changelog.sh
 ```
 
 Reglas:
@@ -500,12 +500,12 @@ Reglas:
 Crea:
 
 ```text
-scripts/install-git-hooks.sh
+scripts/tools/install-git-hooks.sh
 ```
 
 Debe:
 
-* Copiar `scripts/hooks/post-commit.changelog` a `.git/hooks/post-commit`.
+* Usar `scripts/tools/install-git-hooks.sh` o `make hooks-install` para instalar el hook.
 * Hacer backup si ya existe `.git/hooks/post-commit`.
 * Marcar el hook como ejecutable.
 * Informar qué hizo.
@@ -595,15 +595,15 @@ CHANGELOG.md
 Al finalizar, ejecuta o indica cómo ejecutar:
 
 ```bash
-bash -n scripts/changelog.sh
+bash -n scripts/tools/changelog.sh
 bash -n scripts/hooks/post-commit.changelog
-bash -n scripts/install-git-hooks.sh
+bash -n scripts/tools/install-git-hooks.sh
 ```
 
 Si es seguro, ejecuta también:
 
 ```bash
-scripts/changelog.sh
+scripts/tools/changelog.sh
 ```
 
 para verificar que el script de recordatorio funciona.
