@@ -40,5 +40,4 @@ build/
 .coverage.*
 htmlcov/
 
-context/
-.repomixignore
+docs/context/
