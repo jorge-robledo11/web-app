@@ -64,6 +64,13 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Funciones helper en `conftest.py` de integración: `alembic_ok()`, `seed_ok()` y `setup_db()` con validación de returncode de Alembic y seed (spec 005).
 - Módulo vertical `health` (spec 005): endpoint `GET /health` con rutas, esquemas y tests propios, extraído de `app/main.py`.
 - Soporte para `pydantic-settings[yaml]` en dependencias del proyecto para lectura de `config/app.yaml`.
+- Página `GET /propiedades` con grid de 3 columnas de cards, encabezado con título y subtítulo, y estado vacío con icono y mensaje (spec 006).
+- Sección CSS `.propiedades-grid` con layout responsive: 3 columnas en desktop, 2 en tablet (≤1023px) y 1 en móvil (≤767px) (spec 006).
+- Función `listar_propiedades()` en el servicio de propiedades: formatea precio como `$X,XXX.00`, área como `X,XXX m²` y mapea entidades a diccionario con 8 campos (spec 006).
+- Tests unitarios del servicio `listar_propiedades`: verifica formato de precio, área, lista vacía y 8 campos requeridos (`tests/unit/propiedades/test_service_listar.py`) (spec 006).
+- Tests de integración del endpoint `GET /propiedades`: respuesta 200 con layout, renderizado de 10 cards del seed, estructura de cards (media/body/footer), imágenes explícitas, ausencia de estilos inline, estado vacío, placeholder de imagen, sidebar activo, breadcrumb dinámico y 7 items de navegación separados (`tests/integration/propiedades/test_routes.py`) (spec 006).
+- Tests del seed: verificación de ausencia de `hashlib`/`picsum.photos`, imagen explícita por propiedad, persistencia de imágenes en BD y migración en `ON CONFLICT` (`tests/integration/propiedades/test_seed.py`) (spec 006).
+- Artefactos completos de spec 006 en `specs/006-pagina-propiedades-cards/`: spec, plan, tasks, report, research, data-model, quickstart, contratos YAML y checklist de requisitos.
 
 ### Changed
 
@@ -95,6 +102,13 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Corregidos imports de `settings` en `alembic/env.py`, `scripts/dev/seed_propiedades.py` y `scripts/dev/db_preflight.py`: migrados de `from app.config import settings` (módulo) a `from app.config import get_settings` (instancia); acceso a `settings.DATABASE_URL` → `get_settings().database_url`.
 - `pyproject.toml`: mypy strict limitado a `app.modules.*` con override para `app.config.settings` que permite `call-arg`.
 - `.gitignore` simplificado: eliminadas reglas genéricas redundantes; reemplazadas por entrada única `config/app.yaml` como única fuente de configuración local.
+- **[visual][extension]** Card de propiedad (`_card_propiedad.html`) extendida con modo grid: incluye imagen, dirección, precio, habitaciones, baños, área y badge de estado; mantiene retrocompatibilidad con el modo dashboard original (spec 006, tareas T1.1–T1.3).
+- **[visual][extension]** Placeholder visual para imagen faltante en card: fondo con `--color-surface` e icono `building-2` centrado, activo cuando la imagen está vacía o falla al cargar (spec 006, tarea T1.2).
+- Sidebar: enlace «Propiedades» cambiado de `href="#"` a `href="/propiedades"` (spec 006, tarea T5.1).
+- Sidebar: estado activo calculado dinámicamente desde `request.url.path` con clase `sidebar__item--active` y `aria-current="page"`; Dashboard activo solo en `/`, Propiedades activo en rutas `/propiedades`; Inquilinos y Contratos separados en dos `<a>` independientes.
+- Navbar: breadcrumb dinámico que refleja la sección actual (`Inicio / Propiedades` en `/propiedades`, `Inicio / Dashboard` en `/`).
+- Seed de propiedades: URLs de imágenes reemplazadas de hash MD5 determinista a URLs explícitas curadas de Unsplash con contenido inmobiliario real (apartamentos, fachadas, condominios, interiores, casas/villas).
+- Import de `settings` en seed corregido: migrado de `settings.DATABASE_URL` a `get_settings().database_url`.
 
 ### Fixed
 
@@ -111,6 +125,10 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Test `test_upgrade_head_crea_tabla` corregido: ahora usa `_reset_db()` con DROP/CREATE schema y `asyncio.run()` en lugar de `Base.metadata.create_all` mixto, garantizando estado limpio en cada ejecución (spec 004).
 - Regresión en test de migración corregida: `async_session` fixture ya no ejecuta `Base.metadata.create_all` (inconsistente con Alembic); el esquema se prepara exclusivamente con `setup_db()` vía Alembic (spec 004).
 - `async_session` fixture en `conftest.py` de integración simplificado: eliminada creación directa de tablas con `Base.metadata.create_all`; ahora solo crea engine y session factory delegando el esquema a Alembic.
+- Cards de propiedad: títulos largos ahora usan `line-clamp: 2` para evitar desborde horizontal; altura consistente entre cards del grid con `height: 100%` y `flex: 1`.
+- Imágenes del seed: eliminada dependencia de `picsum.photos` para imágenes aleatorias; reemplazadas por URLs estables y curadas de Unsplash visibles en la UI.
+- Control de visibilidad de imagen/placeholder en card: eliminados estilos inline (`style="display:none"`) y manipulación de `onerror`; reemplazados por modificadores de clase CSS (`card-propiedad--has-image`, `card-propiedad--no-image`, `card-propiedad__imagen--error`).
+- Sidebar: corregido el estado activo que antes usaba `sidebar__item--active` fijo en Dashboard; ahora se aplica condicionalmente según la ruta.
 
 ### Removed
 
@@ -120,5 +138,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Archivo `tests/unit/test_dashboard.py` removido: dependía de PostgreSQL como test unitario; reemplazado por tests unitarios con mocks en `tests/unit/dashboard/test_routes.py` y tests de integración dedicados.
 - Archivos `app/config.py` y `app/database.py` eliminados; reemplazados por `app/config/` (módulo) y `app/infra/database.py`.
 - Archivos `.env`, `.env.example` y `.env.*.local` removidos del repositorio y del `.gitignore`; `config/app.yaml` es la fuente única de configuración.
+- Función `_imagen_determinista()` y `import hashlib` del script de seed; las imágenes ya no se generan con hash MD5 (spec 006).
+- Llamada a `picsum.photos` en el seed; reemplazada por URLs explícitas en cada propiedad.
+- Estilos inline y manipulación directa de `style.display` en `_card_propiedad.html`.
 
-<!-- changelog:last-processed-commit=b01b148adda5d64c7a57889874f53f5f6080da47 -->
+<!-- changelog:last-processed-commit=d856c3ccadf0c0a9260a02677c2a98d621a664bf -->

@@ -14,47 +14,69 @@ from app.modules.propiedades.service import (
 
 
 class TestFormatPrecio:
-	"""Pruebas de formato de precio."""
+	"""
+	Pruebas de formato de precio.
+	"""
 
 	def test_formato_entero(self) -> None:
-		"""Debe formatear 1500 como $1,500.00."""
+		"""
+		Debe formatear 1500 como $1,500.00.
+		"""
 		assert _format_precio(Decimal('1500')) == '$1,500.00'
 
 	def test_formato_decimal(self) -> None:
-		"""Debe formatear 2500.50 como $2,500.50."""
+		"""
+		Debe formatear 2500.50 como $2,500.50.
+		"""
 		assert _format_precio(Decimal('2500.50')) == '$2,500.50'
 
 	def test_formato_float(self) -> None:
-		"""Debe aceptar float y formatearlo correctamente."""
+		"""
+		Debe aceptar float y formatearlo correctamente.
+		"""
 		assert _format_precio(1000.0) == '$1,000.00'
 
 	def test_formato_miles(self) -> None:
-		"""Debe usar separador de miles."""
+		"""
+		Debe usar separador de miles.
+		"""
 		assert _format_precio(Decimal('1000000')) == '$1,000,000.00'
 
 
 class TestFormatArea:
-	"""Pruebas de formato de área."""
+	"""
+	Pruebas de formato de área.
+	"""
 
 	def test_formato_pequeno(self) -> None:
-		"""Debe formatear 500 como 500 m²."""
+		"""
+		Debe formatear 500 como 500 m².
+		"""
 		assert _format_area(500) == '500 m²'
 
 	def test_formato_miles(self) -> None:
-		"""Debe formatear 1000 como 1,000 m²."""
+		"""
+		Debe formatear 1000 como 1,000 m².
+		"""
 		assert _format_area(1000) == '1,000 m²'
 
 	def test_formato_grande(self) -> None:
-		"""Debe formatear 10000 como 10,000 m²."""
+		"""
+		Debe formatear 10000 como 10,000 m².
+		"""
 		assert _format_area(10000) == '10,000 m²'
 
 
 class TestListarPropiedades:
-	"""Pruebas de listar_propiedades."""
+	"""
+	Pruebas de listar_propiedades.
+	"""
 
 	@pytest.mark.asyncio
 	async def test_retorna_dicts_con_campos(self) -> None:
-		"""Verifica que retorna lista de dicts con los 8 campos esperados."""
+		"""
+		Verifica que retorna lista de dicts con los 8 campos esperados.
+		"""
 		mock_prop = AsyncMock()
 		mock_prop.id = '00000000-0000-0000-0000-000000000001'
 		mock_prop.titulo = 'Casa Test'
@@ -91,7 +113,9 @@ class TestListarPropiedades:
 
 	@pytest.mark.asyncio
 	async def test_lista_vacia_retorna_lista_vacia(self) -> None:
-		"""Verifica que lista vacía del repo retorna []."""
+		"""
+		Verifica que lista vacía del repo retorna [].
+		"""
 		mock_session = AsyncMock(spec=AsyncSession)
 
 		with patch(
@@ -104,7 +128,9 @@ class TestListarPropiedades:
 
 	@pytest.mark.asyncio
 	async def test_precio_con_decimales_formato_correcto(self) -> None:
-		"""Verifica formato de precio con centavos no redondos."""
+		"""
+		Verifica formato de precio con centavos no redondos.
+		"""
 		mock_prop = AsyncMock()
 		mock_prop.id = 'id'
 		mock_prop.titulo = 'T'

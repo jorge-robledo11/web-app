@@ -152,8 +152,11 @@ contexto:
 | `[visual][extension]` | `_card_propiedad.html` | Nuevos campos (imagen, datos, badge) sin modificar estructura base ni tokens |
 | `[visual][extension]` | `app.css` | Nuevas clases `.propiedades-grid`, `.card-propiedad__*` usando tokens existentes |
 | `[visual][extension]` | `propiedades.html` | Nuevo template que extiende `base.html` sin modificar layout global |
+| `[visual][extension]` | `_sidebar.html` | Corrección de estado activo dinámico y separación de items; no modifica tokens |
+| `[visual][extension]` | `_navbar.html` | Corrección de breadcrumb dinámico por ruta; no modifica tokens |
+| `[visual][extension]` | `frontend.instructions.md` | Documentación de patrones canónicos añadidos (navegación dinámica, fallback de imagen) y eliminación de excepción de estilos inline obsoleta |
 
-Sin modificación de tokens visuales canónicos. Sin cambios en `base.html`, `_navbar.html` ni iconografía.
+Sin modificación de tokens visuales canónicos. Sin cambios en `base.html` ni iconografía.
 
 ## Complexity Tracking
 

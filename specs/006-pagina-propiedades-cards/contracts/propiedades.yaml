@@ -113,5 +113,5 @@ governance:
   visual_files_created:
     - app/modules/propiedades/templates/propiedades.html
   requires_visual_trace: true
-  visual_markers: [visual][extension]
+  visual_markers: "[visual][extension]"
   justification: "Nuevos componentes visuales y clases CSS que extienden el sistema sin modificar tokens canónicos existentes."

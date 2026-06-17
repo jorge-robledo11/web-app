@@ -30,6 +30,8 @@ con el marcador `[visual]`:
 - **Componentes compartidos**: los 8 parciales en `app/templates/components/`.
 - **Macros de iconos**: `app/templates/macros/icons.html`.
 - **Patrones visuales de estados**: colores de badge, alertas, feedback.
+- **Patrones de navegación dinámica**: estado activo del sidebar y breadcrumb del navbar calculados desde `request.url.path`.
+- **Patrón de fallback de imagen en cards**: visibilidad de imagen y placeholder controlada exclusivamente por clases CSS (`card-propiedad--has-image`, `card-propiedad--no-image`, `card-propiedad__imagen--error`).
 
 Las reglas de trazabilidad y autorización están definidas en:
 
@@ -192,10 +194,9 @@ Viven en `app/templates/components/` como parciales Jinja2 reutilizables.
 
 | Componente            | Archivo                       | Propósito                                              |
 |-----------------------|-------------------------------|--------------------------------------------------------|
-| Sidebar               | `_sidebar.html`               | Navegación principal lateral                           |
-| Navbar                | `_navbar.html`                | Barra superior con breadcrumbs y acciones              |
-| Card de propiedad     | `_card_propiedad.html`        | Vista compacta de una propiedad                        |
-| Tarjeta de métrica    | `_tarjeta_metrica.html`       | KPI con número grande, label, tendencia, icono         |
+| Sidebar               | `_sidebar.html`               | Navegación principal lateral; estado activo por ruta   |
+| Navbar                | `_navbar.html`                | Barra superior con breadcrumbs dinámicos y acciones    |
+| Card de propiedad     | `_card_propiedad.html`        | Vista compacta de una propiedad (modo dashboard o grid)|
 | Accesos rápidos       | `_accesos_rapidos.html`       | Grid de atajos a acciones frecuentes                   |
 | Badge de estado       | `_badge_estado.html`          | Píldora con color por estado del dominio               |
 | Campo de formulario   | `_form_field.html`            | Label + input + error inline + helper text             |
@@ -285,8 +286,9 @@ app/modules/<feature>/templates/
 - Modificadores con doble guión: `.btn--primary`, `.alerta--danger`.
 - **Desktop-first**: estilos base para desktop, media queries hacia abajo
   (`max-width`).
-- PROHIBIDO estilos inline excepto estados controlados por HTMX (ej.
-  `style="display:none"` como estado inicial).
+- PROHIBIDO estilos inline. Los estados visuales (visibilidad de imagen,
+  placeholder, activo/inactivo) se controlan con clases CSS, nunca con
+  atributos `style` inline.
 
 ## 12. Accesibilidad mínima
 

@@ -13,13 +13,17 @@ from tests.integration.conftest import seed_ok, setup_db
 
 
 def _setup(postgres_url: str) -> None:
-	"""Aplica alembic y seed validando returncode."""
+	"""
+	Aplica alembic y seed validando returncode.
+	"""
 	setup_db(postgres_url)
 	seed_ok(postgres_url)
 
 
 def _override_session(async_session: AsyncSession) -> None:
-	"""Inyecta la sesión de test en la app."""
+	"""
+	Inyecta la sesión de test en la app.
+	"""
 
 	async def _dep() -> AsyncSession:
 		return async_session
@@ -45,7 +49,9 @@ def _find_anchor_with_text(html: str, text: str) -> str | None:
 
 @pytest.mark.asyncio
 async def test_propiedades_responde_200(postgres_url: str, async_session: AsyncSession):
-	"""Verifica que GET /propiedades retorna 200 con HTML y layout base."""
+	"""
+	Verifica que GET /propiedades retorna 200 con HTML y layout base.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -66,7 +72,9 @@ async def test_propiedades_responde_200(postgres_url: str, async_session: AsyncS
 
 @pytest.mark.asyncio
 async def test_propiedades_cards_seed(postgres_url: str, async_session: AsyncSession):
-	"""Verifica que renderiza 10 cards (seed de propiedades)."""
+	"""
+	Verifica que renderiza 10 cards (seed de propiedades).
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -85,7 +93,9 @@ async def test_propiedades_cards_seed(postgres_url: str, async_session: AsyncSes
 async def test_propiedades_estructura_cards(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""Verifica que las cards tienen estructura media/body/footer."""
+	"""
+	Verifica que las cards tienen estructura media/body/footer.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -113,7 +123,9 @@ async def test_propiedades_estructura_cards(
 async def test_propiedades_imagenes_explicitas(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""Verifica que las cards tienen <img con src explícito por propiedad."""
+	"""
+	Verifica que las cards tienen <img con src explícito por propiedad.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -142,7 +154,9 @@ async def test_propiedades_imagenes_explicitas(
 async def test_propiedades_sin_estilos_inline_en_imagen(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""Verifica que la card no usa estilos inline para imagen/placeholder."""
+	"""
+	Verifica que la card no usa estilos inline para imagen/placeholder.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -162,7 +176,9 @@ async def test_propiedades_sin_estilos_inline_en_imagen(
 
 @pytest.mark.asyncio
 async def test_propiedades_estado_vacio(postgres_url: str, async_session: AsyncSession):
-	"""Verifica que GET /propiedades muestra estado vacío sin propiedades."""
+	"""
+	Verifica que GET /propiedades muestra estado vacío sin propiedades.
+	"""
 	setup_db(postgres_url)
 
 	await async_session.execute(sa_text('DELETE FROM propiedades'))
@@ -187,7 +203,9 @@ async def test_propiedades_estado_vacio(postgres_url: str, async_session: AsyncS
 async def test_propiedades_placeholder_imagen(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""Verifica que una propiedad sin imagen muestra placeholder."""
+	"""
+	Verifica que una propiedad sin imagen muestra placeholder.
+	"""
 	setup_db(postgres_url)
 	seed_ok(postgres_url)
 
@@ -222,7 +240,9 @@ async def test_propiedades_placeholder_imagen(
 async def test_sidebar_activa_propiedades_en_propiedades(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""En /propiedades el link Propiedades debe estar activo y Dashboard no."""
+	"""
+	En /propiedades el link Propiedades debe estar activo y Dashboard no.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -253,7 +273,9 @@ async def test_sidebar_activa_propiedades_en_propiedades(
 async def test_sidebar_activa_dashboard_en_root(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""En / el link Dashboard debe estar activo y Propiedades no."""
+	"""
+	En / el link Dashboard debe estar activo y Propiedades no.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -282,7 +304,9 @@ async def test_sidebar_activa_dashboard_en_root(
 async def test_sidebar_inquilinos_y_contratos_separados(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""Inquilinos y Contratos deben ser anchors separados en el sidebar."""
+	"""
+	Inquilinos y Contratos deben ser anchors separados en el sidebar.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -311,7 +335,9 @@ async def test_sidebar_inquilinos_y_contratos_separados(
 
 @pytest.mark.asyncio
 async def test_sidebar_items_completos(postgres_url: str, async_session: AsyncSession):
-	"""El sidebar debe contener los 7 items en su propio anchor."""
+	"""
+	El sidebar debe contener los 7 items en su propio anchor.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -341,7 +367,9 @@ async def test_sidebar_items_completos(postgres_url: str, async_session: AsyncSe
 async def test_sidebar_tiene_href_propiedades(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""Verifica que el sidebar contiene href="/propiedades"."""
+	"""
+	Verifica que el sidebar contiene href="/propiedades".
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -365,7 +393,9 @@ async def test_sidebar_tiene_href_propiedades(
 async def test_navbar_breadcrumb_en_propiedades(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""En /propiedades el breadcrumb debe ser Inicio / Propiedades."""
+	"""
+	En /propiedades el breadcrumb debe ser Inicio / Propiedades.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -393,7 +423,9 @@ async def test_navbar_breadcrumb_en_propiedades(
 async def test_navbar_breadcrumb_en_root(
 	postgres_url: str, async_session: AsyncSession
 ):
-	"""En / el breadcrumb debe ser Inicio / Dashboard."""
+	"""
+	En / el breadcrumb debe ser Inicio / Dashboard.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
