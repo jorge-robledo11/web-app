@@ -221,6 +221,10 @@ h3 {
   gap: var(--space-3);
 }
 
+.navbar__user {
+  font-size: 14px;
+}
+
 .content {
   flex: 1;
   padding: var(--space-8);
@@ -500,6 +504,9 @@ h3 {
   font-size: 15px;
   font-weight: 600;
   margin-bottom: var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-propiedad__detalle {
@@ -512,6 +519,173 @@ h3 {
   align-items: center;
   gap: var(--space-2);
   flex-shrink: 0;
+}
+
+/* --- Grid de propiedades --- */
+.propiedades-header {
+  margin-bottom: var(--space-8);
+}
+
+.propiedades-header__title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.propiedades-header__subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.propiedades-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  align-items: stretch;
+}
+
+.propiedades--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+}
+
+.propiedades--empty__icon {
+  color: var(--color-text-muted);
+}
+
+.propiedades--empty__text {
+  color: var(--color-text-muted);
+  font-size: 15px;
+  margin: 0;
+}
+
+/* --- Card de propiedad: layout grid --- */
+.card-propiedad--grid {
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+.card-propiedad--grid:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-propiedad__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.card-propiedad__imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-propiedad--has-image .card-propiedad__imagen {
+  display: block;
+}
+
+.card-propiedad--no-image .card-propiedad__imagen,
+.card-propiedad--no-image .card-propiedad__imagen--error,
+.card-propiedad__imagen--error {
+  display: none;
+}
+
+.card-propiedad--no-image .card-propiedad__imagen-placeholder,
+.card-propiedad__imagen--error ~ .card-propiedad__imagen-placeholder {
+  display: flex;
+}
+
+.card-propiedad__imagen-placeholder {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--color-text-muted);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  background: var(--color-surface);
+}
+
+.card-propiedad--no-image .card-propiedad__imagen-placeholder {
+  display: flex;
+}
+
+.card-propiedad__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  flex: 1;
+}
+
+.card-propiedad--grid .card-propiedad__titulo {
+  margin: 0;
+  margin-bottom: var(--space-1);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.card-propiedad--grid .card-propiedad__direccion {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-propiedad__detalles {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 13px;
+  color: var(--color-text-muted);
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.card-propiedad__detalle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.card-propiedad__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.card-propiedad__precio {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.card-propiedad__accion {
+  padding: var(--space-2) var(--space-3);
 }
 
 /* --- Badge de estado --- */
@@ -667,6 +841,11 @@ h3 {
   border: 0;
 }
 
+.text-muted {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
 /* ============ 7. Responsive (media queries) ============ */
 @media (max-width: 1023px) {
   .layout {
@@ -710,6 +889,10 @@ h3 {
     flex-direction: column;
     gap: var(--space-2);
   }
+
+  .propiedades-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 767px) {
@@ -731,5 +914,9 @@ h3 {
 
   .accesos-rapidos__grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .propiedades-grid {
+    grid-template-columns: 1fr;
   }
 }

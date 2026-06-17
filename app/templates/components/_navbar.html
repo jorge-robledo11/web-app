@@ -1,11 +1,31 @@
-{# Navbar: barra superior con breadcrumbs y acciones. #}
+{# Navbar: barra superior con breadcrumbs y acciones.
+
+   El segmento final del breadcrumb se calcula a partir de
+   request.url.path para reflejar la sección actual.
+#}
+{% set ruta_actual = request.url.path %}
+{% if ruta_actual.startswith('/propiedades') %}
+  {% set seccion_actual = 'Propiedades' %}
+{% elif ruta_actual.startswith('/inquilinos') %}
+  {% set seccion_actual = 'Inquilinos' %}
+{% elif ruta_actual.startswith('/contratos') %}
+  {% set seccion_actual = 'Contratos' %}
+{% elif ruta_actual.startswith('/pagos') %}
+  {% set seccion_actual = 'Pagos' %}
+{% elif ruta_actual.startswith('/mantenimiento') %}
+  {% set seccion_actual = 'Mantenimiento' %}
+{% elif ruta_actual.startswith('/configuracion') %}
+  {% set seccion_actual = 'Configuración' %}
+{% else %}
+  {% set seccion_actual = 'Dashboard' %}
+{% endif %}
 <nav class="navbar">
   <div class="navbar__breadcrumbs">
     <a href="/">Inicio</a>
     <span aria-hidden="true">/</span>
-    <span class="text-muted">Dashboard</span>
+    <span class="text-muted">{{ seccion_actual }}</span>
   </div>
   <div class="navbar__actions">
-    <span class="text-muted" style="font-size:14px">Admin</span>
+    <span class="text-muted navbar__user">Admin</span>
   </div>
 </nav>

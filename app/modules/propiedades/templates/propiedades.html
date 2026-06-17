@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon %}
+
+{% block title %}Propiedades{% endblock %}
+
+{% block content %}
+<div class="propiedades-header">
+  <h1 class="propiedades-header__title">Propiedades</h1>
+  <p class="propiedades-header__subtitle">
+    {{ propiedades|length }} propiedad{% if propiedades|length != 1 %}es{% endif %} registrada{% if propiedades|length != 1 %}s{% endif %}
+  </p>
+</div>
+
+{% if vacio %}
+<div class="propiedades--empty">
+  <span class="propiedades--empty__icon">{{ icon("info", size=24) }}</span>
+  <p class="propiedades--empty__text">No hay propiedades registradas</p>
+</div>
+{% else %}
+<div class="propiedades-grid">
+  {% for prop in propiedades %}
+    {% with
+      modo="grid",
+      titulo=prop.titulo,
+      direccion=prop.direccion,
+      precio=prop.precio_mensual,
+      habitaciones=prop.habitaciones,
+      banos=prop.banos,
+      area=prop.area,
+      estado=prop.estado,
+      imagen=prop.imagen
+    %}
+      {% include "components/_card_propiedad.html" %}
+    {% endwith %}
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

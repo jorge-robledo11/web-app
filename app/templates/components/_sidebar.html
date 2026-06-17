@@ -1,5 +1,12 @@
-{# Sidebar: navegación lateral principal. #}
+{# Sidebar: navegación lateral principal.
+
+   El estado activo se calcula a partir de request.url.path.
+   - Dashboard activo solo en "/"
+   - Propiedades activo en rutas que empiezan con "/propiedades"
+   - aria-current="page" se aplica solo al item activo
+#}
 {% from "macros/icons.html" import icon %}
+{% set ruta_actual = request.url.path %}
 
 <button class="sidebar__toggle" onclick="document.querySelector('.sidebar').classList.toggle('sidebar--open')" aria-label="Toggle navigation">
   {{ icon("menu", size=24) }}
@@ -12,31 +19,59 @@
   </div>
 
   <nav class="sidebar__nav">
-    <a href="/" class="sidebar__item sidebar__item--active" aria-current="page">
+    <a
+      href="/"
+      class="sidebar__item{% if ruta_actual == '/' %} sidebar__item--active{% endif %}"
+      {% if ruta_actual == '/' %}aria-current="page"{% endif %}
+    >
       {{ icon("layout-dashboard", size=20) }}
       <span>Dashboard</span>
     </a>
-    <a href="#" class="sidebar__item">
+    <a
+      href="/propiedades"
+      class="sidebar__item{% if ruta_actual.startswith('/propiedades') %} sidebar__item--active{% endif %}"
+      {% if ruta_actual.startswith('/propiedades') %}aria-current="page"{% endif %}
+    >
       {{ icon("building-2", size=20) }}
       <span>Propiedades</span>
     </a>
-    <a href="#" class="sidebar__item">
+    <a
+      href="#"
+      class="sidebar__item{% if ruta_actual.startswith('/inquilinos') %} sidebar__item--active{% endif %}"
+      {% if ruta_actual.startswith('/inquilinos') %}aria-current="page"{% endif %}
+    >
       {{ icon("users", size=20) }}
       <span>Inquilinos</span>
     </a>
-    <a href="#" class="sidebar__item">
+    <a
+      href="#"
+      class="sidebar__item{% if ruta_actual.startswith('/contratos') %} sidebar__item--active{% endif %}"
+      {% if ruta_actual.startswith('/contratos') %}aria-current="page"{% endif %}
+    >
       {{ icon("file-text", size=20) }}
       <span>Contratos</span>
     </a>
-    <a href="#" class="sidebar__item">
+    <a
+      href="#"
+      class="sidebar__item{% if ruta_actual.startswith('/pagos') %} sidebar__item--active{% endif %}"
+      {% if ruta_actual.startswith('/pagos') %}aria-current="page"{% endif %}
+    >
       {{ icon("wallet", size=20) }}
       <span>Pagos</span>
     </a>
-    <a href="#" class="sidebar__item">
+    <a
+      href="#"
+      class="sidebar__item{% if ruta_actual.startswith('/mantenimiento') %} sidebar__item--active{% endif %}"
+      {% if ruta_actual.startswith('/mantenimiento') %}aria-current="page"{% endif %}
+    >
       {{ icon("wrench", size=20) }}
       <span>Mantenimiento</span>
     </a>
-    <a href="#" class="sidebar__item">
+    <a
+      href="#"
+      class="sidebar__item{% if ruta_actual.startswith('/configuracion') %} sidebar__item--active{% endif %}"
+      {% if ruta_actual.startswith('/configuracion') %}aria-current="page"{% endif %}
+    >
       {{ icon("settings", size=20) }}
       <span>Configuración</span>
     </a>

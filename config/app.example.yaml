@@ -10,4 +10,3 @@ static_url: /static
 paths:
   templates_dir: app/templates
   static_dir: app/static
-

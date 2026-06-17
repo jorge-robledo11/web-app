@@ -8,12 +8,13 @@ Ejecutar después de ``alembic upgrade head``::
 Reglas:
 - Idempotente por clave de negocio (titulo + direccion + ciudad).
 - Timestamps server-side (nunca desde Python).
-- Imagen determinista por UUID v5.
+- Cada propiedad tiene una URL de imagen inmobiliaria explícita, curada
+  y estable. No se generan URLs con hash ni se usan servicios de
+  imágenes aleatorias.
 - Solo asyncpg vía create_async_engine. Prohibido psycopg2.
 """
 
 import asyncio
-import hashlib
 import sys
 import uuid
 from pathlib import Path
@@ -37,6 +38,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 1,
 		'area': 850,
 		'estado': 'disponible',
+		'imagen': 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Bayfront Lofts',
@@ -47,6 +49,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 2,
 		'area': 1200,
 		'estado': 'disponible',
+		'imagen': 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Coconut Grove Studio',
@@ -57,6 +60,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 1,
 		'area': 550,
 		'estado': 'disponible',
+		'imagen': 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Brickell Heights',
@@ -67,6 +71,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 2,
 		'area': 1500,
 		'estado': 'disponible',
+		'imagen': 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Little Havana Casa',
@@ -77,6 +82,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 1,
 		'area': 700,
 		'estado': 'rentada',
+		'imagen': 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Design District Loft',
@@ -87,6 +93,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 2,
 		'area': 1100,
 		'estado': 'rentada',
+		'imagen': 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Wynwood Arts Residence',
@@ -97,6 +104,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 1,
 		'area': 950,
 		'estado': 'rentada',
+		'imagen': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Coral Gables Manor',
@@ -107,6 +115,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 3,
 		'area': 2200,
 		'estado': 'mantenimiento',
+		'imagen': 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'Key Biscayne Villa',
@@ -117,6 +126,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 3,
 		'area': 2800,
 		'estado': 'mantenimiento',
+		'imagen': 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=500&fit=crop',
 	},
 	{
 		'titulo': 'South Beach Retreat',
@@ -127,6 +137,7 @@ PROPIEDADES_MIAMI = [
 		'banos': 1,
 		'area': 600,
 		'estado': 'inactiva',
+		'imagen': 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=500&fit=crop',
 	},
 ]
 
@@ -149,14 +160,6 @@ UPSERT_SQL = """
 """
 
 
-def _imagen_determinista(prop_id: uuid.UUID, seed: int) -> str:
-	"""
-	URL de imagen estable a partir de UUID y semilla.
-	"""
-	hash_val = hashlib.md5(f'{prop_id}-{seed}'.encode()).hexdigest()[:8]
-	return f'https://images.unsplash.com/photo-{hash_val}?w=800'
-
-
 def _uuid_negocio(titulo: str, direccion: str, ciudad: str) -> uuid.UUID:
 	"""
 	UUID v5 determinista a partir de clave de negocio.
@@ -177,9 +180,9 @@ async def _cargar() -> int:
 	engine = create_async_engine(database_url, echo=False)
 
 	async with engine.begin() as conn:
-		for i, prop in enumerate(PROPIEDADES_MIAMI, start=1):
+		for prop in PROPIEDADES_MIAMI:
 			prop_id = _uuid_negocio(prop['titulo'], prop['direccion'], prop['ciudad'])
-			imagen = _imagen_determinista(prop_id, seed=i)
+			imagen = prop['imagen']
 
 			await conn.execute(
 				text(UPSERT_SQL),

@@ -1,14 +1,71 @@
-{# Card de propiedad: vista compacta de una propiedad.
+{# Card de propiedad: vista compacta para dashboard y grid de propiedades.
 
-  Recibe:
-    - titulo: dirección o nombre de la propiedad
-    - detalle: texto secundario (ej. tipo, ubicación)
-    - icono: nombre del icono Lucide
-    - badge: diccionario opcional { texto: str, variante: str }
-    - accion_url: URL para la acción principal
+   Parámetros (dashboard - originales):
+     - titulo: nombre de la propiedad
+     - detalle: texto secundario
+     - icono: nombre del icono Lucide (default "building-2")
+     - badge: diccionario opcional { texto: str, variante: str }
+     - accion_url: URL para acción principal
+
+   Parámetros (grid - opcionales):
+     - modo: "grid" para layout vertical de card
+     - imagen: URL de imagen o cadena vacía
+     - direccion: dirección completa
+     - precio: string formateado "$X,XXX.00"
+     - habitaciones: número de habitaciones
+     - banos: número de baños
+     - area: string formateado "X,XXX m²"
+     - estado: valor del enum EstadoPropiedad
+
+   Nota: cuando modo="grid", los parámetros badge, detalle, icono y
+   accion_url son ignorados.
+
+   La card grid controla la visibilidad de imagen y placeholder con
+   modificadores de clase en lugar de estilos inline:
+     - .card-propiedad--has-image: imagen visible, placeholder oculto.
+     - .card-propiedad--no-image: imagen oculta, placeholder visible.
+   Si la imagen falla al cargar, la clase .card-propiedad__imagen--error
+   se aplica a la imagen para activar el placeholder vía CSS.
 #}
 {% from "macros/icons.html" import icon %}
 
+{% if modo == "grid" %}
+<div class="card-propiedad card-propiedad--grid {% if imagen %}card-propiedad--has-image{% else %}card-propiedad--no-image{% endif %}">
+  <div class="card-propiedad__media">
+    {% if imagen %}
+    <img
+      class="card-propiedad__imagen"
+      src="{{ imagen }}"
+      alt="Foto de {{ titulo }}"
+      loading="lazy"
+      decoding="async"
+      onerror="this.classList.add('card-propiedad__imagen--error');"
+    >
+    {% endif %}
+    <div class="card-propiedad__imagen-placeholder">
+      {{ icon("building-2", size=40) }}
+    </div>
+  </div>
+
+  <div class="card-propiedad__body">
+    <h3 class="card-propiedad__titulo" title="{{ titulo }}">{{ titulo }}</h3>
+    <p class="card-propiedad__direccion" title="{{ direccion }}">{{ direccion }}</p>
+    <div class="card-propiedad__detalles">
+      <span class="card-propiedad__detalle">{{ icon("building-2", size=14) }} {{ habitaciones }} hab</span>
+      <span class="card-propiedad__detalle">{{ banos }} baños</span>
+      <span class="card-propiedad__detalle">{{ area }}</span>
+    </div>
+  </div>
+
+  <div class="card-propiedad__footer">
+    <span class="card-propiedad__precio">{{ precio }}</span>
+    {% with texto=estado, variante="accent" %}
+      {% include "components/_badge_estado.html" %}
+    {% endwith %}
+  </div>
+</div>
+
+{% else %}
 <div class="card-propiedad">
   <div class="card-propiedad__icono">
     {{ icon(icono|default("building-2"), size=24) }}
@@ -23,8 +80,9 @@
   </div>
   {% endif %}
   <div class="card-propiedad__acciones">
-    <a href="{{ accion_url }}" class="acceso-rapido" style="padding:{{ 'var(--space-2)' }} {{ 'var(--space-3)' }}">
+    <a href="{{ accion_url }}" class="acceso-rapido card-propiedad__accion">
       Ver detalles
     </a>
   </div>
 </div>
+{% endif %}

@@ -21,7 +21,6 @@ from pydantic_settings import (
 	YamlConfigSettingsSource,
 )
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONFIG_FILE = PROJECT_ROOT / 'config' / 'app.yaml'
 

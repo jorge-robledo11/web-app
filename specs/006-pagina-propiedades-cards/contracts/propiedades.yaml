@@ -1,0 +1,117 @@
+# Contrato del endpoint GET /propiedades
+# Feature: 006-pagina-propiedades-cards
+# Tipo: endpoint-contract
+# Versión: 1.0.0
+
+endpoint:
+  method: GET
+  path: /propiedades
+  response_type: HTMLResponse
+  template: propiedades.html
+  handler: app.modules.propiedades.routes.listar_propiedades
+
+contexto:
+  request:
+    type: Request
+    source: fastapi
+  propiedades:
+    type: list[dict]
+    required: true
+    items:
+      id:
+        type: string
+        source: Propiedad.id (UUID → str)
+      titulo:
+        type: string
+        max_length_visual: 60
+        truncation: ellipsis
+      direccion:
+        type: string
+        max_length_visual: 80
+        truncation: ellipsis
+      ciudad:
+        type: string
+      precio_mensual:
+        type: string
+        format: "$X,XXX.00"
+        source: Propiedad.precio_mensual (Decimal → formateado en service)
+      habitaciones:
+        type: integer
+        source: Propiedad.habitaciones
+      banos:
+        type: integer
+        source: Propiedad.banos
+      area:
+        type: string
+        format: "X,XXX m²"
+        source: Propiedad.area (int → formateado en service)
+      estado:
+        type: string
+        values: [disponible, rentada, mantenimiento, inactiva]
+        render: badge via _badge_estado.html
+      imagen:
+        type: string
+        source: Propiedad.imagen (URL o cadena vacía)
+        fallback: placeholder (fondo --color-surface + icono building-2)
+      created_at:
+        type: string
+        format: ISO 8601
+  vacio:
+    type: boolean
+    required: true
+    description: "True cuando listar() retorna lista vacía. Activa el estado vacío."
+
+layout:
+  orden: [propiedades-grid]
+  base_template: base.html
+  blocks_overrideados: [title, content]
+
+estados_visuales:
+  grid:
+    datos: ".propiedades-grid"             # grid con cards
+    vacio: ".propiedades--empty"           # mensaje + icono
+  card:
+    datos: ".card-propiedad"               # card completa
+    imagen_fallback: ".card-propiedad__imagen-placeholder"  # placeholder
+
+componentes_requeridos:
+  compartidos:
+    - _card_propiedad.html            (extendido)
+    - _badge_estado.html              (reutilizado)
+    - _sidebar.html                   (href actualizado)
+  nuevos:
+    - propiedades.html                (template de página)
+
+css_clases_nuevas:
+  - .propiedades-grid                 (CSS Grid responsive)
+  - .card-propiedad__imagen           (aspect-ratio, object-fit)
+  - .card-propiedad__imagen-placeholder (fondo + icono)
+  - .card-propiedad__datos            (flex container)
+  - .card-propiedad__precio           (font-weight, color)
+  - .card-propiedad__area             (texto secundario)
+
+responsive:
+  breakpoints:
+    desktop: "> 1023px"
+    tablet: "768px - 1023px"
+    mobile: "< 768px"
+  columnas:
+    desktop: 3
+    tablet: 2
+    mobile: 1
+
+iconos_requeridos:
+  card_placeholder: building-2
+  estado_vacio: info
+  todos_existentes: true
+
+governance:
+  visual_impact: "Extensión de _card_propiedad.html con nuevos campos. Nuevo template propiedades.html. CSS nuevo usando tokens existentes."
+  visual_files_modified:
+    - app/templates/components/_card_propiedad.html
+    - app/static/css/app.css
+  visual_files_created:
+    - app/modules/propiedades/templates/propiedades.html
+  requires_visual_trace: true
+  visual_markers: [visual][extension]
+  justification: "Nuevos componentes visuales y clases CSS que extienden el sistema sin modificar tokens canónicos existentes."
