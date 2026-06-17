@@ -1,0 +1,13 @@
+app_name: Realtor
+environment: development
+debug: true
+log_level: INFO
+
+database_url: postgresql+asyncpg://realtor_dev:realtor_dev@localhost:5432/realtor_dev
+
+static_url: /static
+
+paths:
+  templates_dir: app/templates
+  static_dir: app/static
+

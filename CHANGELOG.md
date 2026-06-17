@@ -55,6 +55,15 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - 6 tests de integración del dashboard con Testcontainers: endpoint, estado vacío, orden vertical de secciones, accesos rápidos, presencia de sidebar/navbar y respuesta HTTP 200 (`tests/integration/dashboard/test_dashboard.py`).
 - Artefactos completos de spec 005 en `specs/005-dashboard-datos-reales/`: spec, plan, tasks, report de análisis, research, modelo de datos, quickstart, checklist de requisitos y contratos YAML.
 - 7 prompts de Spec Kit para spec 005 en `.opencode/prompts/` con frontmatter estandarizado (specify, clarify, plan, analyze, tasks, implement, fix-report).
+- Tests unitarios de rutas del dashboard con mocks del servicio: verificación de renderizado HTML con métricas (`test_dashboard_route_renderiza_html_con_metricas`) y estado vacío (`test_dashboard_route_renderiza_estado_vacio`), sin dependencia de PostgreSQL (spec 005).
+- Tests unitarios del repositorio del dashboard con mocks de `contar_por_estado` y `contar_total`: verificación de `obtener_metricas` con y sin datos (spec 005).
+- Tests unitarios de `Propiedad.__repr__`: verifica que el método incluye id, título y estado del modelo.
+- Tests unitarios de `PropiedadIn`: validación de tipo de estado no soportado (`estado=42`) rechazado por Pydantic.
+- Tests de integración del repositorio de propiedades: `test_eliminar_id_inexistente_retorna_false`, `test_contar_por_estado_con_datos`, `test_contar_por_estado_sin_datos`, `test_contar_total_con_datos`, `test_contar_total_sin_datos` (spec 004).
+- Tests de integración del dashboard: `test_marcador_dentro_de_tarjeta` (verifica que "No disponible" se renderiza dentro de la tarjeta métrica) y `test_metricas_valores_reales_4_y_3` (verifica valores 4 y 3 del seed) (spec 005).
+- Funciones helper en `conftest.py` de integración: `alembic_ok()`, `seed_ok()` y `setup_db()` con validación de returncode de Alembic y seed (spec 005).
+- Módulo vertical `health` (spec 005): endpoint `GET /health` con rutas, esquemas y tests propios, extraído de `app/main.py`.
+- Soporte para `pydantic-settings[yaml]` en dependencias del proyecto para lectura de `config/app.yaml`.
 
 ### Changed
 
@@ -74,6 +83,18 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - `conventions.instructions.md`: agregada fila `format-docstrings` en la tabla de hooks automáticos de la sección 12.
 - `.pre-commit-config.yaml`: reorganizado el orden de hooks ubicando `format-docstrings` después de `ruff-format` y antes de las verificaciones generales; agregado `fail_fast: true` para abortar ante el primer fallo.
 - Prompts de specs 001-004: añadido campo `siguiente_fase` en frontmatter para trazabilidad del avance entre fases de Spec Kit.
+- Tipado del contexto del dashboard: `schemas.py` ahora define `MetricaDashboard`, `AccesoDashboard`, `ActividadDashboard`, `MetricasPropiedades` y `ContextoDashboard` como `TypedDict` explícitos en lugar de `dict` genéricos; `repository.py` y `service.py` usan tipos concretos (spec 005).
+- Componente `_tarjeta_metrica.html` extendido: acepta `marcador` opcional y lo renderiza dentro de la tarjeta como `<div class="text-muted">` (spec 005). ⚠️ Cambio en componente compartido protegido sin marcador `[visual]` en `tasks.md`.
+- Consolidada la configuración del proyecto en `config/app.yaml` como fuente única de parámetros; eliminados `.env` y `.env.example`.
+- Infraestructura de base de datos migrada de `app/database.py` a `app/infra/database.py`; configuración de `app/config.py` movida a `app/config/` (módulo `settings.py` + `paths.py`).
+- `app/main.py` simplificado: ahora solo registra routers (`dashboard`, `health`, `propiedades`); endpoint `GET /health` extraído a `app/modules/health/routes.py`.
+- Dashboard routes usa `get_paths()` del path manager en lugar de `Path(__file__).resolve()` hardcodeado.
+- Constitución actualizada a v1.4.0: eliminada referencia a `.env` como fuente de configuración; estructura del repositorio corregida (`app/config.py` → `app/config/`, `app/database.py` → `app/infra/database.py`, `.env.example` → `config/app.example.yaml`); agregado `app/modules/health/` al árbol.
+- `AGENTS.md` sincronizado con constitución v1.4.0: referencias actualizadas de `.env` a `config/app.yaml`.
+- `database.instructions.md` actualizado: referencias de `.env` a `config/app.yaml`, y de `app/database.py` a `app/infra/database.py`.
+- Corregidos imports de `settings` en `alembic/env.py`, `scripts/dev/seed_propiedades.py` y `scripts/dev/db_preflight.py`: migrados de `from app.config import settings` (módulo) a `from app.config import get_settings` (instancia); acceso a `settings.DATABASE_URL` → `get_settings().database_url`.
+- `pyproject.toml`: mypy strict limitado a `app.modules.*` con override para `app.config.settings` que permite `call-arg`.
+- `.gitignore` simplificado: eliminadas reglas genéricas redundantes; reemplazadas por entrada única `config/app.yaml` como única fuente de configuración local.
 
 ### Fixed
 
@@ -83,11 +104,21 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - `backend.instructions.md` corregido: eliminada referencia a `tests/` dentro del módulo; texto ahora apunta a `tests/unit/<feature>/` y `tests/integration/<feature>/` en la raíz.
 - `AGENTS.md` sincronizado con constitución v1.3.1: eliminado `tests/` de artefactos del módulo, agregadas secciones `Órganización de tests`, `Async-First`, `Contratos de dominio`, y árbol de estructura actualizado.
 - Hook `format-docstrings`: reemplazado `inspect.cleandoc` por extracción directa del cuerpo desde líneas fuente mediante `_extract_body` y `_common_indent`, ignorando líneas vacías en la indentación para evitar ciclos de formato con `ruff format` y `trailing-whitespace`.
+- Marcador "No disponible" ahora se renderiza DENTRO de la tarjeta métrica (`_tarjeta_metrica.html`) en lugar de fuera como hermano directo del grid `.metricas` (spec 005).
+- Dashboard ya no duplica los accesos rápidos: reemplazado bloque hardcodeado en `dashboard.html` por `accesos=accesos` del contexto del servicio (spec 005).
+- Tests de integración del dashboard ahora validan returncode de Alembic (`alembic_ok`) y seed (`seed_ok`) con `assert` explícito, en lugar de ignorar errores silenciosos (spec 005).
+- Test `test_dashboard_estado_vacio` corregido: el truncado de propiedades se ejecuta antes de sobrescribir `dependency_overrides` para evitar fugas de datos entre tests (spec 005).
+- Test `test_upgrade_head_crea_tabla` corregido: ahora usa `_reset_db()` con DROP/CREATE schema y `asyncio.run()` en lugar de `Base.metadata.create_all` mixto, garantizando estado limpio en cada ejecución (spec 004).
+- Regresión en test de migración corregida: `async_session` fixture ya no ejecuta `Base.metadata.create_all` (inconsistente con Alembic); el esquema se prepara exclusivamente con `setup_db()` vía Alembic (spec 004).
+- `async_session` fixture en `conftest.py` de integración simplificado: eliminada creación directa de tablas con `Base.metadata.create_all`; ahora solo crea engine y session factory delegando el esquema a Alembic.
 
 ### Removed
 
 - Script `sync-agent-models.sh` y archivo `config/models.yaml`, de uso transitorio durante la configuración inicial de agentes.
 - Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
 - Archivo `.repomixignore` eliminado y sus reglas de exclusión migradas a `.gitignore`.
+- Archivo `tests/unit/test_dashboard.py` removido: dependía de PostgreSQL como test unitario; reemplazado por tests unitarios con mocks en `tests/unit/dashboard/test_routes.py` y tests de integración dedicados.
+- Archivos `app/config.py` y `app/database.py` eliminados; reemplazados por `app/config/` (módulo) y `app/infra/database.py`.
+- Archivos `.env`, `.env.example` y `.env.*.local` removidos del repositorio y del `.gitignore`; `config/app.yaml` es la fuente única de configuración.
 
-<!-- changelog:last-processed-commit=4ac91e8701c117e6714f9629c4a5282830fbdf12 -->
+<!-- changelog:last-processed-commit=b01b148adda5d64c7a57889874f53f5f6080da47 -->

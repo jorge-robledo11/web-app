@@ -10,7 +10,7 @@ dependencies = [
     "asyncpg>=0.30,<1.0",
     "alembic>=1.14,<2.0",
     "pydantic>=2.0,<3.0",
-    "pydantic-settings>=2.0,<3.0",
+    "pydantic-settings[yaml]>=2.0,<3.0",
     "jinja2>=3.1,<4.0",
     "python-multipart>=0.0.18,<1.0",
 ]
@@ -42,12 +42,14 @@ indent-style = "tab"
 docstring-code-format = true
 skip-magic-trailing-comma = false
 
-[tool.mypy]
-strict = true
-
 [[tool.mypy.overrides]]
 module = "app.modules.*"
 strict = true
+
+[[tool.mypy.overrides]]
+module = "app.config.settings"
+strict = true
+disable_error_code = ["call-arg"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

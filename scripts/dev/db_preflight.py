@@ -31,7 +31,7 @@ if str(REPO_ROOT) not in sys.path:
 from sqlalchemy import text  # noqa: E402
 from sqlalchemy.ext.asyncio import create_async_engine  # noqa: E402
 
-from app.config import settings  # noqa: E402
+from app.config import get_settings  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -103,8 +103,8 @@ async def _detectar(head_objetivo: str) -> EstadoBase:
 	"""
 	Consulta la base y clasifica el estado actual.
 	"""
-	settings_obj = settings
-	url = _to_asyncpg_url(settings_obj.DATABASE_URL)
+	settings_obj = get_settings()
+	url = _to_asyncpg_url(settings_obj.database_url)
 	engine = create_async_engine(url)
 	try:
 		async with engine.connect() as conn:
@@ -166,12 +166,12 @@ async def _ejecutar_reset() -> None:
 	"""
 	Resetea el schema ``public``. Bloqueado en producción.
 	"""
-	settings_obj = settings
-	if settings_obj.APP_ENV == 'prod':
+	settings_obj = get_settings()
+	if settings_obj.environment == 'prod':
 		raise RuntimeError(
 			'Reset de schema bloqueado: APP_ENV=prod no admite acciones destructivas.',
 		)
-	url = _to_asyncpg_url(settings_obj.DATABASE_URL)
+	url = _to_asyncpg_url(settings_obj.database_url)
 	engine = create_async_engine(
 		url,
 		isolation_level='AUTOCOMMIT',
@@ -355,7 +355,7 @@ def main() -> int:
 			'mensaje': f'Fallo de conexión o configuración: {exc}',
 			'siguientes_pasos': [
 				'Verifica DATABASE_URL y conectividad con PostgreSQL.',
-				'Confirma que el archivo .env esté presente y sea legible.',
+				'Confirma que el archivo config/app.yaml esté presente y sea legible.',
 			],
 			'exit_code': 20,
 		}

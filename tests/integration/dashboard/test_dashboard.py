@@ -4,7 +4,7 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database import get_session
+from app.infra.database import get_session
 from app.main import app
 from tests.integration.conftest import seed_ok, setup_db
 

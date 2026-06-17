@@ -1,18 +1,18 @@
 <!--
 Informe de impacto de sincronización
-- Cambio de versión: 1.3.1 -> 1.3.2
+- Cambio de versión: 1.3.2 -> 1.4.0
 - Secciones modificadas:
-  - II. Stack: fila Pre-commit ampliada con format-docstrings
-  - XIII. Estructura: agregado .repomixignore al árbol del repositorio
+  - X. Base de datos: eliminada referencia a .env, reemplazada por config/app.yaml
+  - XIII. Estructura: corregido app/config.py → app/config/, app/database.py → app/infra/database.py, .env.example → config/app.example.yaml, agregado app/modules/health/
 - Secciones agregadas:
   - Ninguna
 - Secciones eliminadas:
   - Ninguna
 - Artefactos relacionados revisados:
-  - .specify/templates/plan-template.md ✅ sin cambios necesarios
-  - .specify/templates/spec-template.md ✅ sin cambios necesarios
-  - .specify/templates/tasks-template.md ✅ sin cambios necesarios
-  - AGENTS.md ✅ ya sincronizado con v1.3.1
+  - AGENTS.md ✅ actualizado
+  - .opencode/instructions/database.instructions.md ✅ actualizado
+  - .opencode/instructions/conventions.instructions.md ✅ actualizado
+  - scripts/dev/db_preflight.py ✅ actualizado
 - Pendientes de seguimiento:
   - Ninguno
 -->
@@ -364,8 +364,8 @@ Reglas obligatorias:
 * Las migraciones se gestionan exclusivamente con Alembic.
 * Las sesiones de base de datos se manejan mediante dependencias controladas con
   inyección de `AsyncSession`.
-* `.env` nunca debe versionarse con secretos reales.
-* `.env.example` debe existir como plantilla de configuración.
+* `config/app.yaml` nunca debe versionarse con secretos reales.
+* `config/app.example.yaml` debe existir como plantilla de configuración.
 * La infraestructura local debe usar archivos `.yaml`, nunca `.yml`.
 
 ## XI. Async-First
@@ -453,8 +453,12 @@ La estructura base del proyecto debe respetar esta organización:
 app/
   __init__.py
   main.py
-  config.py
-  database.py
+  config/
+    __init__.py
+    settings.py
+    paths.py
+  infra/
+    database.py
   modules/
     <feature>/
       routes.py
@@ -464,6 +468,10 @@ app/
       service.py
       templates/
         *.html
+    health/
+      __init__.py
+      routes.py
+      schemas.py
   static/
     css/
       app.css
@@ -480,6 +488,8 @@ app/
 alembic/
   env.py
   versions/
+config/
+  app.example.yaml
 tests/
   conftest.py
   unit/
@@ -494,7 +504,6 @@ tests/
 pyproject.toml
 uv.lock
 docker-compose.yaml
-.env.example
 ```
 
 Cualquier desviación debe justificarse en `plan.md`.
@@ -579,5 +588,11 @@ explícitamente y seguir la capa de mayor autoridad.
 * **v1.3.2** — Actualizado el informe de impacto de sincronización. Agregado
   `format-docstrings` a la fila Pre-commit del stack. Agregado `.repomixignore`
   a la estructura obligatoria del repositorio.
+* **v1.4.0** — Consolidada la configuración en `config/app.yaml` como fuente
+  única (eliminado `.env`). Extraído `GET /health` a `app/modules/health/`.
+  Registrados todos los routers en `app/main.py`. Corregida la estructura del
+  repositorio: `app/config.py` → `app/config/`, `app/database.py` →
+  `app/infra/database.py`, `.env.example` → `config/app.example.yaml`.
+  Sincronizados `AGENTS.md`, instrucciones y `db_preflight.py`.
 
-**Versión**: 1.3.2 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-15
+**Versión**: 1.4.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-16

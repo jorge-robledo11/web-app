@@ -6,7 +6,6 @@ desde base de datos.
 """
 
 import logging
-from pathlib import Path
 from typing import Annotated, cast
 
 from fastapi import APIRouter, Depends, Request
@@ -14,21 +13,17 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database import get_session
+from app.config import get_paths
+from app.infra.database import get_session
 from app.modules.dashboard.service import construir_contexto
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 logger = logging.getLogger(__name__)
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+paths = get_paths()
 
-templates = Jinja2Templates(
-	directory=[
-		str(BASE_DIR / 'templates'),
-		str(BASE_DIR / 'static'),
-	]
-)
+templates = Jinja2Templates(directory=[paths.templates_dir, paths.static_dir])
 
 router = APIRouter(tags=['dashboard'])
 

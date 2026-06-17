@@ -7,11 +7,11 @@ applyTo: "app/modules/**/models.py,app/modules/**/repository.py,alembic/**"
 ## Conexiones (Docker local)
 
 PostgreSQL se ejecuta localmente con Docker o Docker Compose. La
-configuración de conexión se define en `.env` (nunca versionado) mediante
-`DATABASE_URL`.
+configuración de conexión se define en `config/app.yaml` (nunca versionado)
+mediante `database_url`.
 
 - Una sola URL de conexión para runtime y migraciones.
-- El engine se configura en `app/database.py` con soporte async.
+- El engine se configura en `app/infra/database.py` con soporte async.
 - NUNCA usar Supabase como proveedor de base de datos.
 
 ## models.py

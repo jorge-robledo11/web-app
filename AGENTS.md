@@ -1,7 +1,7 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/005-dashboard-datos-reales/spec.md
+at specs/005-dashboard-datos-reales/plan.md
 <!-- SPECKIT END -->
 
 # Instrucciones — Proyecto Realtor
@@ -221,7 +221,7 @@ La validación de formato, lint, typecheck y docstrings está unificada en el
 pre-commit (`make auto-checks`). Para validación completa:
 
 ```bash
-make ci                   # auto-checks + tests + coverage + clean
+make ci # auto-checks + tests + coverage + clean
 ```
 
 Las pruebas unitarias usan pytest. Las pruebas asíncronas usan pytest-asyncio.
@@ -245,8 +245,8 @@ PostgreSQL usan Testcontainers.
 * Las migraciones se gestionan exclusivamente con Alembic.
 * Las sesiones de base de datos se manejan mediante dependencias controladas con
   inyección de `AsyncSession`.
-* `.env` nunca debe versionarse con secretos reales.
-* `.env.example` debe existir como plantilla.
+* `config/app.yaml` nunca debe versionarse con secretos reales.
+* `config/app.example.yaml` debe existir como plantilla.
 * La infraestructura local debe usar `.yaml`, nunca `.yml`.
 
 ## Async-First

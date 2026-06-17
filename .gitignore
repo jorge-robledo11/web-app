@@ -41,3 +41,6 @@ build/
 htmlcov/
 
 docs/context/
+
+# Configuración local declarativa.
+config/app.yaml

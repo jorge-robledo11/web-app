@@ -25,7 +25,7 @@ if str(REPO_ROOT) not in sys.path:
 from sqlalchemy import text  # noqa: E402
 from sqlalchemy.ext.asyncio import create_async_engine  # noqa: E402
 
-from app.config import settings  # noqa: E402
+from app.config import get_settings  # noqa: E402
 
 PROPIEDADES_MIAMI = [
 	{
@@ -169,11 +169,12 @@ async def _cargar() -> int:
 	"""
 	Ejecuta carga inicial. Retorna cantidad de propiedades.
 	"""
-	if not settings.DATABASE_URL:
+	database_url = get_settings().database_url
+	if not database_url:
 		print('[seed] ERROR: DATABASE_URL no configurada', file=sys.stderr)
 		sys.exit(1)
 
-	engine = create_async_engine(settings.DATABASE_URL, echo=False)
+	engine = create_async_engine(database_url, echo=False)
 
 	async with engine.begin() as conn:
 		for i, prop in enumerate(PROPIEDADES_MIAMI, start=1):

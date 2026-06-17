@@ -15,7 +15,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.database import Base
+from app.infra.database import Base
 
 
 class EstadoPropiedad(enum.StrEnum):

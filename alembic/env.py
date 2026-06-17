@@ -9,8 +9,8 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 import app.modules.propiedades.models  # noqa: F401 - registrar modelo para autogenerate
 from alembic import context
-from app.config import settings
-from app.database import Base
+from app.config import get_settings
+from app.infra.database import Base
 
 config = context.config
 
@@ -18,7 +18,7 @@ if config.config_file_name is not None:
 	fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
-config.set_main_option('sqlalchemy.url', settings.DATABASE_URL)
+config.set_main_option('sqlalchemy.url', get_settings().database_url)
 
 
 def run_migrations_offline() -> None:
@@ -50,7 +50,7 @@ async def run_async_migrations() -> None:
 	Crea un motor async y ejecuta las migraciones.
 	"""
 	connectable = create_async_engine(
-		settings.DATABASE_URL,
+		get_settings().database_url,
 		poolclass=pool.NullPool,
 	)
 	async with connectable.connect() as connection:
