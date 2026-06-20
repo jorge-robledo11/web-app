@@ -1,10 +1,10 @@
 ---
-name: 002-blindar-tokens-visuales-spec
+name: 002-blindar-tokens-visuales-specify
 description: >
   Crea la spec 002-blindar-tokens-visuales para blindar los tokens visuales
   canónicos del frontend.
 spec_kit_command: "/speckit.specify"
-usage: "/speckit.specify @.opencode/prompts/002-blindar-tokens-visuales.spec.prompt.md"
+usage: "/speckit.specify @.opencode/prompts/002-blindar-tokens-visuales.specify.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---

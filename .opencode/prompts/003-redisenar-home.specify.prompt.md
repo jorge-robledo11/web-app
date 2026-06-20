@@ -1,10 +1,10 @@
 ---
-name: 003-redisenar-home-spec
+name: 003-redisenar-home-specify
 description: >
   Crea la spec 003-redisenar-home para rediseñar la Home principal respetando
   la gobernanza visual canónica.
 spec_kit_command: "/speckit.specify"
-usage: "/speckit.specify @.opencode/prompts/003-redisenar-home.spec.prompt.md"
+usage: "/speckit.specify @.opencode/prompts/003-redisenar-home.specify.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---

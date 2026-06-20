@@ -1,10 +1,10 @@
 ---
-name: 004-propiedades-base-spec
+name: 004-propiedades-base-specify
 description: >
 Crea la spec 004-propiedades-base para habilitar la base persistente inicial
 de propiedades inmobiliarias del proyecto Realtor.
 spec_kit_command: "/speckit.specify"
-usage: "/speckit.specify @.opencode/prompts/004-propiedades-base.spec.prompt.md"
+usage: "/speckit.specify @.opencode/prompts/004-propiedades-base.specify.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---

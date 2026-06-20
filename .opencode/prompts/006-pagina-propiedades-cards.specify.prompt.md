@@ -1,10 +1,10 @@
 ---
-name: 006-pagina-propiedades-cards-spec
+name: 006-pagina-propiedades-cards-specify
 description: >
   Crea la spec 006-pagina-propiedades-cards para la página server-rendered
   de propiedades con grid de cards responsive y endpoint dedicado.
 spec_kit_command: "/speckit.specify"
-usage: "/speckit.specify @.opencode/prompts/006-pagina-propiedades-cards.spec.prompt.md"
+usage: "/speckit.specify @.opencode/prompts/006-pagina-propiedades-cards.specify.prompt.md"
 execution_context: primary-build
 model_policy: inherit-primary
 ---
