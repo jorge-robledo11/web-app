@@ -1,4 +1,4 @@
-.PHONY: help backend context \
+.PHONY: help server context \
         db-up db-down db-reset db-migrate db-create \
         db-logs db-status \
         auto-checks manual-checks ci \
@@ -18,8 +18,8 @@ help: ## Muestra esta ayuda
 # ║             DESARROLLO                   ║
 # ╚══════════════════════════════════════════╝
 
-backend: ## Arranca el backend de la aplicación
-	bash scripts/dev/backend.sh
+server: ## Arranca el server de la aplicación
+	bash scripts/dev/server.sh
 
 # ╔══════════════════════════════════════════╗
 # ║            BASE DE DATOS                 ║
