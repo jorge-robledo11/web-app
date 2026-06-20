@@ -1,0 +1,47 @@
+# Runtime / deps
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+.coverage
+
+# Build / reports
+dist/
+build/
+coverage/
+htmlcov/
+graphify-out/
+
+# Snapshots generados
+repo-state*.xml
+repomix-output.*
+
+# Secretos / local
+.env
+.env.*
+*.sqlite
+*.db
+
+# Ignorar todo OpenCode
+.opencode/*
+# Pero permitir estos directorios
+!.opencode/prompts/
+!.opencode/prompts/**
+!.opencode/instructions/
+!.opencode/instructions/**
+
+.specify/*
+!.specify/memory/
+!.specify/memory/**
+
+# Lockfile: normalmente no aporta al grafo semántico
+uv.lock
+
+# Assets pesados no necesarios para contexto SDD
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif

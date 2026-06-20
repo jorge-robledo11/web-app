@@ -5,6 +5,7 @@
     ".opencode/instructions/*.instructions.md"
   ],
   "plugin": [
-    "./.opencode/vendor/ponytail/plugins/ponytail.mjs"
+    "./.opencode/vendor/ponytail/plugins/ponytail.mjs",
+    "./.opencode/vendor/graphify/plugins/graphify.mjs"
   ]
 }

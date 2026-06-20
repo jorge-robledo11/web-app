@@ -369,3 +369,37 @@ correspondientes.
 
 Estas instrucciones son obligatorias y forman parte del contexto operativo del
 proyecto.
+
+## graphify
+
+Graphify está vendoreado en `.opencode/vendor/graphify/` y se usa como mapa de
+conocimiento del repo. Su salida vive en `graphify-out/` e incluye relaciones
+entre specs, documentación, código, módulos y artefactos transversales.
+
+Cuando el usuario escriba `/graphify`, `/graphify <args>` o haga una pregunta
+sobre arquitectura, impacto, trazabilidad entre specs e implementación, o
+relaciones entre archivos, usa Graphify antes de navegar manualmente el código.
+
+Reglas:
+
+- Para preguntas del codebase, si existe `graphify-out/graph.json`, ejecuta
+  primero `graphify query "<pregunta>"`.
+- Usa `graphify path "<A>" "<B>"` para relaciones entre conceptos, specs,
+  módulos o archivos.
+- Usa `graphify explain "<concepto>"` para explicar un nodo concreto.
+- Lee `graphify-out/GRAPH_REPORT.md` solo para revisión amplia de arquitectura o
+  cuando `query`, `path` o `explain` no den contexto suficiente.
+- Si existe `graphify-out/wiki/index.md`, úsalo para navegación general antes de
+  abrir código fuente en bruto.
+- Los archivos sucios dentro de `graphify-out/` son esperados después de hooks o
+  actualizaciones incrementales; no son razón para saltarse Graphify.
+- Omite Graphify únicamente si el usuario lo pide explícitamente, si la tarea es
+  corregir salida obsoleta del grafo, o si `graphify` no está instalado y no se
+  puede ejecutar con `uv tool run graphifyy`.
+- Después de modificar código, intenta mantener el grafo actualizado con
+  `graphify update .`. Si falla por falta de API key, reporta el motivo y no
+  inventes credenciales.
+- No pongas API keys en archivos versionados. Graphify CLI reconoce variables
+  como `GEMINI_API_KEY`, `GOOGLE_API_KEY`, `OPENAI_API_KEY`,
+  `ANTHROPIC_API_KEY`, `DEEPSEEK_API_KEY` y `MOONSHOT_API_KEY` para extracción
+  semántica de docs, PDFs e imágenes.

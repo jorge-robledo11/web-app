@@ -67,7 +67,11 @@ Thumbs.db
 
 # Spec Kit / OpenCode / contexto operativo local
 .specify/
-.opencode/
+.opencode/*
+!.opencode/prompts/
+!.opencode/prompts/**
+!.opencode/instructions/
+!.opencode/instructions/**
 
 # Lock/cachés generados
 uv.lock
