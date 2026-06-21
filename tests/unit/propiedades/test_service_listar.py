@@ -1,6 +1,7 @@
 """Tests unitarios de listar_propiedades del servicio."""
 
 from decimal import Decimal
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -11,6 +12,41 @@ from app.modules.propiedades.service import (
 	_format_precio,
 	listar_propiedades,
 )
+
+
+def _propiedad_fake(
+	*,
+	id: str = '00000000-0000-0000-0000-000000000001',
+	titulo: str = 'Casa Test',
+	direccion: str = 'Calle 123',
+	ciudad: str = 'Miami',
+	precio_mensual: Decimal = Decimal('1500.00'),
+	habitaciones: int = 3,
+	banos: int = 2,
+	area: int = 850,
+	estado: str = 'disponible',
+	imagen: str | None = 'https://example.com/img.jpg',
+	created_at: str = '2026-01-01T00:00:00Z',
+) -> SimpleNamespace:
+	"""
+	Construye una propiedad falsa con argumentos por keyword.
+
+	Reemplaza los AsyncMock verbosos por SimpleNamespace explícito
+	para que las aserciones sobre ``.value`` y atributos sean más legibles.
+	"""
+	return SimpleNamespace(
+		id=id,
+		titulo=titulo,
+		direccion=direccion,
+		ciudad=ciudad,
+		precio_mensual=precio_mensual,
+		habitaciones=habitaciones,
+		banos=banos,
+		area=area,
+		estado=SimpleNamespace(value=estado),
+		imagen=imagen,
+		created_at=created_at,
+	)
 
 
 class TestFormatPrecio:
@@ -73,83 +109,103 @@ class TestListarPropiedades:
 	"""
 
 	@pytest.mark.asyncio
-	async def test_retorna_dicts_con_campos(self) -> None:
+	async def test_retorna_dicts_con_campos_y_usa_session(self) -> None:
 		"""
-		Verifica que retorna lista de dicts con los 8 campos esperados.
+		Verifica el dict exacto con los 11 campos esperados y que la
+		sesión se propaga al repositorio.
 		"""
-		mock_prop = AsyncMock()
-		mock_prop.id = '00000000-0000-0000-0000-000000000001'
-		mock_prop.titulo = 'Casa Test'
-		mock_prop.direccion = 'Calle 123'
-		mock_prop.ciudad = 'Miami'
-		mock_prop.precio_mensual = Decimal('1500.00')
-		mock_prop.habitaciones = 3
-		mock_prop.banos = 2
-		mock_prop.area = 850
-		mock_prop.estado = AsyncMock(value='disponible')
-		mock_prop.imagen = 'https://example.com/img.jpg'
-		mock_prop.created_at = '2026-01-01T00:00:00Z'
-
+		mock_prop = _propiedad_fake()
 		mock_session = AsyncMock(spec=AsyncSession)
+		mock_listar = AsyncMock(return_value=[mock_prop])
 
 		with patch(
 			'app.modules.propiedades.service.repo_listar',
-			new=AsyncMock(return_value=[mock_prop]),
+			new=mock_listar,
 		):
 			resultado = await listar_propiedades(mock_session)
 
-		assert len(resultado) == 1
-		prop = resultado[0]
-		assert prop['id'] == '00000000-0000-0000-0000-000000000001'
-		assert prop['titulo'] == 'Casa Test'
-		assert prop['direccion'] == 'Calle 123'
-		assert prop['ciudad'] == 'Miami'
-		assert prop['precio_mensual'] == '$1,500.00'
-		assert prop['habitaciones'] == 3
-		assert prop['banos'] == 2
-		assert prop['area'] == '850 m²'
-		assert prop['estado'] == 'disponible'
-		assert prop['imagen'] == 'https://example.com/img.jpg'
+		assert resultado == [
+			{
+				'id': '00000000-0000-0000-0000-000000000001',
+				'titulo': 'Casa Test',
+				'direccion': 'Calle 123',
+				'ciudad': 'Miami',
+				'precio_mensual': '$1,500.00',
+				'habitaciones': 3,
+				'banos': 2,
+				'area': '850 m²',
+				'estado': 'disponible',
+				'imagen': 'https://example.com/img.jpg',
+				'created_at': '2026-01-01T00:00:00Z',
+			},
+		]
+		mock_listar.assert_awaited_once_with(mock_session)
 
 	@pytest.mark.asyncio
 	async def test_lista_vacia_retorna_lista_vacia(self) -> None:
 		"""
-		Verifica que lista vacía del repo retorna [].
+		Verifica que lista vacía del repo retorna ``[]`` y conserva la
+		propagación de la sesión.
 		"""
 		mock_session = AsyncMock(spec=AsyncSession)
+		mock_listar = AsyncMock(return_value=[])
 
 		with patch(
 			'app.modules.propiedades.service.repo_listar',
-			new=AsyncMock(return_value=[]),
+			new=mock_listar,
 		):
 			resultado = await listar_propiedades(mock_session)
 
 		assert resultado == []
+		mock_listar.assert_awaited_once_with(mock_session)
 
 	@pytest.mark.asyncio
 	async def test_precio_con_decimales_formato_correcto(self) -> None:
 		"""
 		Verifica formato de precio con centavos no redondos.
 		"""
-		mock_prop = AsyncMock()
-		mock_prop.id = 'id'
-		mock_prop.titulo = 'T'
-		mock_prop.direccion = 'D'
-		mock_prop.ciudad = 'C'
-		mock_prop.precio_mensual = Decimal('1234.50')
-		mock_prop.habitaciones = 1
-		mock_prop.banos = 1
-		mock_prop.area = 100
-		mock_prop.estado = AsyncMock(value='rentada')
-		mock_prop.imagen = ''
-		mock_prop.created_at = ''
-
+		mock_prop = _propiedad_fake(
+			id='id',
+			titulo='T',
+			direccion='D',
+			ciudad='C',
+			precio_mensual=Decimal('1234.50'),
+			habitaciones=1,
+			banos=1,
+			area=100,
+			estado='rentada',
+			imagen='',
+			created_at='',
+		)
 		mock_session = AsyncMock(spec=AsyncSession)
+		mock_listar = AsyncMock(return_value=[mock_prop])
 
 		with patch(
 			'app.modules.propiedades.service.repo_listar',
-			new=AsyncMock(return_value=[mock_prop]),
+			new=mock_listar,
 		):
 			resultado = await listar_propiedades(mock_session)
 
 		assert resultado[0]['precio_mensual'] == '$1,234.50'
+		mock_listar.assert_awaited_once_with(mock_session)
+
+	@pytest.mark.asyncio
+	async def test_imagen_none_se_normaliza_a_string_vacio(self) -> None:
+		"""
+		Verifica que ``imagen=None`` se transforma a ``''`` en la salida.
+
+		El servicio usa ``p.imagen if p.imagen else ''`` para activar el
+		placeholder visual cuando la imagen está ausente o es nula.
+		"""
+		mock_prop = _propiedad_fake(imagen=None)
+		mock_session = AsyncMock(spec=AsyncSession)
+		mock_listar = AsyncMock(return_value=[mock_prop])
+
+		with patch(
+			'app.modules.propiedades.service.repo_listar',
+			new=mock_listar,
+		):
+			resultado = await listar_propiedades(mock_session)
+
+		assert resultado[0]['imagen'] == ''
+		mock_listar.assert_awaited_once_with(mock_session)
