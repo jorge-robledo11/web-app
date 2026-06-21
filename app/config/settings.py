@@ -67,6 +67,9 @@ class Settings(BaseSettings):
 	static_url: str = Field(
 		validation_alias=AliasChoices('static_url', 'STATIC_URL'),
 	)
+	session_secret: str = Field(
+		validation_alias=AliasChoices('session_secret', 'SESSION_SECRET'),
+	)
 	paths: PathSettings
 
 	@classmethod

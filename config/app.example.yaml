@@ -7,6 +7,10 @@ database_url: postgresql+asyncpg://realtor_dev:realtor_dev@localhost:5432/realto
 
 static_url: /static
 
+# Generar valor único con: python -c "import secrets; print(secrets.token_urlsafe(32))"
+# Requerido para firma HMAC de cookies flash (spec 007-crear-propiedad).
+session_secret: <placeholder-de-32-bytes-base64>
+
 paths:
   templates_dir: app/templates
   static_dir: app/static

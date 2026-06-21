@@ -1,0 +1,270 @@
+# Contrato: Crear propiedad
+# Feature: 007-crear-propiedad
+# Actualiza: specs/006-pagina-propiedades-cards/contracts/propiedades.yaml
+# Tipo: endpoint-contract
+# Versión: 1.0.0
+
+endpoints:
+  - method: GET
+    path: /propiedades/nueva
+    response_type: HTMLResponse
+    template: crear_propiedad.html
+    handler: app.modules.propiedades.routes.crear_propiedad_form
+    autenticacion_requerida: false
+    descripcion: |
+      Renderiza el formulario de creación de propiedad. Muestra los 6 campos
+      del formulario vacíos, sin errores ni valores previos.
+
+  - method: POST
+    path: /propiedades
+    response_type: RedirectResponse | HTMLResponse
+    status_codes:
+      303: Creación exitosa; redirige a /propiedades con flash cookie.
+      200: Validación fallida o duplicado; re-renderiza el formulario.
+    handler: app.modules.propiedades.routes.crear_propiedad
+    autenticacion_requerida: false
+    descripcion: |
+      Procesa el formulario enviado (application/x-www-form-urlencoded).
+      Valida con PropiedadFormIn, aplica defaults, persiste y redirige.
+
+contexto_get_nueva:
+  request:
+    type: Request
+    source: fastapi
+  form:
+    type: dict[str, str]
+    required: true
+    default: {}
+    description: |
+      Vacío en GET inicial. Cada key es un nombre de campo del formulario
+      (titulo, direccion, precio_mensual, habitaciones, banos, area) y el
+      value es el string crudo que el usuario tipeó (sin procesar).
+  errores:
+    type: dict[str, str]
+    required: true
+    default: {}
+    description: |
+      Errores de validación por campo. La clave especial '__all__' indica
+      error global (duplicado por constraint único).
+
+contexto_post_valido:
+  response:
+    type: RedirectResponse
+    status_code: 303
+    location: /propiedades
+    cookies:
+      - name: flash
+        value_type: string firmada HMAC-SHA256
+        payload_formato: '{"tipo": "success", "mensaje": "..."}'
+        formato_firma: '{base64(json).{hmac_sha256_hex}}'
+        atributos:
+          httponly: true
+          samesite: lax
+          max_age: 60
+          path: /
+        descripcion: |
+          Cookie firmada que el GET /propiedades consume y elimina
+          (one-shot). El payload contiene el tipo y mensaje del flash.
+
+contexto_post_invalido:
+  response:
+    type: HTMLResponse
+    status_code: 200
+    template: crear_propiedad.html
+  contexto:
+    request:
+      type: Request
+    form:
+      type: dict[str, str]
+      description: |
+        Valores crudos del usuario re-poblados en cada campo. Los strings
+        vacíos para campos opcionales (area) se convierten a None antes
+        de pasar a Pydantic.
+    errores:
+      type: dict[str, str]
+      description: |
+        Errores parseados de Pydantic ValidationError. Formato:
+        {nombre_campo: mensaje_pydantic, '__all__': mensaje_global}.
+      claves_especiales:
+        __all__: "Error global (ej. duplicado por constraint único)"
+
+request_body_post:
+  content_type: application/x-www-form-urlencoded
+  campos:
+    - name: titulo
+      type: str
+      required: true
+      constraints: "1 <= len(strip(value)) <= 255"
+      descripcion: Título de la propiedad. Whitespace se trata como vacío.
+    - name: direccion
+      type: str
+      required: true
+      constraints: "1 <= len(strip(value)) <= 255"
+      descripcion: Dirección completa. Whitespace se trata como vacío.
+    - name: precio_mensual
+      type: str  # str en el form, Decimal tras parsing
+      required: true
+      constraints: "> 0; formato libre (entero o decimal)"
+      descripcion: |
+        Se recibe como str para tolerar valores malformados. La ruta
+        intenta Decimal(value); si falla, mantiene "" para que Pydantic
+        genere el error. Sin restricción de 2 decimales en entrada.
+    - name: habitaciones
+      type: str  # str en el form, int tras parsing
+      required: true
+      constraints: "1 <= int(value) <= 20"
+      descripcion: |
+        Rango residencial urbano. Máximo 20 habitaciones.
+    - name: banos
+      type: str  # str en el form, int tras parsing
+      required: true
+      constraints: "1 <= int(value) <= 10"
+      descripcion: |
+        Rango residencial urbano. Máximo 10 baños.
+    - name: area
+      type: str  # str en el form, int | None tras parsing
+      required: false
+      default: None  # string vacío se convierte a None
+      constraints: "int(value) >= 0 si presente"
+      descripcion: |
+        Opcional. Si el form envía "" se convierte a None y Pydantic
+        aplica default 0. Si no parseable como int, mantiene "" para
+        error.
+
+errores_globales_post:
+  - codigo: "duplicado"
+    clave_template: __all__
+    mensaje: "Ya existe una propiedad con ese título y dirección en Miami"
+    causa: |
+      Constraint UNIQUE (titulo, direccion, ciudad) violated. Detectado
+      vía IntegrityError capturada en service.crear_propiedad_desde_formulario().
+    respuesta: 200 con form re-renderizado y errores['__all__'] = mensaje.
+  - codigo: "integrity_other"
+    clave_template: __all__
+    mensaje: "Error al persistir la propiedad. Intente nuevamente."
+    causa: |
+      Otra IntegrityError no relacionada con duplicados. Mitigación:
+      rollback de la sesión y mensaje genérico.
+
+validacion_orden:
+  - "1. FastAPI parsea el body form-encoded."
+  - "2. Ruta recibe cada campo como Annotated[str, Form()] = ''."
+  - "3. Ruta convierte manualmente con try/except:"
+  - "     - Requeridos: si falla, mantener ''."
+  - "     - area: si '', None; si no parseable, ''."
+  - "4. Ruta construye PropiedadFormIn(**datos)."
+  - "5. Pydantic valida y normaliza:"
+  - "     - strip en titulo/direccion (mode='before')."
+  - "     - min_length=1, max_length=255 en strings."
+  - "     - gt=0, ge=1, le=20, le=10, ge=0, default=0 en numéricos."
+  - "6. Si ValidationError: parsear errores a dict[str, str] y re-renderizar."
+  - "7. Si OK: llamar service.crear_propiedad_desde_formulario()."
+  - "8. Si service retorna None (duplicado): errores['__all__'] y re-render."
+  - "9. Si service retorna PropiedadOut: cookie flash + 303 a /propiedades."
+
+campos_template_crear_propiedad:
+  - name: titulo
+    type: input text
+    required: true
+    value_source: form.titulo
+    error_source: errores.titulo
+  - name: direccion
+    type: input text
+    required: true
+    value_source: form.direccion
+    error_source: errores.direccion
+  - name: precio_mensual
+    type: input number step=0.01
+    required: true
+    value_source: form.precio_mensual
+    error_source: errores.precio_mensual
+  - name: habitaciones
+    type: input number min=1 max=20
+    required: true
+    value_source: form.habitaciones
+    error_source: errores.habitaciones
+  - name: banos
+    type: input number min=1 max=10
+    required: true
+    value_source: form.banos
+    error_source: errores.banos
+  - name: area
+    type: input number min=0
+    required: false
+    value_source: form.area
+    error_source: errores.area
+    helper: "Opcional. Si se omite, se usará 0 m²."
+  - name: submit
+    type: button
+    text: "Crear propiedad"
+    class: "formulario-crear__submit"
+  - name: cancelar
+    type: link
+    href: "/propiedades"
+    text: "Cancelar"
+    class: "formulario-crear__cancelar"
+
+boton_navegacion_nueva_propiedad:
+  ubicacion: app/templates/components/_navbar.html
+  selector: .navbar__accion.navbar__accion--primary
+  href: /propiedades/nueva
+  contenido:
+    icono: plus
+    icono_size: 18
+    texto: "Nueva propiedad"
+  atributos:
+    aria-label: "Crear nueva propiedad"
+
+iconos_requeridos:
+  nuevos:
+    - nombre: plus
+      vendoring: app/static/icons/plus.svg
+      origen: Lucide (ISC)
+      size_base: 24
+  todos_existentes: true
+
+governance:
+  visual_impact: |
+    Crea un nuevo template (crear_propiedad.html) que extiende base.html sin
+    modificarlo. Agrega clases CSS nuevas (.formulario-crear*, .navbar__accion*)
+    sin modificar tokens canónicos. Modifica _navbar.html y propiedades.html
+    solo en contenido (no en estructura ni tokens). Vendorea un nuevo icono
+    (plus.svg) sin modificar los 15 existentes.
+  visual_files_created:
+    - app/modules/propiedades/templates/crear_propiedad.html
+    - app/static/icons/plus.svg
+  visual_files_modified:
+    - app/modules/propiedades/templates/propiedades.html  # render de flash
+    - app/templates/components/_navbar.html  # botón nueva propiedad
+    - app/static/css/app.css  # clases .formulario-crear* y .navbar__accion*
+  visual_files_unmodified:
+    - app/templates/base.html
+    - app/templates/components/_sidebar.html
+    - app/static/css/app.css  # secciones existentes (solo adición)
+    - app/static/icons/  # los 15 iconos existentes
+  visual_markers:
+    - "[visual][extension] crear_propiedad.html (nuevo)"
+    - "[visual][extension] plus.svg (nuevo)"
+    - "[visual][extension] propiedades.html (modificación)"
+    - "[visual][extension] _navbar.html (modificación)"
+    - "[visual][extension] app.css (clases nuevas)"
+  requires_visual_trace: false
+  justification: |
+    Ningún token canónico modificado. Todas las extensiones usan tokens
+    existentes. Desviaciones documentadas en Complexity Tracking del plan:
+    flash dentro de block content (no en #flash-zone), helper de cookie
+    firmada en routes.py (YAGNI), session_secret en Settings (cross-cutting).
+
+seguridad:
+  csrf: |
+    No implementado en esta feature. La app no tiene autenticación. Cuando
+    se introduzca auth (spec futura), será obligatorio agregar tokens CSRF
+    al formulario.
+  rate_limiting: "No implementado."
+  validacion: |
+    Whitespace stripping, length constraints, range constraints, default
+    values. Validación de duplicados vía IntegrityError a nivel DB.
+  flash_cookie: |
+    HMAC-SHA256 con secret en config/app.yaml. Cookie httpOnly, samesite=lax,
+    max_age=60. Firma verificada con hmac.compare_digest (timing-safe).
+    Cookie con firma inválida se ignora silenciosamente.

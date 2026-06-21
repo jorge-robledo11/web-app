@@ -111,6 +111,41 @@ class TestPropiedadIn:
 		with pytest.raises(ValidationError):
 			PropiedadIn(**datos)  # type: ignore[arg-type]
 
+	def test_area_acepta_cero(self) -> None:
+		"""
+		PropiedadIn debe aceptar area=0 (ge=0, default=0).
+		"""
+		datos = {
+			'titulo': 'Casa Test',
+			'direccion': 'Calle 123',
+			'ciudad': 'Miami',
+			'precio_mensual': 2500.00,
+			'habitaciones': 2,
+			'banos': 1,
+			'area': 0,
+			'estado': 'disponible',
+			'imagen': 'https://example.com/img.jpg',
+		}
+		prop = PropiedadIn(**datos)  # type: ignore[arg-type]
+		assert prop.area == 0
+
+	def test_area_default_cero(self) -> None:
+		"""
+		PropiedadIn sin area debe usar default 0.
+		"""
+		datos = {
+			'titulo': 'Casa Test',
+			'direccion': 'Calle 123',
+			'ciudad': 'Miami',
+			'precio_mensual': 2500.00,
+			'habitaciones': 2,
+			'banos': 1,
+			'estado': 'disponible',
+			'imagen': 'https://example.com/img.jpg',
+		}
+		prop = PropiedadIn(**datos)  # type: ignore[arg-type]
+		assert prop.area == 0
+
 	def test_estado_tipo_no_soportado(self) -> None:
 		"""
 		Debe rechazar un estado que no es str ni EstadoPropiedad.

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon %}
+
+{% block title %}Nueva propiedad{% endblock %}
+
+{% block content %}
+<h1 class="formulario-crear__titulo">Nueva propiedad</h1>
+
+{% if errores and errores.__all__ %}
+<div class="alerta alerta--danger" role="alert">
+  <span class="alerta__icono">
+    {{ icon("alert-circle", size=20) }}
+  </span>
+  <span class="alerta__mensaje">{{ errores.__all__ }}</span>
+</div>
+{% endif %}
+
+<form method="post" action="/propiedades" class="formulario-crear" novalidate>
+  {% with label="Título", name="titulo", type="text", value=form.titulo|default(""), error=errores.titulo|default(""), required=true %}
+    {% include "components/_form_field.html" %}
+  {% endwith %}
+
+  {% with label="Dirección", name="direccion", type="text", value=form.direccion|default(""), error=errores.direccion|default(""), required=true %}
+    {% include "components/_form_field.html" %}
+  {% endwith %}
+
+  {% with label="Precio mensual (USD)", name="precio_mensual", type="number", value=form.precio_mensual|default(""), error=errores.precio_mensual|default(""), required=true %}
+    {% include "components/_form_field.html" %}
+  {% endwith %}
+
+  <div class="formulario-crear__grupo">
+    {% with label="Habitaciones", name="habitaciones", type="number", value=form.habitaciones|default(""), error=errores.habitaciones|default(""), required=true %}
+      {% include "components/_form_field.html" %}
+    {% endwith %}
+
+    {% with label="Baños", name="banos", type="number", value=form.banos|default(""), error=errores.banos|default(""), required=true %}
+      {% include "components/_form_field.html" %}
+    {% endwith %}
+
+    {% with label="Área (m²)", name="area", type="number", value=form.area|default(""), error=errores.area|default(""), required=false, helper="Opcional. Si se omite, se usará 0 m²." %}
+      {% include "components/_form_field.html" %}
+    {% endwith %}
+  </div>
+
+  <div class="formulario-crear__acciones">
+    <button type="submit" class="formulario-crear__submit">Crear propiedad</button>
+    <a href="/propiedades" class="formulario-crear__cancelar">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

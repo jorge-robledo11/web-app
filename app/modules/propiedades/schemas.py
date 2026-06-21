@@ -9,6 +9,35 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.modules.propiedades.models import EstadoPropiedad
 
 
+class PropiedadFormIn(BaseModel):
+	"""
+	DTO de entrada específico del formulario de creación HTTP.
+
+	Contiene solo los campos que el usuario completa en el formulario.
+	Los defaults de ``ciudad``, ``estado`` e ``imagen`` se aplican en
+	``service.crear_propiedad_desde_formulario``.
+	"""
+
+	model_config = ConfigDict(frozen=True, extra='forbid')
+
+	titulo: str = Field(min_length=1, max_length=255)
+	direccion: str = Field(min_length=1, max_length=255)
+	precio_mensual: Decimal = Field(gt=0)
+	habitaciones: int = Field(ge=1, le=20)
+	banos: int = Field(ge=1, le=10)
+	area: int = Field(ge=0, default=0)
+
+	@field_validator('titulo', 'direccion', mode='before')
+	@classmethod
+	def _strip_whitespace(cls, v: object) -> object:
+		"""
+		Elimina espacios en blanco al inicio y final de strings.
+		"""
+		if isinstance(v, str):
+			return v.strip()
+		return v
+
+
 class PropiedadIn(BaseModel):
 	"""
 	DTO de entrada para crear o actualizar una propiedad.
@@ -22,7 +51,7 @@ class PropiedadIn(BaseModel):
 	precio_mensual: Decimal = Field(gt=0)
 	habitaciones: int = Field(ge=1)
 	banos: int = Field(ge=1)
-	area: int = Field(gt=0)
+	area: int = Field(ge=0, default=0)
 	estado: EstadoPropiedad
 	imagen: str
 

@@ -1,18 +1,20 @@
 <!--
 Informe de impacto de sincronización
-- Cambio de versión: 1.3.2 -> 1.4.0
+- Cambio de versión: 1.4.0 -> 1.5.0
 - Secciones modificadas:
-  - X. Base de datos: eliminada referencia a .env, reemplazada por config/app.yaml
-  - XIII. Estructura: corregido app/config.py → app/config/, app/database.py → app/infra/database.py, .env.example → config/app.example.yaml, agregado app/modules/health/
+  - V. Spec-Driven Development: el mínimo de cada spec pasa de 3 a 7 archivos obligatorios; se agregan data-model.md, contracts/<feature>.yaml, quickstart.md y research.md
 - Secciones agregadas:
   - Ninguna
 - Secciones eliminadas:
   - Ninguna
 - Artefactos relacionados revisados:
-  - AGENTS.md ✅ actualizado
-  - .opencode/instructions/database.instructions.md ✅ actualizado
-  - .opencode/instructions/conventions.instructions.md ✅ actualizado
-  - scripts/dev/db_preflight.py ✅ actualizado
+  - specs/001-bootstrap-proyecto/ ✅ ya contenía los 7 archivos
+  - specs/002-blindar-tokens-visuales/ ✅ ya contenía los 7 archivos
+  - specs/003-redisenar-home/ ✅ ya contenía los 7 archivos
+  - specs/004-propiedades-base/ ✅ ya contenía los 7 archivos
+  - specs/005-dashboard-datos-reales/ ✅ ya contenía los 7 archivos
+  - specs/006-pagina-propiedades-cards/ ✅ ya contenía los 7 archivos
+  - specs/007-crear-propiedad/ ✅ backfilled en la enmienda con los 4 archivos auxiliares
 - Pendientes de seguimiento:
   - Ninguno
 -->
@@ -115,13 +117,43 @@ futura de Spec Kit cambia la ruta generada por sus comandos, deben actualizarse
 solo los documentos derivados o el puntero operativo correspondiente, sin
 modificar la arquitectura del proyecto.
 
-Cada spec debe contener, como mínimo:
+Cada spec debe contener, **todos obligatorios sin excepción**:
 
 ```text
 spec.md
 plan.md
 tasks.md
+data-model.md
+contracts/<feature>.yaml
+quickstart.md
+research.md
 ```
+
+Donde:
+
+* `spec.md` — fuente de verdad funcional de la feature (qué).
+* `plan.md` — decisiones técnicas, fases, contrato de contexto, gobernanza
+  visual y Complexity Tracking (cómo).
+* `tasks.md` — tareas pequeñas, ordenadas, verificables y trazables a
+  requisitos funcionales (cuándo).
+* `data-model.md` — entidades, columnas, índices, migraciones, flujo de datos
+  entre módulos y DTOs Pydantic. Si la spec no introduce cambios al modelo,
+  referenciar el spec del que se hereda y declarar "Sin cambios".
+* `contracts/<feature>.yaml` — contrato formal de los endpoints HTTP expuestos
+  por la feature: método, path, request, response, contexto de template,
+  gobernanza visual y consideraciones de seguridad. El nombre del archivo es
+  el slug de la feature. Formato YAML para permitir parseo programático.
+* `quickstart.md` — pasos manuales reproducibles para validar la feature
+  end-to-end con `curl`, navegador o scripts. Incluye reset completo para
+  entorno limpio.
+* `research.md` — decisiones técnicas investigadas con alternativas
+  evaluadas y fundamento. Las decisiones tomadas en la fase `clarify` se
+  referencian aquí.
+
+Toda spec nueva o retroactiva debe generar los 7 archivos. Ningún archivo es
+opcional. La ausencia de cualquiera de ellos bloquea la transición a
+`implement`. Los archivos pueden tener contenido mínimo (p. ej.
+`data-model.md` con "Sin cambios") pero no pueden estar ausentes.
 
 El orden de implementación lo define el prefijo numérico de cada spec. Toda tarea
 de implementación debe rastrear a un `tasks.md` generado desde la spec.
@@ -594,5 +626,12 @@ explícitamente y seguir la capa de mayor autoridad.
   repositorio: `app/config.py` → `app/config/`, `app/database.py` →
   `app/infra/database.py`, `.env.example` → `config/app.example.yaml`.
   Sincronizados `AGENTS.md`, instrucciones y `db_preflight.py`.
+* **v1.5.0** — El mínimo de cada spec pasa de 3 a 7 archivos obligatorios en la
+  sección V: `data-model.md`, `contracts/<feature>.yaml`, `quickstart.md` y
+  `research.md` se suman a `spec.md`, `plan.md` y `tasks.md`. La regla aplica
+  consistentemente a toda spec nueva (≥ 008) y se hizo backfill de la spec 007
+  en la enmienda. Las specs 001-006 ya contaban con estos archivos por
+  convención previa. Sin cambios al stack, arquitectura ni flujo SDD
+  existente.
 
-**Versión**: 1.4.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-16
+**Versión**: 1.5.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-20

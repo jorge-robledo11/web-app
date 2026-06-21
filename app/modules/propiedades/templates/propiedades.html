@@ -4,6 +4,16 @@
 {% block title %}Propiedades{% endblock %}
 
 {% block content %}
+{# Flash: renderizado dentro de block content porque VTG-005
+   prohíbe modificar base.html. El helper de cookie firmada
+   (HMAC-SHA256) en routes.py escribe y elimina esta cookie
+   one-shot. #}
+{% if flash %}
+  {% with tipo=flash.tipo, mensaje=flash.mensaje %}
+    {% include "components/_alerta.html" %}
+  {% endwith %}
+{% endif %}
+
 <div class="propiedades-header">
   <h1 class="propiedades-header__title">Propiedades</h1>
   <p class="propiedades-header__subtitle">

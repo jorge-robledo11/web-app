@@ -3,12 +3,17 @@
 import logging
 from decimal import Decimal
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.propiedades.models import EstadoPropiedad
 from app.modules.propiedades.repository import crear as repo_crear
 from app.modules.propiedades.repository import listar as repo_listar
-from app.modules.propiedades.schemas import PropiedadIn, PropiedadOut
+from app.modules.propiedades.schemas import (
+	PropiedadFormIn,
+	PropiedadIn,
+	PropiedadOut,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +33,30 @@ def validar_estado(valor: str) -> EstadoPropiedad:
 		) from None
 
 
+def _formatear_url_picsum(ancho: int, alto: int) -> str:
+	"""
+	Construye la URL de picsum.photos con las dimensiones dadas.
+
+	Función helper aislada para facilitar el mocking del path defensivo
+	de ``_generar_url_imagen``.
+	"""
+	return f'https://picsum.photos/{ancho}/{alto}'
+
+
+def _generar_url_imagen(ancho: int = 800, alto: int = 600) -> str:
+	"""
+	Genera una URL de imagen determinista vía picsum.photos.
+
+	Si el formato falla por motivos excepcionales, retorna cadena vacía
+	para activar el placeholder visual del listado.
+	"""
+	try:
+		return _formatear_url_picsum(ancho, alto)
+	except Exception:
+		logger.exception('imagen.generar.fallo')
+		return ''
+
+
 async def crear_propiedad(
 	session: AsyncSession,
 	payload: PropiedadIn,
@@ -42,6 +71,56 @@ async def crear_propiedad(
 	entidad = await repo_crear(session, payload)
 	logger.info(
 		'propiedad.crear.ok',
+		extra={'propiedad_id': str(entidad.id)},
+	)
+	return PropiedadOut.model_validate(entidad)
+
+
+async def crear_propiedad_desde_formulario(
+	session: AsyncSession,
+	form: PropiedadFormIn,
+) -> PropiedadOut | None:
+	"""
+	Crea una propiedad a partir de un formulario HTTP.
+
+	Aplica los defaults que el usuario no completa en el form:
+	- ``ciudad = "Miami"`` (FR-007).
+	- ``estado = EstadoPropiedad.DISPONIBLE`` (FR-006).
+	- ``imagen = _generar_url_imagen()`` (FR-008, FR-009).
+	- ``area = form.area`` (default 0, FR-020).
+
+	Retorna ``None`` cuando el repositorio lanza ``IntegrityError`` por
+	duplicado de la constraint única (titulo, direccion, ciudad). En ese
+	caso la sesión hace rollback y el caller debe interpretar ``None`` como
+	"mostrar error global de duplicado al usuario".
+	"""
+	imagen = _generar_url_imagen()
+	payload = PropiedadIn(
+		titulo=form.titulo,
+		direccion=form.direccion,
+		ciudad='Miami',
+		precio_mensual=form.precio_mensual,
+		habitaciones=form.habitaciones,
+		banos=form.banos,
+		area=form.area,
+		estado=EstadoPropiedad.DISPONIBLE,
+		imagen=imagen,
+	)
+	logger.info(
+		'propiedad.crear_formulario.inicio',
+		extra={'titulo': form.titulo},
+	)
+	try:
+		entidad = await repo_crear(session, payload)
+	except IntegrityError:
+		await session.rollback()
+		logger.warning(
+			'propiedad.crear_formulario.duplicado',
+			extra={'titulo': form.titulo, 'direccion': form.direccion},
+		)
+		return None
+	logger.info(
+		'propiedad.crear_formulario.ok',
 		extra={'propiedad_id': str(entidad.id)},
 	)
 	return PropiedadOut.model_validate(entidad)

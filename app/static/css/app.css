@@ -829,6 +829,88 @@ h3 {
   color: #1e40af;
 }
 
+/* --- Formulario de creación de propiedad --- */
+.formulario-crear {
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.formulario-crear__titulo {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 var(--space-4) 0;
+}
+
+.formulario-crear__grupo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.formulario-crear__grupo .form-field {
+  margin-bottom: 0;
+}
+
+.formulario-crear__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.formulario-crear__submit {
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.formulario-crear__submit:hover {
+  background: var(--color-accent-hover);
+}
+
+.formulario-crear__cancelar {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: color 0.15s;
+}
+
+.formulario-crear__cancelar:hover {
+  color: var(--color-text);
+}
+
+/* --- Botón de acción en navbar --- */
+.navbar__accion {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.navbar__accion--primary {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.navbar__accion--primary:hover {
+  background: var(--color-accent-hover);
+  color: #ffffff;
+}
+
 /* ============ 6. Utilidades ============ */
 .sr-only {
   position: absolute;
@@ -917,6 +999,10 @@ h3 {
   }
 
   .propiedades-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario-crear__grupo {
     grid-template-columns: 1fr;
   }
 }
