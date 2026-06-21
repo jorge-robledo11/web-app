@@ -1,38 +1,38 @@
 <!--
 Informe de impacto de sincronización
-- Cambio de versión: 1.5.0 -> 1.6.0
+- Cambio de versión: 1.6.0 -> 1.7.0
 - Secciones agregadas:
-  - X. Calidad de tests, mutation testing y poda de tests: política explícita de medición
-    de calidad de tests por capacidad de detectar mutaciones; prohíbe tests triviales y
-    duplicados; permite eliminar o fusionar tests de bajo valor con justificación;
-    clasifica sobrevivientes de mutación; declara mutmut como herramienta; mutation
-    testing entra como práctica focalizada, sin meta global de coverage de mutación.
-- Secciones renumeradas:
-  - X. Base de datos -> XI
-  - XI. Async-First -> XII
-  - XII. Frontend y sistema visual -> XIII
-  - XIII. Estructura obligatoria del repositorio -> XIV
-  - XIV. Contratos de dominio -> XV
-  - XV. Complexity Tracking -> XVI
-  - XVI. Jerarquía de autoridad -> XVII
-  - XVII. Gobernanza -> XVIII
-  - XVIII. Historial de versiones -> XIX
+  - X.7 Responsabilidad operativa de métricas de tests: precisa quién opera las
+    métricas de calidad de tests. Declara que la operación es responsabilidad del
+    desarrollador humano. Enumera los targets de Makefile mínimos obligatorios
+    (tests, coverage, mutation, mutation-results, mutation-clean). Lista las
+    prohibiciones explícitas para los agentes de IA (no ejecutar ciclos
+    exploratorios, no cambiar umbrales, no agregar tests artificiales, no eliminar
+    tests por score, no usar score global como objetivo, no marcar
+    `# pragma: no mutate` sin aprobación, no convertir mutation testing en gate
+    obligatorio de CI). Lista las acciones permitidas (proponer tests con
+    evidencia, endurecer asserts, fusionar redundantes, explicar clasificación,
+    documentar decisiones del desarrollador). Reserva al desarrollador la
+    clasificación final, aceptación de mutantes equivalentes, baselines, poda
+    de tests e interpretación de métricas.
 - Secciones modificadas:
-  - IV. Arquitectura: actualizada referencia a "sección XIV" (antes sección XIII).
-  - XIX. Historial de versiones (antes XVIII): agregada entrada v1.6.0; actualizadas
-    menciones previas a "sección XIII" y "sección XIV" donde correspondía.
+  - XIX. Historial de versiones: agregada entrada v1.7.0; versión y fecha de
+    última enmienda actualizadas.
 - Artefactos relacionados revisados:
-  - .opencode/instructions/tests.instructions.md ✅ actualizado en la misma enmienda
-  - pyproject.toml ✅ agregada dependencia de desarrollo `mutmut` y bloque [tool.mutmut]
-  - .gitignore ✅ agregadas salidas de mutmut
-  - Makefile ✅ agregados targets mutation, mutation-browse, mutation-results
-  - scripts/ci/mutation.sh ✅ creado bajo el mismo patrón que test.sh y coverage.sh
-  - docs/testing/mutation-testing.md ✅ creado
-  - docs/testing/test-value-audit.md ✅ creado
+  - .opencode/instructions/tests.instructions.md ✅ agregada subsección
+    «Responsabilidad operativa de métricas de tests» alineada con X.7
+  - docs/testing/mutation-testing.md ✅ agregada sección sobre responsabilidad
+    operativa
+  - Makefile ✅ agregado target `mutation-clean` para limpiar `mutants/`
+- Sin cambios al stack, arquitectura, flujo SDD ni a los principios ya
+  establecidos en la sección X. La nueva subsección X.7 refina la responsabilidad
+  operativa, no modifica la política de calidad de tests ni las reglas de
+  conservación y poda.
 - Pendientes de seguimiento:
   - Baseline de mutation score por definir tras primera ejecución real con
-    `make mutation` sobre `app/modules/`.
-  - Umbrales por slice crítico: aún no definidos; se introducirán de forma evolutiva.
+    `make mutation` sobre `app/modules/` (heredado de v1.6.0).
+  - Umbrales por slice crítico: aún no definidos; se introducirán de forma
+    evolutiva.
 -->
 
 # Constitución del Proyecto Realtor
@@ -526,6 +526,69 @@ orden de preferencia:
 * La cobertura de líneas se mantiene como señal secundaria, con el mismo
   umbral del 80 % declarado en `scripts/ci/coverage.sh`.
 
+### 7. Responsabilidad operativa de métricas de tests
+
+La operación de métricas de calidad de tests es responsabilidad del
+desarrollador humano. Mutation testing es una herramienta de auditoría y
+aprendizaje, no una tarea automática delegable al agente ni una métrica
+vanity.
+
+#### 7.1. Interfaces oficiales
+
+Las interfaces oficiales para ejecutar verificaciones de calidad de tests
+DEBEN permanecer expuestas mediante el `Makefile`. Como mínimo el
+proyecto DEBE conservar targets para:
+
+* Ejecutar la suite de tests.
+* Ejecutar coverage.
+* Ejecutar mutation testing.
+* Consultar resultados de mutation testing.
+* Limpiar artefactos temporales de mutation testing.
+
+#### 7.2. Alcance de responsabilidad de los agentes de IA
+
+Los agentes de IA PUEDEN escribir, modificar o endurecer tests cuando
+una tarea funcional lo requiera, pero NO son responsables de operar,
+optimizar ni perseguir métricas globales de coverage o mutation testing
+salvo instrucción explícita del desarrollador.
+
+#### 7.3. Prohibiciones explícitas para los agentes de IA
+
+Está PROHIBIDO que los agentes de IA, por iniciativa propia:
+
+* Ejecuten ciclos exploratorios de mutation testing para maximizar
+  score.
+* Cambien umbrales, configuración o scope de mutation testing.
+* Agreguen tests artificiales solo para matar mutantes.
+* Eliminen tests únicamente porque no mejoran coverage o mutation
+  score.
+* Usen el mutation score global como objetivo de implementación.
+* Marquen mutantes con `# pragma: no mutate` sin justificación
+  aprobada por el desarrollador.
+* Conviertan mutation testing en gate obligatorio de CI sin
+  aprobación explícita.
+
+#### 7.4. Acciones permitidas para los agentes de IA
+
+Los agentes de IA SÍ PUEDEN:
+
+* Proponer tests mínimos y valiosos cuando el desarrollador
+  proporcione evidencia concreta, como un mutante sobreviviente, bug
+  reproducible, requisito de spec o contrato roto.
+* Endurecer assertions débiles en tests existentes.
+* Fusionar tests redundantes cuando el comportamiento protegido
+  permanezca cubierto.
+* Explicar la clasificación de mutantes sobrevivientes.
+* Documentar decisiones tomadas por el desarrollador sobre mutantes
+  equivalentes, irrelevantes o aceptados.
+
+#### 7.5. Responsabilidad reservada al desarrollador
+
+La clasificación final de sobrevivientes, la aceptación de mutantes
+equivalentes, la actualización de baselines, la poda de tests y la
+interpretación de métricas quedan bajo criterio exclusivo del
+desarrollador humano.
+
 ## XI. Base de datos
 
 * PostgreSQL se ejecuta localmente con Docker o Docker Compose.
@@ -791,5 +854,27 @@ explícitamente y seguir la capa de mayor autoridad.
   tests). Actualizadas `.opencode/instructions/tests.instructions.md`
   para incorporar `mutmut` y la política de poda. Sin cambios al stack,
   arquitectura ni flujo SDD existente.
+* **v1.7.0** — Agregada la subsección X.7 «Responsabilidad operativa de
+  métricas de tests» dentro de la sección X. Se precisa que la operación
+  de métricas de calidad de tests es responsabilidad del desarrollador
+  humano. Se declaran los targets de Makefile mínimos obligatorios:
+  tests, coverage, mutation, mutation-results y mutation-clean. Se
+  enumeran las prohibiciones explícitas para los agentes de IA
+  (prohibido ejecutar ciclos exploratorios para maximizar score, cambiar
+  umbrales o scope por iniciativa propia, agregar tests artificiales,
+  eliminar tests por score, usar mutation score como objetivo, marcar
+  `# pragma: no mutate` sin aprobación del desarrollador y convertir
+  mutation testing en gate obligatorio de CI sin aprobación). Se
+  enumeran las acciones permitidas (proponer tests con evidencia
+  concreta, endurecer asserts débiles, fusionar redundantes, explicar
+  clasificación de sobrevivientes, documentar decisiones del
+  desarrollador). Se reserva al desarrollador la clasificación final de
+  sobrevivientes, la aceptación de mutantes equivalentes, la
+  actualización de baselines, la poda de tests y la interpretación de
+  métricas. Sincronizados `.opencode/instructions/tests.instructions.md`
+  y `docs/testing/mutation-testing.md` con la nueva subsección, y
+  agregado el target `mutation-clean` al `Makefile` para limpiar el
+  directorio `mutants/`. Sin cambios al stack, arquitectura, flujo SDD
+  ni a los principios ya establecidos en la sección X.
 
-**Versión**: 1.6.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-20
+**Versión**: 1.7.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-20

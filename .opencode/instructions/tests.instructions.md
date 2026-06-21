@@ -228,3 +228,77 @@ el resultado es candidato a test de bajo valor. Reglas:
 - Marcar una tarea como terminada si sus tests no pasan.
 - Mocks que reproduzcan la implementación original en lugar de verificar
   el resultado.
+
+## Responsabilidad operativa de métricas de tests
+
+La operación de métricas de calidad de tests es responsabilidad del
+desarrollador humano. Esta instrucción resume operativamente la
+subsección X.7 de la constitución.
+
+### Interfaces oficiales
+
+Las verificaciones de calidad de tests se exponen mediante el `Makefile`.
+Los targets mínimos obligatorios son:
+
+* `make test` — suite de tests.
+* `make coverage` — coverage.
+* `make mutation` — mutation testing.
+* `make mutation-results` — resumen de mutantes.
+* `make mutation-clean` — limpieza de artefactos (`mutants/`).
+
+### Lo que un agente de IA NO debe hacer
+
+Por iniciativa propia, un agente de IA tiene prohibido:
+
+* Ejecutar ciclos exploratorios de mutation testing para maximizar
+  score.
+* Cambiar umbrales, configuración o scope de mutation testing.
+* Agregar tests artificiales solo para matar mutantes.
+* Eliminar tests únicamente porque no mejoran coverage o mutation
+  score.
+* Usar el mutation score global como objetivo de implementación.
+* Marcar mutantes con `# pragma: no mutate` sin justificación
+  aprobada por el desarrollador.
+* Convertir mutation testing en gate obligatorio de CI sin
+  aprobación explícita.
+
+### Lo que un agente de IA sí puede hacer
+
+Un agente de IA sí puede:
+
+* Proponer tests mínimos y valiosos cuando el desarrollador
+  proporcione evidencia concreta, como un mutante sobreviviente, bug
+  reproducible, requisito de spec o contrato roto.
+* Endurecer assertions débiles en tests existentes.
+* Fusionar tests redundantes cuando el comportamiento protegido
+  permanezca cubierto.
+* Explicar la clasificación de mutantes sobrevivientes.
+* Documentar decisiones tomadas por el desarrollador sobre mutantes
+  equivalentes, irrelevantes o aceptados.
+
+### Responsabilidad reservada al desarrollador
+
+Quedan bajo criterio exclusivo del desarrollador humano:
+
+* La clasificación final de mutantes sobrevivientes.
+* La aceptación de mutantes equivalentes.
+* La actualización de baselines.
+* La poda de tests.
+* La interpretación de métricas.
+
+Mutation testing es una herramienta de auditoría y aprendizaje, no una
+tarea automática delegada al agente ni una métrica vanity.
+
+## Límites del agente sobre métricas de tests
+
+No optimices coverage ni mutation score por iniciativa propia.
+
+Cuando trabajes en tests:
+
+* escribe o modifica tests para proteger requisitos, contratos, bugs o comportamiento observable;
+* no agregues tests solo para mejorar métricas;
+* no elimines tests solo porque no matan mutantes;
+* no cambies configuración de mutmut, coverage o Makefile sin instrucción explícita;
+* si el desarrollador entrega un mutante sobreviviente concreto, puedes proponer el test mínimo valioso o clasificarlo como equivalente, irrelevante o de bajo valor.
+
+Las métricas operativas (`make coverage`, `make mutation`, `make mutation-results`) son responsabilidad del desarrollador.

@@ -3,7 +3,7 @@
         db-logs db-status \
         auto-checks manual-checks ci \
         test coverage clean visual-check hooks-install \
-        mutation mutation-browse mutation-results
+        mutation mutation-browse mutation-results mutation-clean
 
 .DEFAULT_GOAL := help
 

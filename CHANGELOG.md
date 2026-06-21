@@ -92,6 +92,15 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Tests unitarios de `PropiedadFormIn`: campos requeridos, strip whitespace, default de `area=0`, rechazo de campos extra (`extra='forbid'`), rangos numéricos (`habitaciones` 1–20, `banos` 1–10) y longitudes máximas (`tests/unit/propiedades/test_schemas_form.py`) (spec 007).
 - Tests unitarios adicionales de `PropiedadIn.area` (`test_area_acepta_cero` y `test_area_default_cero`) verificando que la relajación de `gt=0` a `ge=0, default=0` permite omitir o enviar `area=0` (`tests/unit/propiedades/test_schemas.py`) (spec 007).
 - Tests de integración con Testcontainers para los endpoints `GET /propiedades/nueva` y `POST /propiedades`: render del formulario, persistencia exitosa con cookie flash y redirect 303, lectura de flash con render de alerta y limpieza de cookie, validación con errores inline (título vacío, dirección con solo espacios, `precio_mensual` no numérico o cero, habitaciones y baños fuera de rango, `area` negativo, título de 256 caracteres), manejo de duplicado con alerta global, persistencia con `area=''` → `area=0`, presencia del botón en el navbar de `/` e ignorancia silenciosa de cookies con firma inválida (`tests/integration/propiedades/test_routes_crear.py`) (spec 007).
+- Dependencia de desarrollo `mutmut>=3.6.0` agregada a `pyproject.toml` para mutation testing focalizado sobre `app/modules/`.
+- Bloque `[tool.mutmut]` en `pyproject.toml` con `source_paths = ["app/"]`, `do_not_mutate` cubriendo `app/**/__init__.py`, `app/**/routes.py`, `app/main.py`, `app/infra/**`, `app/config/**` y `app/modules/health/*`, `pytest_add_cli_args_test_selection` apuntando a los 7 archivos unitarios de dashboard y propiedades, `pytest_add_cli_args = ["-o", "pythonpath=mutants/.."]`, `also_copy = ["config/"]`, `max_stack_depth = 8` y `mutate_only_covered_lines = true`.
+- Script `scripts/ci/mutation.sh` que ejecuta `uv run pytest -q` y luego `uv run mutmut run`, con guarda `set -euo pipefail` y rutas resueltas desde el repositorio (`mutants/` ignorado por git).
+- Targets de Makefile para mutation testing: `mutation` (corre `scripts/ci/mutation.sh`), `mutation-browse` (`uv run mutmut browse`), `mutation-results` (`uv run mutmut results`), `mutation-estimates` (`uv run mutmut print-time-estimates`) y `mutation-clean` (`rm -rf mutants`).
+- Sección X «Calidad de tests, mutation testing y poda de tests» en la constitución: declara `mutmut` como herramienta oficial, define mutation testing como práctica focalizada sin meta global de coverage de mutación, prohíbe tests triviales y duplicados, permite eliminar o fusionar tests de bajo valor con justificación, y clasifica sobrevivientes de mutación.
+- Subsección X.7 «Responsabilidad operativa de métricas de tests» en la constitución: precisa que la operación de métricas de calidad de tests es responsabilidad del desarrollador humano, enumera los targets de Makefile mínimos obligatorios (`test`, `coverage`, `mutation`, `mutation-results`, `mutation-clean`), las prohibiciones explícitas para los agentes de IA (sin ciclos exploratorios para maximizar score, sin cambios de umbrales o scope por iniciativa propia, sin tests artificiales, sin eliminación por score, sin `# pragma: no mutate` sin aprobación, sin mutation testing como gate obligatorio de CI), las acciones permitidas (proponer tests con evidencia concreta, endurecer asserts, fusionar redundantes, explicar clasificación, documentar decisiones del desarrollador) y la responsabilidad reservada al desarrollador sobre clasificación final, baselines, poda e interpretación.
+- Documentación `docs/testing/mutation-testing.md`: guía de uso de mutmut con principios, herramientas, flujo recomendado, clasificación de sobrevivientes, política de conservación y poda, umbrales y cobertura, y responsabilidad operativa.
+- Documentación `docs/testing/test-value-audit.md`: auditoría inicial del valor de los tests existentes con tabla de clasificación por archivo/módulo, cobertura de mutantes, limitaciones detectadas y decisiones de conservación o poda.
+- Entrada `mutants/` en `.gitignore`, `.graphifyignore` y `.repomixignore` para excluir artefactos generados por mutmut (mutantes y resultados en `mutants/mutmut-stats.json`).
 
 ### Changed
 
@@ -145,6 +154,28 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Constitución del proyecto actualizada a v1.5.0 (enmienda MINOR): la sección V «Spec-Driven Development» ahora exige 7 archivos obligatorios por spec — `spec.md`, `plan.md`, `tasks.md`, `data-model.md`, `contracts/<feature>.yaml`, `quickstart.md` y `research.md` — todos sin excepción; los archivos pueden tener contenido mínimo pero no pueden estar ausentes para permitir la transición a `implement`. Se hizo backfill de la spec 007 con los 4 archivos auxiliares en la propia enmienda; las specs 001–006 ya contaban con estos archivos por convención previa (spec 007).
 - `AGENTS.md` sincronizado: el bloque `SPECKIT START` apunta ahora a `specs/007-crear-propiedad/plan.md` como plan activo de la feature en curso (spec 007).
 - `.specify/feature.json` actualizado: el campo `feature_directory` apunta ahora a `specs/007-crear-propiedad/` para que los prompts de Spec Kit operen sobre el directorio correcto (spec 007).
+- Constitución del proyecto actualizada a v1.6.0 (enmienda MINOR): secciones renumeradas X→XI, XI→XII, XII→XIII, XIII→XIV, XIV→XV, XV→XVI, XVI→XVII, XVII→XVIII y XVIII→XIX para abrir espacio a la nueva sección X; introducida la sección X «Calidad de tests, mutation testing y poda de tests» con declaración de `mutmut` como herramienta oficial, mutation testing como práctica focalizada sin meta global de coverage de mutación, política de conservación y poda (X.4), y prohibición de tests triviales o duplicados; referencia interna de la sección IV actualizada de «sección XIII» a «sección XIV».
+- Constitución del proyecto actualizada a v1.7.0 (enmienda MINOR): agregada la subsección X.7 «Responsabilidad operativa de métricas de tests» dentro de la sección X, declarando que la operación de métricas de calidad de tests es responsabilidad del desarrollador humano; enumera las interfaces oficiales del Makefile, las prohibiciones explícitas para los agentes de IA, las acciones permitidas y la responsabilidad reservada al desarrollador; sincronizados `.opencode/instructions/tests.instructions.md` y `docs/testing/mutation-testing.md` con la nueva subsección; agregado el target `mutation-clean` al `Makefile`.
+- Referencias cruzadas a «sección XII» (Frontend y sistema visual) actualizadas a «sección XIII» en `AGENTS.md`, `.opencode/instructions/frontend.instructions.md` y `.specify/templates/spec-template.md`, alineadas con la renumeración constitucional v1.6.0.
+- `.opencode/instructions/tests.instructions.md` ahora cubre `mutmut` como herramienta oficial, el flujo de mutation testing focalizado (suite verde → `uv run mutmut run` → revisión con `make mutation-results`), la política de conservación y poda de la sección X.4, la responsabilidad operativa de la subsección X.7 y los límites del agente sobre coverage y mutation score (prohibido optimizar métricas por iniciativa propia; permitidos solo propuestas de tests con evidencia concreta del desarrollador).
+- `docs/testing/mutation-testing.md` ahora incluye la sección «Responsabilidad operativa» alineada con X.7: tabla de targets oficiales del Makefile (`test`, `coverage`, `mutation`, `mutation-results`, `mutation-clean`), prohibiciones para agentes de IA, acciones permitidas y responsabilidad reservada al desarrollador.
+
+### Deprecated
+
+- Sin entradas en esta versión.
+
+### Removed
+
+- Script `sync-agent-models.sh` y archivo `config/models.yaml`, de uso transitorio durante la configuración inicial de agentes.
+- Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
+- Archivo `.repomixignore` eliminado y sus reglas de exclusión migradas a `.gitignore`.
+- Archivo `tests/unit/test_dashboard.py` removido: dependía de PostgreSQL como test unitario; reemplazado por tests unitarios con mocks en `tests/unit/dashboard/test_routes.py` y tests de integración dedicados.
+- Archivos `app/config.py` y `app/database.py` eliminados; reemplazados por `app/config/` (módulo) y `app/infra/database.py`.
+- Archivos `.env`, `.env.example` y `.env.*.local` removidos del repositorio y del `.gitignore`; `config/app.yaml` es la fuente única de configuración.
+- Función `_imagen_determinista()` y `import hashlib` del script de seed; las imágenes ya no se generan con hash MD5 (spec 006).
+- Llamada a `picsum.photos` en el seed; reemplazada por URLs explícitas en cada propiedad.
+- Estilos inline y manipulación directa de `style.display` en `_card_propiedad.html`.
+- `scripts/dev/backend.sh` eliminado al consolidarse en `scripts/dev/server.sh`.
 
 ### Fixed
 
@@ -167,23 +198,11 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Sidebar: corregido el estado activo que antes usaba `sidebar__item--active` fijo en Dashboard; ahora se aplica condicionalmente según la ruta.
 - Validación del formulario de creación: los campos numéricos `precio_mensual`, `habitaciones` y `banos` ahora se reciben como `str` con default `""` en la firma del endpoint y se convierten manualmente con `try/except` dentro de `_convertir_form_numericos()`; en caso de fallo se mantiene el string vacío para que Pydantic genere el error específico del campo, evitando respuestas 422 de FastAPI cuando el form envía valores vacíos o malformados (spec 007).
 - Validación del formulario de creación: el campo opcional `area` se trata como `0` cuando está vacío en lugar de propagarse como `None` o string vacío, ya que Pydantic v2 rechaza `None` para campos tipados como `int` aunque tengan default; los valores no parseables se mantienen como string para que Pydantic los rechace (spec 007).
+- Fusión de dos tests duplicados en `tests/unit/propiedades/test_models.py`: `test_cuatro_valores` (verificaba `len(EstadoPropiedad) == 4`) y `test_valores_esperados` (verificaba el conjunto exacto de 4 valores) se consolidan en un único `test_catalogo_tiene_cuatro_valores_esperados` que verifica el conjunto de valores, satisfaciendo simultáneamente ambas aserciones. La fusión cumple la sección X.4.2 de la constitución: cobertura duplicada sobre el mismo objeto, sin pérdida de protección observable.
 
 ### Security
 
 - Mensajes flash post-creación implementados con cookie HMAC-SHA256 firmada por `session_secret` de `config/app.yaml`: payload serializado como `{base64(json)}.{hmac_hex}`, atributos `httponly=True`, `samesite='lax'`, `max_age=60`, `path='/'`; la verificación usa `hmac.compare_digest` (timing-safe) y descarta silenciosamente las cookies con firma inválida, formato incorrecto o JSON malformado sin exponer información (spec 007).
 - Sin protección CSRF añadida en esta spec: la aplicación aún no tiene autenticación y la creación de propiedades es de acceso libre; la introducción de CSRF queda explícitamente pendiente para la spec que introduzca autenticación (spec 007).
 
-### Removed
-
-- Script `sync-agent-models.sh` y archivo `config/models.yaml`, de uso transitorio durante la configuración inicial de agentes.
-- Buffer técnico `.changelog-pending.md` y directorio `docs/context/`: el flujo de changelog ahora es directo (hook → recordatorio → agente cronista → `CHANGELOG.md`).
-- Archivo `.repomixignore` eliminado y sus reglas de exclusión migradas a `.gitignore`.
-- Archivo `tests/unit/test_dashboard.py` removido: dependía de PostgreSQL como test unitario; reemplazado por tests unitarios con mocks en `tests/unit/dashboard/test_routes.py` y tests de integración dedicados.
-- Archivos `app/config.py` y `app/database.py` eliminados; reemplazados por `app/config/` (módulo) y `app/infra/database.py`.
-- Archivos `.env`, `.env.example` y `.env.*.local` removidos del repositorio y del `.gitignore`; `config/app.yaml` es la fuente única de configuración.
-- Función `_imagen_determinista()` y `import hashlib` del script de seed; las imágenes ya no se generan con hash MD5 (spec 006).
-- Llamada a `picsum.photos` en el seed; reemplazada por URLs explícitas en cada propiedad.
-- Estilos inline y manipulación directa de `style.display` en `_card_propiedad.html`.
-- `scripts/dev/backend.sh` eliminado al consolidarse en `scripts/dev/server.sh`.
-
-<!-- changelog:last-processed-commit=43ed9b4b359b8cd93a84a680ab42ade72a5ac3ac -->
+<!-- changelog:last-processed-commit=a22554d62271d58c239cb5118711ed554a9a71d9 -->

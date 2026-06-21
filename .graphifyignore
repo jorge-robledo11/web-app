@@ -13,6 +13,7 @@ build/
 coverage/
 htmlcov/
 graphify-out/
+mutants/
 
 # Snapshots generados
 repo-state*.xml

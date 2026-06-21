@@ -231,3 +231,79 @@ aplicación de formas que mutation testing no detecta.
 
 La sección X.4.1 de la constitución declara explícitamente estos casos
 como motivos válidos para conservar un test aunque no mate mutantes.
+
+## Responsabilidad operativa
+
+La operación de métricas de calidad de tests es responsabilidad del
+desarrollador humano. Mutation testing es una herramienta de auditoría
+y aprendizaje, no una tarea automática delegable al agente ni una
+métrica vanity. Esta sección resume operativamente la subsección X.7
+de la constitución.
+
+### Interfaces oficiales vía Makefile
+
+Los targets mínimos obligatorios para operar las verificaciones de
+calidad de tests son:
+
+| Target                | Propósito                                              |
+|-----------------------|--------------------------------------------------------|
+| `make test`           | Ejecutar la suite de tests.                            |
+| `make coverage`       | Ejecutar tests con coverage.                          |
+| `make mutation`       | Ejecutar mutation testing focalizado con mutmut.       |
+| `make mutation-results` | Consultar resumen de mutantes (vivos, muertos).      |
+| `make mutation-clean` | Limpiar artefactos temporales (`mutants/`).            |
+
+Adicionalmente, `make mutation-browse` y `make mutation-estimates` son
+interfaces de exploración opcionales.
+
+### Lo que un agente de IA NO debe hacer
+
+Por iniciativa propia, un agente de IA tiene prohibido:
+
+* Ejecutar ciclos exploratorios de mutation testing para maximizar
+  score.
+* Cambiar umbrales, configuración o scope de mutation testing.
+* Agregar tests artificiales solo para matar mutantes.
+* Eliminar tests únicamente porque no mejoran coverage o mutation
+  score.
+* Usar el mutation score global como objetivo de implementación.
+* Marcar mutantes con `# pragma: no mutate` sin justificación
+  aprobada por el desarrollador.
+* Convertir mutation testing en gate obligatorio de CI sin
+  aprobación explícita.
+
+### Lo que un agente de IA sí puede hacer
+
+Un agente de IA sí puede:
+
+* Proponer tests mínimos y valiosos cuando el desarrollador
+  proporcione evidencia concreta, como un mutante sobreviviente, bug
+  reproducible, requisito de spec o contrato roto.
+* Endurecer assertions débiles en tests existentes.
+* Fusionar tests redundantes cuando el comportamiento protegido
+  permanezca cubierto.
+* Explicar la clasificación de mutantes sobrevivientes.
+* Documentar decisiones tomadas por el desarrollador sobre mutantes
+  equivalentes, irrelevantes o aceptados.
+
+### Responsabilidad reservada al desarrollador
+
+Quedan bajo criterio exclusivo del desarrollador humano:
+
+* La clasificación final de mutantes sobrevivientes.
+* La aceptación de mutantes equivalentes.
+* La actualización de baselines.
+* La poda de tests.
+* La interpretación de métricas.
+
+La política completa (incluyendo los criterios de conservación y poda
+de la sección X.4 y la tabla de clasificación de sobrevivientes de la
+sección X.3) está en `.specify/memory/constitution.md`.
+
+## Responsabilidad operativa
+
+El desarrollador opera mutation testing mediante los targets del `Makefile`.
+
+Los agentes de IA pueden ayudar a interpretar resultados o proponer tests concretos a partir de evidencia proporcionada por el desarrollador, pero no deben ejecutar ciclos de optimización de mutation score ni modificar el scope de mutmut sin instrucción explícita.
+
+La decisión de aceptar, justificar, excluir o corregir mutantes sobrevivientes corresponde al desarrollador.

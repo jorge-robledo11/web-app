@@ -3,7 +3,6 @@ description: >
   Audita y renombra commits locales con mensajes mejorables siguiendo
   Conventional Commits. Optimizado para ser rápido: calcula una base segura,
   audita solo commits locales y usa un único rebase no interactivo.
-mode: subagent
 permission:
 read: allow
 edit: allow

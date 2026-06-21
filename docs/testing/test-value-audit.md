@@ -258,13 +258,29 @@ política de conservación y poda de la sección X.4.
   condiciones simultáneamente. La auditoría cuantitativa (con
   `make mutation`) puede revelar otros candidatos.
 
-## Pendientes
+## Baseline mutmut inicial
 
-1. Ejecutar `make mutation` sobre `app/modules/propiedades/` para
-   obtener el primer baseline cuantitativo.
-2. Clasificar cada mutante sobreviviente según la sección X.3.
-3. Si la suite crece o se introducen nuevos módulos, repetir la
-   auditoría y actualizar este documento.
-4. Considerar introducir un umbral de mutation score por slice
-   (`app/modules/propiedades/service.py` como primer candidato) una vez
-   que haya baseline.
+Resultado:
+
+- Mutantes evaluados: 341
+- Matados: 313
+- Sobrevivientes: 28
+- Score aproximado: 91.8 %
+
+Clasificación de sobrevivientes:
+
+- 27 sobrevivientes corresponden a mutaciones de logging (`logger.info`,
+  `logger.warning`, `logger.exception` y sus `extra`). Se aceptan como
+  mutaciones irrelevantes para comportamiento observable en esta iteración.
+- 1 sobreviviente elimina `ciudad='Miami'` en
+  `crear_propiedad_desde_formulario`. Se clasifica como mutante equivalente
+  porque `PropiedadIn` mantiene el mismo default observable. Se conserva el
+  código explícito por trazabilidad con spec 007.
+- El problema de mutmut + Pydantic v2 + Decimal fue mitigado en tests de formulario usando inputs tipo string y assertions estables.
+- El baseline cuantitativo inicial ya existe para el scope unitario actual: 341 mutantes evaluados, 313 matados, 28 sobrevivientes, score aproximado 91.8%.
+- Los 28 sobrevivientes actuales fueron clasificados como logging operacional o mutante equivalente/de bajo valor funcional.
+
+Decisión:
+
+No se agregan tests adicionales para logs. No se persigue 100% mutation score.
+El baseline queda aceptado para el scope unitario actual.

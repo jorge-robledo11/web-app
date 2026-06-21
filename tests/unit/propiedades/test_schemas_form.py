@@ -1,6 +1,5 @@
 """Tests unitarios del DTO de entrada de formulario PropiedadFormIn."""
 
-
 import pytest
 from pydantic import ValidationError
 

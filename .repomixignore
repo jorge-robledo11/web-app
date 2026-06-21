@@ -16,6 +16,7 @@ __pycache__/
 .coverage
 coverage.xml
 htmlcov/
+mutants/
 
 # Artefactos de build/empaquetado
 build/
