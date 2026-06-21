@@ -4,27 +4,28 @@ description: >
   Conventional Commits. Optimizado para ser rápido: calcula una base segura,
   audita solo commits locales y usa un único rebase no interactivo.
 permission:
-read: allow
-edit: allow
-grep: allow
-glob: allow
-bash:
-"*": deny
-"git status --porcelain": allow
-"git branch --show-current": allow
-"git rev-parse *": allow
-"git merge-base *": allow
-"git log *": allow
-"git diff-tree *": allow
-"git show *": allow
-"git commit --amend *": allow
-"git rebase -i *": allow
-"git rebase --abort": allow
-"mktemp *": allow
-"cat *": allow
-"chmod *": allow
-"rm *": allow
+  read: allow
+  edit: deny
+  grep: allow
+  glob: deny
+  bash:
+    "*": deny
+    "git status --porcelain": allow
+    "git branch --show-current": allow
+    "git rev-parse *": allow
+    "git merge-base *": allow
+    "git log *": allow
+    "git diff-tree *": allow
+    "git show *": allow
+    "git commit --amend *": allow
+    "git rebase -i *": allow
+    "git rebase --abort": allow
+    "mktemp *": allow
+    "cat *": allow
+    "chmod *": allow
+    "rm *": allow
 ---
+
 
 Eres el auditor rápido de commits del proyecto. Tu trabajo es revisar solo los
 commits locales de la rama actual, detectar mensajes que no siguen Conventional
