@@ -71,6 +71,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Tests de integración del endpoint `GET /propiedades`: respuesta 200 con layout, renderizado de 10 cards del seed, estructura de cards (media/body/footer), imágenes explícitas, ausencia de estilos inline, estado vacío, placeholder de imagen, sidebar activo, breadcrumb dinámico y 7 items de navegación separados (`tests/integration/propiedades/test_routes.py`) (spec 006).
 - Tests del seed: verificación de ausencia de `hashlib`/`picsum.photos`, imagen explícita por propiedad, persistencia de imágenes en BD y migración en `ON CONFLICT` (`tests/integration/propiedades/test_seed.py`) (spec 006).
 - Artefactos completos de spec 006 en `specs/006-pagina-propiedades-cards/`: spec, plan, tasks, report, research, data-model, quickstart, contratos YAML y checklist de requisitos.
+- Siete prompts de Spec Kit para spec 007-crear-propiedad (`007-crear-propiedad.specify`, `.clarify`, `.plan`, `.analyze`, `.fix-report`, `.tasks` y `.implement`) en `.opencode/prompts/`, con frontmatter estandarizado y referencias cruzadas a las fases del flujo (spec 007).
+- Grafo de conocimiento del repositorio con Graphify: vendoreado en `.opencode/vendor/graphify/` (plugin y skill), comandos `graphify`, `graphify-query`, `graphify-path` y `graphify-explain` registrados en `.opencode/commands/`, plugin añadido a `opencode.json`, archivo `.graphifyignore` con exclusiones para el grafo y artefactos generados en `graphify-out/` (`graph.json`, `graph.html`, `GRAPH_REPORT.md`, `manifest.json`, `cost.json`).
 
 ### Changed
 
@@ -109,6 +111,14 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Navbar: breadcrumb dinámico que refleja la sección actual (`Inicio / Propiedades` en `/propiedades`, `Inicio / Dashboard` en `/`).
 - Seed de propiedades: URLs de imágenes reemplazadas de hash MD5 determinista a URLs explícitas curadas de Unsplash con contenido inmobiliario real (apartamentos, fachadas, condominios, interiores, casas/villas).
 - Import de `settings` en seed corregido: migrado de `settings.DATABASE_URL` a `get_settings().database_url`.
+- Prompts de Spec Kit de specs 001-006 renombrados: extensión `.spec.prompt.md` → `.specify.prompt.md`, con los campos `name:` y `usage:` del frontmatter actualizados para reflejar la nueva ruta del archivo.
+- Sección 0 de `frontend.instructions.md` (tokens visuales canónicos) ampliada con dos patrones nuevos: navegación dinámica (estado activo del sidebar y breadcrumb del navbar calculados desde `request.url.path`) y fallback de imagen en cards (visibilidad y placeholder controlados exclusivamente por clases CSS). Eliminada la excepción que permitía `style="display:none"` como estado inicial HTMX. Cambios trazados como `[visual][extension]` en `tasks.md` de spec 006.
+- `plan.md` y `tasks.md` de spec 006 actualizados: marcadores `[visual][extension]` añadidos para `_sidebar.html`, `_navbar.html` y `frontend.instructions.md`; añadida la tarea T5.2 para el sidebar/navbar dinámico y la actualización de instrucciones; tareas T0–T8 marcadas como completadas.
+- Comando de desarrollo renombrado: target `backend` del Makefile → `server`; `scripts/dev/backend.sh` reemplazado por `scripts/dev/server.sh` (sin flag `--reload`).
+- FastAPI actualizado de 0.136.3 a 0.138.0 en `pyproject.toml` y `uv.lock`.
+- `AGENTS.md` ampliado con la sección `graphify` que documenta el grafo de conocimiento del repo: cuándo usarlo, comandos disponibles (`query`, `path`, `explain`), reglas de omisión, manejo de API keys y notas de integración SDD.
+- `.repomixignore` ajustado: `.opencode/` permanece excluido pero se reabren `.opencode/prompts/` y `.opencode/instructions/` para que repomix incluya esos artefactos en el contexto de IA.
+- `.gitignore` reorganizado con secciones comentadas por categoría; entrada `graphify-out/` añadida para no versionar la salida del grafo de Graphify.
 
 ### Fixed
 
@@ -141,5 +151,6 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/) y est
 - Función `_imagen_determinista()` y `import hashlib` del script de seed; las imágenes ya no se generan con hash MD5 (spec 006).
 - Llamada a `picsum.photos` en el seed; reemplazada por URLs explícitas en cada propiedad.
 - Estilos inline y manipulación directa de `style.display` en `_card_propiedad.html`.
+- `scripts/dev/backend.sh` eliminado al consolidarse en `scripts/dev/server.sh`.
 
-<!-- changelog:last-processed-commit=d856c3ccadf0c0a9260a02677c2a98d621a664bf -->
+<!-- changelog:last-processed-commit=a3e3c9f3e00193439cb546c4c2b03ced268757e7 -->

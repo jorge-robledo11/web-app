@@ -4,7 +4,6 @@ description: >
   Funciona en cualquier rama. Usa amend para HEAD y rebase no interactivo para
   commits históricos locales.
 mode: subagent
-model: opencode-go/deepseek-v4-flash
 permission:
   read: allow
   edit: allow
