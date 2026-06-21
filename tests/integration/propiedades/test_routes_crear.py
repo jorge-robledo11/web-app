@@ -11,13 +11,17 @@ from tests.integration.conftest import seed_ok, setup_db
 
 
 def _setup(postgres_url: str) -> None:
-	"""Aplica alembic y seed validando returncode."""
+	"""
+	Aplica alembic y seed validando returncode.
+	"""
 	setup_db(postgres_url)
 	seed_ok(postgres_url)
 
 
 def _override_session(async_session: AsyncSession) -> None:
-	"""Inyecta la sesión de test en la app."""
+	"""
+	Inyecta la sesión de test en la app.
+	"""
 
 	async def _dep() -> AsyncSession:
 		return async_session
@@ -27,7 +31,9 @@ def _override_session(async_session: AsyncSession) -> None:
 
 @pytest.fixture(autouse=True)
 def _clean_overrides() -> None:
-	"""Limpia dependency_overrides después de cada test."""
+	"""
+	Limpia dependency_overrides después de cada test.
+	"""
 	yield
 	app.dependency_overrides.clear()
 
@@ -37,7 +43,9 @@ async def test_get_nueva_retorna_200_con_formulario(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""GET /propiedades/nueva debe retornar 200 con el formulario."""
+	"""
+	GET /propiedades/nueva debe retornar 200 con el formulario.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -62,7 +70,9 @@ async def test_post_valido_redirige_303_y_setea_flash(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con datos válidos redirige 303 a /propiedades y setea cookie flash."""
+	"""
+	POST con datos válidos redirige 303 a /propiedades y setea cookie flash.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -90,7 +100,9 @@ async def test_get_propiedades_con_flash_valido_renderiza_y_limpia_cookie(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""GET /propiedades con cookie flash válida debe renderizar la alerta y limpiar."""
+	"""
+	GET /propiedades con cookie flash válida debe renderizar la alerta y limpiar.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -123,7 +135,9 @@ async def test_post_titulo_vacio_re_renderiza_con_error_inline(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con titulo='' debe re-renderizar con error inline."""
+	"""
+	POST con titulo='' debe re-renderizar con error inline.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -153,7 +167,9 @@ async def test_post_direccion_solo_espacios_rechaza(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con direccion='   ' debe rechazarse."""
+	"""
+	POST con direccion='   ' debe rechazarse.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -179,7 +195,9 @@ async def test_post_precio_mensual_no_numerico_rechaza(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con precio_mensual='abc' debe rechazarse."""
+	"""
+	POST con precio_mensual='abc' debe rechazarse.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -207,7 +225,9 @@ async def test_post_precio_mensual_menor_o_igual_cero_rechaza(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con precio_mensual='0' o negativo debe rechazarse."""
+	"""
+	POST con precio_mensual='0' o negativo debe rechazarse.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -233,7 +253,9 @@ async def test_post_habitaciones_fuera_rango_rechaza(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con habitaciones='25' debe rechazarse."""
+	"""
+	POST con habitaciones='25' debe rechazarse.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -261,7 +283,9 @@ async def test_post_banos_fuera_rango_rechaza(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con banos='11' debe rechazarse."""
+	"""
+	POST con banos='11' debe rechazarse.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -289,7 +313,9 @@ async def test_post_area_vacio_persiste_con_cero(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con area='' debe persistir la propiedad con area=0."""
+	"""
+	POST con area='' debe persistir la propiedad con area=0.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -321,7 +347,9 @@ async def test_post_area_negativo_rechaza(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con area='-5' debe rechazarse."""
+	"""
+	POST con area='-5' debe rechazarse.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -348,7 +376,9 @@ async def test_post_titulo_256_caracteres_rechaza(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con titulo de 256 chars debe rechazarse (max_length=255)."""
+	"""
+	POST con titulo de 256 chars debe rechazarse (max_length=255).
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -374,7 +404,9 @@ async def test_post_duplicado_retorna_error_global(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""POST con duplicado re-renderiza con error global."""
+	"""
+	POST con duplicado re-renderiza con error global.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -414,7 +446,9 @@ async def test_get_root_navbar_contiene_enlace_nueva_propiedad(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""GET / debe contener el enlace /propiedades/nueva en el navbar."""
+	"""
+	GET / debe contener el enlace /propiedades/nueva en el navbar.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 
@@ -434,7 +468,9 @@ async def test_cookie_flash_firma_invalida_se_ignora_silenciosamente(
 	postgres_url: str,
 	async_session: AsyncSession,
 ) -> None:
-	"""GET con cookie de flash con firma inválida debe ignorar la cookie."""
+	"""
+	GET con cookie de flash con firma inválida debe ignorar la cookie.
+	"""
 	_setup(postgres_url)
 	_override_session(async_session)
 

@@ -19,15 +19,9 @@ class TestEstadoPropiedad:
 		"""
 		assert issubclass(EstadoPropiedad, enum.StrEnum)
 
-	def test_cuatro_valores(self) -> None:
+	def test_catalogo_tiene_cuatro_valores_esperados(self) -> None:
 		"""
-		Debe tener exactamente 4 valores.
-		"""
-		assert len(EstadoPropiedad) == 4
-
-	def test_valores_esperados(self) -> None:
-		"""
-		Debe contener los 4 estados del catálogo.
+		El catálogo debe contener exactamente los 4 estados esperados.
 		"""
 		valores = {e.value for e in EstadoPropiedad}
 		assert valores == {'disponible', 'rentada', 'mantenimiento', 'inactiva'}

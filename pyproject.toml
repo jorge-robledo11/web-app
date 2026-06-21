@@ -15,16 +15,17 @@ dependencies = [
     "python-multipart>=0.0.18,<1.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "pytest>=8.4.2",
-    "pytest-cov>=7.1.0",
-    "pytest-asyncio>=0.24,<1.0",
-    "testcontainers>=4.0,<5.0",
     "httpx>=0.27,<1.0",
-    "pre-commit>=4.6.0",
-    "ruff>=0.15.16,<1.0",
+    "mutmut>=3.6.0",
     "mypy>=1.14,<2.0",
+    "pre-commit>=4.6.0",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=0.24,<1.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.16,<1.0",
+    "testcontainers>=4.0,<5.0",
 ]
 
 [tool.ruff]
@@ -58,3 +59,19 @@ testpaths = ["tests"]
 [tool.pydocstyle]
 convention = "google"
 add-ignore = ["D104", "D107", "D200", "D203", "D212", "D413"]
+
+[tool.mutmut]
+source_paths = ["app/"]
+do_not_mutate = [
+    "app/**/__init__.py",
+    "app/**/routes.py",
+    "app/config/**",
+    "app/infra/**",
+    "app/main.py",
+    "app/modules/health/*",
+]
+pytest_add_cli_args_test_selection = ["tests/unit/"]
+pytest_add_cli_args = ["-o", "pythonpath=mutants/.."]
+also_copy = ["config/"]
+max_stack_depth = 8
+mutate_only_covered_lines = true

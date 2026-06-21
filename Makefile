@@ -2,7 +2,8 @@
         db-up db-down db-reset db-migrate db-create \
         db-logs db-status \
         auto-checks manual-checks ci \
-        test coverage clean visual-check hooks-install
+        test coverage clean visual-check hooks-install \
+        mutation mutation-browse mutation-results
 
 .DEFAULT_GOAL := help
 
@@ -82,3 +83,16 @@ hooks-install: ## Instala hooks Git del proyecto
 
 visual-check: ## Audita trazabilidad visual de la feature activa
 	bash scripts/tools/check-visual-trace.sh
+
+# ╔══════════════════════════════════════════╗
+# ║          MUTATION TESTING                ║
+# ╚══════════════════════════════════════════╝
+
+mutation: ## Ejecuta mutation testing focalizado con mutmut
+	bash scripts/ci/mutation.sh
+
+mutation-browse: ## Abre la UI textual de mutmut para revisar mutantes
+	uv run mutmut browse
+
+mutation-results: ## Muestra el resumen de mutantes (vivos, muertos, equivalentes)
+	uv run mutmut results

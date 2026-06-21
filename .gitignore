@@ -70,3 +70,10 @@ config/app.yaml
 # Graphify
 # ===========================================================
 graphify-out/
+
+# ===========================================================
+# Mutmut — mutation testing
+# ===========================================================
+# mutmut 3.x guarda mutantes generados y resultados en `mutants/`
+# (incluye mutants/mutmut-stats.json).
+mutants/

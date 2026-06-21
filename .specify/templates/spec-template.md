@@ -137,7 +137,7 @@
   compartidos. Si no los toca, marcar "Sin impacto visual".
 
   Si hay impacto, las tareas correspondientes DEBEN incluir el marcador
-  `[visual]` en tasks.md. Ver constitución sección XII y spec
+  `[visual]` en tasks.md. Ver constitución sección XIII y spec
   002-blindar-tokens-visuales.
 -->
 

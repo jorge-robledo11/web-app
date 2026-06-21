@@ -35,7 +35,7 @@ con el marcador `[visual]`:
 
 Las reglas de trazabilidad y autorización están definidas en:
 
-- `.specify/memory/constitution.md`, sección XII.
+- `.specify/memory/constitution.md`, sección XIII.
 - `specs/002-blindar-tokens-visuales/spec.md` (spec de gobernanza visual).
 
 Ninguna feature futura puede modificar estos tokens como efecto colateral de

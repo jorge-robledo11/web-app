@@ -26,7 +26,7 @@
   `app/modules/propiedades/schemas.py` con `ConfigDict(frozen=True,
   extra='forbid')`, validadores `mode='before'` para `titulo` y `direccion`
   que aplican `.strip()`, `Field(min_length=1, max_length=255)` para strings
-  (post-strip), `Field(gt=0)` para `precio_mensual` (formato libre), 
+  (post-strip), `Field(gt=0)` para `precio_mensual` (formato libre),
   `Field(ge=1, le=20)` para `habitaciones`, `Field(ge=1, le=10)` para
   `banos`, `Field(ge=0, default=0)` para `area`. Traza a FR-004, FR-005,
   FR-014, FR-015, FR-016, FR-020.

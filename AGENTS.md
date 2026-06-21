@@ -271,7 +271,7 @@ validaciones sin I/O.
   tipografía, breakpoints, layout base, componentes compartidos, macros de
   iconos) están protegidos. Cualquier modificación requiere marcador
   `[visual]` en `tasks.md` con justificación. Las extensiones se permiten con
-  `[visual][extension]`. Ver constitución sección XII y spec
+  `[visual][extension]`. Ver constitución sección XIII y spec
   `002-blindar-tokens-visuales`.
 
 ## Estructura obligatoria del repositorio

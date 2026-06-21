@@ -1,22 +1,38 @@
 <!--
 Informe de impacto de sincronización
-- Cambio de versión: 1.4.0 -> 1.5.0
-- Secciones modificadas:
-  - V. Spec-Driven Development: el mínimo de cada spec pasa de 3 a 7 archivos obligatorios; se agregan data-model.md, contracts/<feature>.yaml, quickstart.md y research.md
+- Cambio de versión: 1.5.0 -> 1.6.0
 - Secciones agregadas:
-  - Ninguna
-- Secciones eliminadas:
-  - Ninguna
+  - X. Calidad de tests, mutation testing y poda de tests: política explícita de medición
+    de calidad de tests por capacidad de detectar mutaciones; prohíbe tests triviales y
+    duplicados; permite eliminar o fusionar tests de bajo valor con justificación;
+    clasifica sobrevivientes de mutación; declara mutmut como herramienta; mutation
+    testing entra como práctica focalizada, sin meta global de coverage de mutación.
+- Secciones renumeradas:
+  - X. Base de datos -> XI
+  - XI. Async-First -> XII
+  - XII. Frontend y sistema visual -> XIII
+  - XIII. Estructura obligatoria del repositorio -> XIV
+  - XIV. Contratos de dominio -> XV
+  - XV. Complexity Tracking -> XVI
+  - XVI. Jerarquía de autoridad -> XVII
+  - XVII. Gobernanza -> XVIII
+  - XVIII. Historial de versiones -> XIX
+- Secciones modificadas:
+  - IV. Arquitectura: actualizada referencia a "sección XIV" (antes sección XIII).
+  - XIX. Historial de versiones (antes XVIII): agregada entrada v1.6.0; actualizadas
+    menciones previas a "sección XIII" y "sección XIV" donde correspondía.
 - Artefactos relacionados revisados:
-  - specs/001-bootstrap-proyecto/ ✅ ya contenía los 7 archivos
-  - specs/002-blindar-tokens-visuales/ ✅ ya contenía los 7 archivos
-  - specs/003-redisenar-home/ ✅ ya contenía los 7 archivos
-  - specs/004-propiedades-base/ ✅ ya contenía los 7 archivos
-  - specs/005-dashboard-datos-reales/ ✅ ya contenía los 7 archivos
-  - specs/006-pagina-propiedades-cards/ ✅ ya contenía los 7 archivos
-  - specs/007-crear-propiedad/ ✅ backfilled en la enmienda con los 4 archivos auxiliares
+  - .opencode/instructions/tests.instructions.md ✅ actualizado en la misma enmienda
+  - pyproject.toml ✅ agregada dependencia de desarrollo `mutmut` y bloque [tool.mutmut]
+  - .gitignore ✅ agregadas salidas de mutmut
+  - Makefile ✅ agregados targets mutation, mutation-browse, mutation-results
+  - scripts/ci/mutation.sh ✅ creado bajo el mismo patrón que test.sh y coverage.sh
+  - docs/testing/mutation-testing.md ✅ creado
+  - docs/testing/test-value-audit.md ✅ creado
 - Pendientes de seguimiento:
-  - Ninguno
+  - Baseline de mutation score por definir tras primera ejecución real con
+    `make mutation` sobre `app/modules/`.
+  - Umbrales por slice crítico: aún no definidos; se introducirán de forma evolutiva.
 -->
 
 # Constitución del Proyecto Realtor
@@ -99,7 +115,7 @@ capas de entrada e infraestructura sin reglas de negocio. La lógica compartida
 solo se extrae cuando exista duplicación real demostrable, nunca por anticipación.
 
 Las pruebas del proyecto viven fuera del módulo, en la raíz del repositorio,
-según la estructura obligatoria definida en la sección IX.5 y en la sección XIII.
+según la estructura obligatoria definida en la sección IX.5 y en la sección XIV.
 
 ## V. Spec-Driven Development
 
@@ -389,7 +405,128 @@ Reglas obligatorias:
 * El contenedor PostgreSQL de Testcontainers debe ser `postgres:16-alpine`,
   coherente con la imagen de desarrollo.
 
-## X. Base de datos
+## X. Calidad de tests, mutation testing y poda de tests
+
+La calidad de los tests no se mide por la cantidad ni por la cobertura de
+líneas: se mide por su capacidad de detectar cambios incorrectos en el
+comportamiento observable del sistema.
+
+### 1. Principios
+
+* La calidad de tests se mide por capacidad de detectar cambios incorrectos,
+  no por cantidad de tests ni por cobertura de líneas.
+* Toda regla de negocio nueva debe tener tests capaces de matar mutantes
+  relevantes.
+* La cobertura de líneas es señal secundaria; mutation testing es señal
+  fuerte para reglas de negocio y validaciones.
+* Está prohibido agregar tests triviales, duplicados o sin asserts útiles
+  solo para aumentar métricas.
+* Está permitido eliminar o fusionar tests de bajo valor cuando cumplan la
+  política de poda de la sección X.4.
+* Está prohibido eliminar tests únicamente para subir el mutation score o
+  para hacer pasar la suite.
+* Un test puede conservarse aunque no mate mutantes si protege un
+  comportamiento valioso: smoke test crítico, contrato HTTP, DTO público,
+  migración, seed, integración con base de datos, render server-side,
+  wiring de rutas o templates, regresión documentada o gobernanza visual o
+  estructural.
+* Mutation testing debe aplicarse de forma focalizada por slice o módulo
+  crítico, no obligatoriamente a todo el repositorio en cada cambio.
+
+### 2. Herramienta
+
+* `mutmut` es la herramienta de mutation testing declarada en el stack.
+* Se declara como dependencia de desarrollo en `pyproject.toml`.
+* Se configura mediante el bloque `[tool.mutmut]` en `pyproject.toml`,
+  apuntando a `app/modules/` como código a mutar y a `tests/unit/` y
+  `tests/integration/` como selección de tests para matar mutantes.
+* Las ejecuciones por defecto son manuales y focalizadas; no forman parte
+  del gate obligatorio de CI en esta enmienda.
+
+### 3. Clasificación de mutantes sobrevivientes
+
+Todo mutante que sobreviva a la suite debe clasificarse antes de actuar.
+Las categorías mínimas son:
+
+1. Falta de test valioso: existe una rama o camino no cubierto.
+2. Test con assertion débil: existe el test pero su assert no detecta el
+   cambio.
+3. Mutante equivalente: el cambio no produce diferencia observable en
+   comportamiento.
+4. Código muerto o innecesario: la rama mutada no aporta valor.
+5. Mutación irrelevante: el cambio no afecta comportamiento observable
+   documentado.
+
+### 4. Política de conservación y poda de tests
+
+#### 4.1. Un test se conserva si cumple al menos una condición
+
+* Mata mutantes no equivalentes en código de negocio.
+* Cubre un requisito `FR`/`SC` o edge case de una `spec.md` aprobada.
+* Protege un contrato HTTP o un DTO público.
+* Protege una migración, un seed o una integración con base de datos.
+* Protege render server-side o el wiring de rutas y templates.
+* Reproduce una regresión histórica documentada.
+* Es el smoke test mínimo de una capability crítica.
+* Protege gobernanza visual, estructural o de configuración.
+
+#### 4.2. Un test se puede eliminar o fusionar si cumple todas estas condiciones
+
+* No mata mutantes relevantes del comportamiento que dice proteger.
+* No está trazado a spec, contrato, bug o integración.
+* Está duplicado por otro test más expresivo.
+* Solo verifica detalle de implementación interna.
+* Sus assertions son triviales o no validan comportamiento observable.
+* Su eliminación no reduce la cobertura de requisitos ni el mutation score
+  relevante.
+
+#### 4.3. Reglas para borrar o fusionar tests
+
+* Nunca borrar tests en bloque.
+* Borrar o fusionar tests en cambios pequeños y revisables, idealmente
+  dentro del mismo PR que ajusta la regla de negocio o el test más
+  expresivo que lo sustituye.
+* Después de eliminar o fusionar tests, ejecutar la suite normal y, si
+  aplica, un ciclo focalizado de mutation testing sobre el módulo
+  afectado.
+* Todo test eliminado o fusionado debe dejar explícito cuál de las
+  siguientes razones aplica:
+
+  * El comportamiento queda cubierto por otro test más expresivo.
+  * El test no era trazable a spec, contrato, bug o integración.
+  * El test solo verificaba detalle interno.
+  * El test tenía assertions triviales sin protección observable.
+  * Existía duplicación directa con otro test.
+  * El código asociado fue eliminado o simplificado en la misma
+    enmienda.
+* Si hay duda razonable, conservar el test o fusionarlo en lugar de
+  eliminarlo.
+
+### 5. Acción preferida ante un mutante sobreviviente
+
+Ante un mutante que sobrevive a la suite, la acción se elige en este
+orden de preferencia:
+
+1. Mejorar un test existente para que su assert detecte el cambio.
+2. Agregar un test mínimo y valioso si cubre un comportamiento de negocio
+   real.
+3. Fusionar tests redundantes.
+4. Eliminar tests superficiales según la política de la sección X.4.
+5. Simplificar o eliminar código innecesario.
+6. Marcar el mutante como excluido con `# pragma: no mutate` solo si hay
+   justificación explícita registrada en `tasks.md` o en `plan.md`.
+
+### 6. Umbrales y cobertura
+
+* No se exige una meta global del 100 % de mutation score.
+* El baseline informativo se obtiene en la primera ejecución real.
+* Los umbrales futuros, si los hubiera, deben ser por slice crítico,
+  evolutivos y nunca deben bloquear por mutantes equivalentes
+  documentados.
+* La cobertura de líneas se mantiene como señal secundaria, con el mismo
+  umbral del 80 % declarado en `scripts/ci/coverage.sh`.
+
+## XI. Base de datos
 
 * PostgreSQL se ejecuta localmente con Docker o Docker Compose.
 * La base de datos de producción no usará Supabase.
@@ -400,7 +537,7 @@ Reglas obligatorias:
 * `config/app.example.yaml` debe existir como plantilla de configuración.
 * La infraestructura local debe usar archivos `.yaml`, nunca `.yml`.
 
-## XI. Async-First
+## XII. Async-First
 
 Todo I/O del sistema debe ser asíncrono cuando forme parte del flujo web,
 persistencia o integración externa.
@@ -417,7 +554,7 @@ Esto incluye:
 Solo se permite `def` síncrono para puro cómputo en memoria, mapeos, cálculos o
 validaciones sin I/O.
 
-## XII. Frontend y sistema visual
+## XIII. Frontend y sistema visual
 
 La interfaz será server-rendered con Jinja2 y mejorada progresivamente con HTMX.
 No se debe convertir la aplicación en una SPA.
@@ -477,7 +614,7 @@ Toda variación de tokens visuales canónicos requiere:
 
 El incumplimiento de esta regla invalida la implementación de la spec en revisión.
 
-## XIII. Estructura obligatoria del repositorio
+## XIV. Estructura obligatoria del repositorio
 
 La estructura base del proyecto debe respetar esta organización:
 
@@ -540,7 +677,7 @@ docker-compose.yaml
 
 Cualquier desviación debe justificarse en `plan.md`.
 
-## XIV. Contratos de dominio
+## XV. Contratos de dominio
 
 * Las entidades SQLAlchemy no se exponen como respuesta HTTP.
 * Las respuestas HTTP se mapean a DTOs Pydantic.
@@ -549,7 +686,7 @@ Cualquier desviación debe justificarse en `plan.md`.
 * Los errores usan `HTTPException` o modelos de error tipados.
 * Los límites del sistema validan entradas antes de ejecutar lógica de negocio.
 
-## XV. Complexity Tracking
+## XVI. Complexity Tracking
 
 Toda desviación del stack, arquitectura, estructura, flujo obligatorio o reglas
 de esta constitución debe registrarse explícitamente en la sección
@@ -566,7 +703,7 @@ Debe incluir:
 
 En ausencia de justificación, la desviación debe rechazarse.
 
-## XVI. Jerarquía de autoridad
+## XVII. Jerarquía de autoridad
 
 Durante la implementación de una spec, aplica el siguiente orden de prioridad
 ante cualquier conflicto:
@@ -578,7 +715,7 @@ constitución > spec > AGENTS.md > instructions > comando
 Si hay conflicto entre capas, se debe pausar, advertir el conflicto
 explícitamente y seguir la capa de mayor autoridad.
 
-## XVII. Gobernanza
+## XVIII. Gobernanza
 
 * Esta constitución es la fuente de verdad suprema del proyecto. Ninguna
   decisión, spec o implementación puede contradecirla.
@@ -595,24 +732,24 @@ explícitamente y seguir la capa de mayor autoridad.
 * La complejidad introducida debe justificarse explícitamente. Ante la duda,
   elegir la opción más simple.
 
-## XVIII. Historial de versiones
+## XIX. Historial de versiones
 
 * **v1.0.0** — Versión inicial de la constitución del proyecto Realtor.
 * **v1.1.0** — Agregado el protocolo de modo interactivo de preguntas para
   `speckit.specify`, `speckit.clarify`, `speckit.plan` y prompts custom de
   clarificación.
 * **v1.2.0** — Agregada la regla de blindaje de tokens visuales canónicos en
-  la sección XII, exigiendo autorización explícita, justificación y trazabilidad
+  la sección XIII, exigiendo autorización explícita, justificación y trazabilidad
   en `tasks.md` con marcador `[visual]`.
 * **v1.3.0** — Agregada la subsección «Organización de tests» en la sección IX
   con estructura obligatoria `tests/unit/` y `tests/integration/`, prohibición
   de dependencias externas en tests unitarios, obligatoriedad de Testcontainers
   en tests de integración, y prohibición de tests dentro de `app/modules/`.
-  Actualizada la estructura del repositorio en la sección XIII para reflejar
+  Actualizada la estructura del repositorio en la sección XIV para reflejar
   la nueva ubicación de tests. Corregido el nivel jerárquico de la
   subsección «Sistema visual canónico».
 * **v1.3.1** — Documentado `.pre-commit-config.yaml` como entry point unificado
-  de calidad en las secciones II, IX y XIII. Agregados pyupgrade, ruff-format y
+  de calidad en las secciones II, IX y XIV. Agregados pyupgrade, ruff-format y
   pydocstyle al stack. Actualizados los comandos de validación para referenciar
   `make auto-checks`/`make ci`. Corregida la instrucción `backend.instructions.md`
   para eliminar `tests/` de los artefactos del módulo. Sincronizados `AGENTS.md`
@@ -633,5 +770,26 @@ explícitamente y seguir la capa de mayor autoridad.
   en la enmienda. Las specs 001-006 ya contaban con estos archivos por
   convención previa. Sin cambios al stack, arquitectura ni flujo SDD
   existente.
+* **v1.6.0** — Agregada la sección X «Calidad de tests, mutation testing y
+  poda de tests». Se declara `mutmut` como herramienta de mutation testing,
+  se prohíbe agregar tests triviales o duplicados solo para subir métricas,
+  se permite eliminar o fusionar tests de bajo valor con justificación
+  explícita y se prohíbe eliminar tests únicamente para subir el mutation
+  score. Mutation testing entra como práctica focalizada y manual, sin meta
+  global del 100 % de coverage de mutación y sin formar parte obligatoria
+  del gate de CI. Renumeradas las secciones X-XVIII a XI-XIX para abrir
+  espacio a la nueva sección X. Actualizadas las referencias cruzadas en
+  `AGENTS.md`, `.opencode/instructions/frontend.instructions.md` y
+  `.specify/templates/spec-template.md` para apuntar a la nueva sección
+  XIII (Frontend). Sincronizados `pyproject.toml` (dependencia de
+  desarrollo `mutmut` y bloque `[tool.mutmut]`), `.gitignore` (salidas de
+  mutmut), `Makefile` (targets `mutation`, `mutation-browse`,
+  `mutation-results`) y `scripts/ci/mutation.sh` (nuevo script bajo el
+  mismo patrón que `test.sh` y `coverage.sh`). Creados
+  `docs/testing/mutation-testing.md` (guía de uso) y
+  `docs/testing/test-value-audit.md` (auditoría inicial de valor de
+  tests). Actualizadas `.opencode/instructions/tests.instructions.md`
+  para incorporar `mutmut` y la política de poda. Sin cambios al stack,
+  arquitectura ni flujo SDD existente.
 
-**Versión**: 1.5.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-20
+**Versión**: 1.6.0 | **Ratificada**: 2026-06-08 | **Última enmienda**: 2026-06-20

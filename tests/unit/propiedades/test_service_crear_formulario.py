@@ -15,20 +15,28 @@ from app.modules.propiedades.service import (
 
 
 class TestGenerarUrlImagen:
-	"""Pruebas del helper de generación de URL de imagen."""
+	"""
+	Pruebas del helper de generación de URL de imagen.
+	"""
 
 	def test_retorna_url_picsum_formato_esperado(self) -> None:
-		"""Debe retornar URL con formato https://picsum.photos/800/600."""
+		"""
+		Debe retornar URL con formato https://picsum.photos/800/600.
+		"""
 		url = _generar_url_imagen()
 		assert url == 'https://picsum.photos/800/600'
 
 	def test_acepta_dimensiones_custom(self) -> None:
-		"""Debe aceptar ancho y alto personalizados."""
+		"""
+		Debe aceptar ancho y alto personalizados.
+		"""
 		url = _generar_url_imagen(ancho=400, alto=300)
 		assert url == 'https://picsum.photos/400/300'
 
 	def test_retorna_vacio_si_falla_formato(self) -> None:
-		"""Debe retornar string vacío si el formato falla."""
+		"""
+		Debe retornar string vacío si el formato falla.
+		"""
 		with patch(
 			'app.modules.propiedades.service._formatear_url_picsum',
 			side_effect=Exception('formato falla'),
@@ -38,11 +46,15 @@ class TestGenerarUrlImagen:
 
 
 class TestCrearPropiedadDesdeFormulario:
-	"""Pruebas de la lógica de creación desde formulario."""
+	"""
+	Pruebas de la lógica de creación desde formulario.
+	"""
 
 	@pytest.fixture
 	def form_valido(self) -> PropiedadFormIn:
-		"""Fixture con un formulario válido."""
+		"""
+		Fixture con un formulario válido.
+		"""
 		return PropiedadFormIn(
 			titulo='Casa Form',
 			direccion='Calle Form 100',
@@ -57,7 +69,9 @@ class TestCrearPropiedadDesdeFormulario:
 		self,
 		form_valido: PropiedadFormIn,
 	) -> None:
-		"""Debe aplicar ciudad='Miami' por defecto."""
+		"""
+		Debe aplicar ciudad='Miami' por defecto.
+		"""
 		with patch(
 			'app.modules.propiedades.service.repo_crear',
 			new=AsyncMock(),
@@ -86,7 +100,9 @@ class TestCrearPropiedadDesdeFormulario:
 		self,
 		form_valido: PropiedadFormIn,
 	) -> None:
-		"""Debe aplicar estado=EstadoPropiedad.DISPONIBLE por defecto."""
+		"""
+		Debe aplicar estado=EstadoPropiedad.DISPONIBLE por defecto.
+		"""
 		with patch(
 			'app.modules.propiedades.service.repo_crear',
 			new=AsyncMock(),
@@ -115,7 +131,9 @@ class TestCrearPropiedadDesdeFormulario:
 		self,
 		form_valido: PropiedadFormIn,
 	) -> None:
-		"""Debe generar una imagen no vacía vía _generar_url_imagen."""
+		"""
+		Debe generar una imagen no vacía vía _generar_url_imagen.
+		"""
 		with patch(
 			'app.modules.propiedades.service.repo_crear',
 			new=AsyncMock(),
@@ -142,7 +160,9 @@ class TestCrearPropiedadDesdeFormulario:
 
 	@pytest.mark.asyncio
 	async def test_propag_area_cero(self) -> None:
-		"""form.area=0 debe propagarse a PropiedadIn.area=0."""
+		"""
+		form.area=0 debe propagarse a PropiedadIn.area=0.
+		"""
 		form = PropiedadFormIn(
 			titulo='Sin Area',
 			direccion='Calle Sin Area 1',
@@ -179,7 +199,9 @@ class TestCrearPropiedadDesdeFormulario:
 		self,
 		form_valido: PropiedadFormIn,
 	) -> None:
-		"""Debe retornar None y hacer rollback cuando hay IntegrityError."""
+		"""
+		Debe retornar None y hacer rollback cuando hay IntegrityError.
+		"""
 		mock_session = AsyncMock()
 		with patch(
 			'app.modules.propiedades.service.repo_crear',
@@ -197,7 +219,9 @@ class TestCrearPropiedadDesdeFormulario:
 		self,
 		form_valido: PropiedadFormIn,
 	) -> None:
-		"""Debe retornar PropiedadOut con id y estado en éxito."""
+		"""
+		Debe retornar PropiedadOut con id y estado en éxito.
+		"""
 		mock_entidad = AsyncMock(
 			id='00000000-0000-0000-0000-000000000001',
 			titulo=form_valido.titulo,
