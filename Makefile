@@ -89,10 +89,19 @@ visual-check: ## Audita trazabilidad visual de la feature activa
 # ╚══════════════════════════════════════════╝
 
 mutation: ## Ejecuta mutation testing focalizado con mutmut
-	bash scripts/ci/mutation.sh
+	bash scripts/ci/mutation.sh $(ARGS)
 
 mutation-browse: ## Abre la UI textual de mutmut para revisar mutantes
+	mkdir -p mutants
 	uv run mutmut browse
 
-mutation-results: ## Muestra el resumen de mutantes (vivos, muertos, equivalentes)
+mutation-results: ## Muestra el resumen de mutantes
+	mkdir -p mutants
 	uv run mutmut results
+
+mutation-estimates: ## Estima duración de mutation testing
+	mkdir -p mutants
+	uv run mutmut print-time-estimates
+
+mutation-clean: ## Borra artefactos locales de mutmut
+	rm -rf mutants

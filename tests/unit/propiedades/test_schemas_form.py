@@ -1,6 +1,5 @@
 """Tests unitarios del DTO de entrada de formulario PropiedadFormIn."""
 
-from decimal import Decimal
 
 import pytest
 from pydantic import ValidationError
@@ -20,14 +19,14 @@ class TestPropiedadFormIn:
 		form = PropiedadFormIn(
 			titulo='Casa Test',
 			direccion='Calle 123',
-			precio_mensual=Decimal('1500.00'),
+			precio_mensual='1500.00',
 			habitaciones=2,
 			banos=1,
 			area=80,
 		)
 		assert form.titulo == 'Casa Test'
 		assert form.direccion == 'Calle 123'
-		assert form.precio_mensual == Decimal('1500.00')
+		assert str(form.precio_mensual) == '1500.00'
 		assert form.habitaciones == 2
 		assert form.banos == 1
 		assert form.area == 80
@@ -40,7 +39,7 @@ class TestPropiedadFormIn:
 			PropiedadFormIn(
 				titulo='',
 				direccion='Calle 123',
-				precio_mensual=Decimal('1500.00'),
+				precio_mensual='1500.00',
 				habitaciones=2,
 				banos=1,
 			)
@@ -53,7 +52,7 @@ class TestPropiedadFormIn:
 			PropiedadFormIn(
 				titulo='Casa Test',
 				direccion='   ',
-				precio_mensual=Decimal('1500.00'),
+				precio_mensual='1500.00',
 				habitaciones=2,
 				banos=1,
 			)
@@ -66,7 +65,7 @@ class TestPropiedadFormIn:
 			PropiedadFormIn(
 				titulo='A' * 256,
 				direccion='Calle 123',
-				precio_mensual=Decimal('1500.00'),
+				precio_mensual='1500.00',
 				habitaciones=2,
 				banos=1,
 			)
@@ -79,7 +78,7 @@ class TestPropiedadFormIn:
 			PropiedadFormIn(
 				titulo='Casa Test',
 				direccion='A' * 256,
-				precio_mensual=Decimal('1500.00'),
+				precio_mensual='1500.00',
 				habitaciones=2,
 				banos=1,
 			)
@@ -88,7 +87,7 @@ class TestPropiedadFormIn:
 		"""
 		precio_mensual <= 0 debe fallar con gt=0.
 		"""
-		for precio in (Decimal('0'), Decimal('-1')):
+		for precio in ('0', '-1'):
 			with pytest.raises(ValidationError):
 				PropiedadFormIn(
 					titulo='Casa Test',
@@ -105,11 +104,11 @@ class TestPropiedadFormIn:
 		form = PropiedadFormIn(
 			titulo='Casa Test',
 			direccion='Calle 123',
-			precio_mensual=Decimal('1500'),
+			precio_mensual='1500',
 			habitaciones=2,
 			banos=1,
 		)
-		assert form.precio_mensual == Decimal('1500')
+		assert str(form.precio_mensual) == '1500'
 
 	def test_habitaciones_mayor_20_falla(self) -> None:
 		"""
@@ -119,7 +118,7 @@ class TestPropiedadFormIn:
 			PropiedadFormIn(
 				titulo='Casa Test',
 				direccion='Calle 123',
-				precio_mensual=Decimal('1500.00'),
+				precio_mensual='1500.00',
 				habitaciones=21,
 				banos=1,
 			)
@@ -132,7 +131,7 @@ class TestPropiedadFormIn:
 			PropiedadFormIn(
 				titulo='Casa Test',
 				direccion='Calle 123',
-				precio_mensual=Decimal('1500.00'),
+				precio_mensual='1500.00',
 				habitaciones=2,
 				banos=11,
 			)
@@ -144,7 +143,7 @@ class TestPropiedadFormIn:
 		form = PropiedadFormIn(
 			titulo='Casa Test',
 			direccion='Calle 123',
-			precio_mensual=Decimal('1500.00'),
+			precio_mensual='1500.00',
 			habitaciones=2,
 			banos=1,
 		)
@@ -158,7 +157,7 @@ class TestPropiedadFormIn:
 			PropiedadFormIn(
 				titulo='Casa Test',
 				direccion='Calle 123',
-				precio_mensual=Decimal('1500.00'),
+				precio_mensual='1500.00',
 				habitaciones=2,
 				banos=1,
 				area=-1,
@@ -171,7 +170,7 @@ class TestPropiedadFormIn:
 		form = PropiedadFormIn(
 			titulo='Casa Test',
 			direccion='Calle 123',
-			precio_mensual=Decimal('1500.00'),
+			precio_mensual='1500.00',
 			habitaciones=2,
 			banos=1,
 		)

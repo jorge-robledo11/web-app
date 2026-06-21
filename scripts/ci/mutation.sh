@@ -7,7 +7,6 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo_root"
-
+mkdir -p mutants
 uv run pytest -q
-
 uv run mutmut run "$@"

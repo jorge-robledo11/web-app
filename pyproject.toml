@@ -65,12 +65,20 @@ source_paths = ["app/"]
 do_not_mutate = [
     "app/**/__init__.py",
     "app/**/routes.py",
-    "app/config/**",
-    "app/infra/**",
     "app/main.py",
+    "app/infra/**",
+    "app/config/**",
     "app/modules/health/*",
 ]
-pytest_add_cli_args_test_selection = ["tests/unit/"]
+pytest_add_cli_args_test_selection = [
+    "tests/unit/dashboard/test_repository.py",
+    "tests/unit/dashboard/test_service.py",
+    "tests/unit/propiedades/test_models.py",
+    "tests/unit/propiedades/test_schemas.py",
+    "tests/unit/propiedades/test_schemas_form.py",
+    "tests/unit/propiedades/test_service_crear_formulario.py",
+    "tests/unit/propiedades/test_service_listar.py",
+]
 pytest_add_cli_args = ["-o", "pythonpath=mutants/.."]
 also_copy = ["config/"]
 max_stack_depth = 8

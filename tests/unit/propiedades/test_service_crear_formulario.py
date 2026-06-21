@@ -1,6 +1,5 @@
 """Tests unitarios del servicio de creación desde formulario."""
 
-from decimal import Decimal
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -58,7 +57,7 @@ class TestCrearPropiedadDesdeFormulario:
 		return PropiedadFormIn(
 			titulo='Casa Form',
 			direccion='Calle Form 100',
-			precio_mensual=Decimal('1800.00'),
+			precio_mensual='1800.00',
 			habitaciones=2,
 			banos=1,
 			area=70,
@@ -166,7 +165,7 @@ class TestCrearPropiedadDesdeFormulario:
 		form = PropiedadFormIn(
 			titulo='Sin Area',
 			direccion='Calle Sin Area 1',
-			precio_mensual=Decimal('1000.00'),
+			precio_mensual='1000.00',
 			habitaciones=1,
 			banos=1,
 			area=0,
